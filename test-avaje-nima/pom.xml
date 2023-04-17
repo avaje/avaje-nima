@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+  <modelVersion>4.0.0</modelVersion>
+  <parent>
+    <groupId>io.avaje</groupId>
+    <artifactId>avaje-nima-parent</artifactId>
+    <version>0.1</version>
+  </parent>
+
+  <artifactId>test-avaje-nima</artifactId>
+
+  <properties>
+<!--    <java.release>19</java.release>-->
+<!--    <maven.compiler.source>19</maven.compiler.source>-->
+<!--    <maven.compiler.target>19</maven.compiler.target>-->
+<!--    <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>-->
+    <surefire.useModulePath>false</surefire.useModulePath>
+  </properties>
+
+
+  <dependencies>
+
+    <dependency>
+      <groupId>io.avaje</groupId>
+      <artifactId>avaje-nima</artifactId>
+      <version>0.1</version>
+    </dependency>
+
+    <dependency>
+      <groupId>io.avaje</groupId>
+      <artifactId>avaje-nima-test</artifactId>
+      <version>0.1</version>
+      <scope>test</scope>
+    </dependency>
+
+    <dependency>
+      <groupId>io.avaje</groupId>
+      <artifactId>junit</artifactId>
+      <version>1.1</version>
+      <scope>test</scope>
+    </dependency>
+
+  </dependencies>
+
+
+  <build>
+    <plugins>
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-compiler-plugin</artifactId>
+        <version>3.11.0</version>
+        <configuration>
+          <release>20</release>
+          <enablePreview>true</enablePreview>
+          <annotationProcessorPaths>
+            <path>
+              <groupId>io.avaje</groupId>
+              <artifactId>avaje-nima-apt</artifactId>
+              <version>0.1</version>
+            </path>
+          </annotationProcessorPaths>
+        </configuration>
+      </plugin>
+
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-surefire-plugin</artifactId>
+        <version>3.0.0</version>
+        <configuration>
+          <argLine>--enable-preview</argLine>
+        </configuration>
+      </plugin>
+    </plugins>
+  </build>
+</project>
