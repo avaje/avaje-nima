@@ -9,9 +9,16 @@ import io.avaje.jsonb.Json;
 @Controller
 public class FooController {
 
+  private final FooService fooService;
+
+  FooController(FooService fooService) {
+    this.fooService = fooService;
+  }
+
   @Get
   Foo one() {
-    return new Foo(82, "Foo here");
+    long val = fooService.helloThere();
+    return new Foo(82, "Foo here " + val);
   }
 
   @Json

@@ -40,7 +40,7 @@ class MainTest {
       .GET().bean(FooController.Foo.class);
 
     assertThat(bean.id()).isEqualTo(82);
-    assertThat(bean.name()).isEqualTo("Foo here");
+    assertThat(bean.name()).isEqualTo("Foo here 42");
   }
 
   @Test
