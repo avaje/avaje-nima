@@ -2,7 +2,8 @@ package io.avaje.nima;
 
 import io.avaje.inject.BeanScope;
 import io.helidon.common.http.Http;
-import io.helidon.nima.webserver.http.*;
+import io.helidon.nima.webserver.WebServer;
+import io.helidon.nima.webserver.http.HttpRouting;
 import org.junit.jupiter.api.Test;
 
 import java.net.URI;
@@ -57,10 +58,11 @@ class NimaTest {
       .bean(HttpRouting.Builder.class, builder)
       .build();
 
-    Nima nima = new Nima();
-    nima.configure(scope);
-
-    nima.start(8082);
+    WebServer webServer = Nima.builder()
+      .configure(scope)
+      .port(8082)
+      .build()
+      .start();
   }
 
   @Test

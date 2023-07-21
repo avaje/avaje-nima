@@ -1,47 +1,70 @@
 package io.avaje.nima;
 
+import io.avaje.config.Config;
 import io.avaje.inject.BeanScope;
 import io.helidon.nima.webserver.WebServer;
 import io.helidon.nima.webserver.WebServerConfig;
 import io.helidon.nima.webserver.http.HttpRouting;
 import io.helidon.nima.webserver.http.HttpService;
 
-public class Nima {
+public interface Nima {
 
-  private WebServerConfig.Builder builder;
-  private WebServer webServer;
+  static Nima builder() {
+    return new DNima();
+  }
 
-  public Nima configure(BeanScope beanScope) {
-    HttpRouting.Builder routeBuilder = beanScope.getOptional(HttpRouting.Builder.class)
-      .orElse(HttpRouting.builder());
+  Nima port(int port);
 
-    for (final HttpService httpService : beanScope.list(HttpService.class)) {
-      httpService.routing(routeBuilder);
+  Nima configure(BeanScope beanScope);
+
+  Nima configure(WebServerConfig.Builder builder);
+
+  WebServer build();
+
+
+  final class DNima implements Nima {
+
+    private BeanScope beanScope;
+    private WebServerConfig.Builder builder;
+    private int port = Config.getInt("avaje.nima.port", 8080);
+
+    @Override
+    public Nima configure(WebServerConfig.Builder builder) {
+      this.builder = builder;
+      return this;
     }
 
-    builder = beanScope.getOptional(WebServerConfig.Builder.class).orElse(WebServer.builder());
-    builder.addRouting(routeBuilder.build());
-    return this;
-  }
+    @Override
+    public Nima configure(BeanScope beanScope) {
+      this.beanScope = beanScope;
+      return this;
+    }
 
-  public Nima port(int port) {
-    builder.port(port);
-    return this;
-  }
+    @Override
+    public Nima port(int port) {
+      this.port = port;
+      return this;
+    }
 
-  public void start() {
-    this.webServer = builder.build().start();
-  }
+    /**
+     * Build the WebServer without starting it.
+     */
+    public WebServer build() {
+      if (beanScope == null) {
+        beanScope = BeanScope.builder().build();
+      }
+      HttpRouting.Builder routeBuilder = beanScope.getOptional(HttpRouting.Builder.class)
+        .orElse(HttpRouting.builder());
 
-  public void start(int port) {
-    this.webServer = builder.port(port).build().start();
-  }
-
-  public int port() {
-    return webServer.port();
-  }
-
-  public void stop() {
-    webServer.stop();
+      for (final HttpService httpService : beanScope.list(HttpService.class)) {
+        httpService.routing(routeBuilder);
+      }
+      if (builder == null) {
+        builder = beanScope.getOptional(WebServerConfig.Builder.class).orElse(WebServer.builder());
+      }
+      builder.addRouting(routeBuilder.build());
+      builder.port(port);
+      return builder.build();
+    }
   }
 }

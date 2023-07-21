@@ -1,18 +1,17 @@
 package org.example;
 
-import io.avaje.inject.BeanScope;
 import io.avaje.nima.Nima;
 
-//@InjectModule(requires = Jsonb.class)
 public class Main {
 
   public static void main(String[] args) {
+    // BeanScope beanScope = BeanScope.builder().build();
 
-    BeanScope beanScope = BeanScope.builder()
-      .build();
+   var webServer =  Nima.builder()
+     //.configure(beanScope)
+     .port(8082)
+     .build();
 
-    Nima nima = new Nima();
-    nima.configure(beanScope);
-    nima.start(8082);
+    webServer.start();
   }
 }

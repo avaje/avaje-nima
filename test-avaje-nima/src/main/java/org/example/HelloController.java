@@ -10,6 +10,10 @@ import io.avaje.metrics.Metrics;
 @Controller
 public class HelloController {
 
+  HelloController() {
+    Metrics.jvmMetrics().registerJvmMetrics();
+  }
+
   @Produces("text/plain")
   @Get("/")
   String hello() {

@@ -4,6 +4,7 @@ import io.avaje.http.client.HttpClient;
 import io.avaje.inject.BeanScope;
 import io.avaje.inject.test.Plugin;
 import io.avaje.nima.Nima;
+import io.helidon.nima.webserver.WebServer;
 
 import java.lang.annotation.Annotation;
 
@@ -56,14 +57,15 @@ public final class NimaTestPlugin implements Plugin {
 
   private static class LocalScope implements Plugin.Scope {
 
-    private final Nima server;
+    private final WebServer server;
     private final HttpClient httpClient;
 
     LocalScope(BeanScope beanScope) {
       this.server = beanScope.getOptional(Nima.class)
-        .orElse(new Nima())
+        .orElse(Nima.builder())
         .configure(beanScope)
-        .port(0);
+        .port(0)
+        .build();
 
       // get a HttpClientContext.Builder provided by dependency injection test scope or new one up
       server.start();
