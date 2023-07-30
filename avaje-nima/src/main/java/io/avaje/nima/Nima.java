@@ -4,6 +4,7 @@ import io.avaje.config.Config;
 import io.avaje.inject.BeanScope;
 import io.helidon.nima.webserver.WebServer;
 import io.helidon.nima.webserver.WebServerConfig;
+import io.helidon.nima.webserver.http.HttpFeature;
 import io.helidon.nima.webserver.http.HttpRouting;
 import io.helidon.nima.webserver.http.HttpService;
 
@@ -49,16 +50,16 @@ public interface Nima {
     /**
      * Build the WebServer without starting it.
      */
-    public WebServer build() {
+    @Override
+  public WebServer build() {
       if (beanScope == null) {
         beanScope = BeanScope.builder().build();
       }
-      HttpRouting.Builder routeBuilder = beanScope.getOptional(HttpRouting.Builder.class)
+      final HttpRouting.Builder routeBuilder = beanScope.getOptional(HttpRouting.Builder.class)
         .orElse(HttpRouting.builder());
 
-      for (final HttpService httpService : beanScope.list(HttpService.class)) {
-        httpService.routing(routeBuilder);
-      }
+      beanScope.list(HttpFeature.class).forEach(routeBuilder::addFeature);
+
       if (builder == null) {
         builder = beanScope.getOptional(WebServerConfig.Builder.class).orElse(WebServer.builder());
       }
