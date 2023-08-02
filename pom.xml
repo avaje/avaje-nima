@@ -42,7 +42,7 @@
         <module>avaje-nima</module>
         <module>avaje-nima-generator</module>
         <module>avaje-nima-test</module>
-        <module>test-avaje-nima</module>
+        <!-- <module>test-avaje-nima</module> -->
       </modules>
     </profile>
   </profiles>

@@ -6,7 +6,6 @@ import io.helidon.nima.webserver.WebServer;
 import io.helidon.nima.webserver.WebServerConfig;
 import io.helidon.nima.webserver.http.HttpFeature;
 import io.helidon.nima.webserver.http.HttpRouting;
-import io.helidon.nima.webserver.http.HttpService;
 
 public interface Nima {
 
@@ -22,12 +21,11 @@ public interface Nima {
 
   WebServer build();
 
-
   final class DNima implements Nima {
 
     private BeanScope beanScope;
     private WebServerConfig.Builder configBuilder;
-    private int port = Config.getInt("avaje.nima.port", 8080);
+    private int port = Config.getInt("server.port", 8080);
 
     @Override
     public Nima configure(WebServerConfig.Builder configBuilder) {
@@ -47,9 +45,7 @@ public interface Nima {
       return this;
     }
 
-    /**
-     * Build the WebServer without starting it.
-     */
+    /** Build the WebServer without starting it. */
     @Override
     public WebServer build() {
       if (beanScope == null) {
@@ -59,12 +55,11 @@ public interface Nima {
         }
         beanScope = scopeBuilder.build();
       }
-      final HttpRouting.Builder routeBuilder = beanScope.getOptional(HttpRouting.Builder.class)
-        .orElse(HttpRouting.builder());
+      final HttpRouting.Builder routeBuilder = beanScope.get(HttpRouting.Builder.class);
 
       beanScope.list(HttpFeature.class).forEach(routeBuilder::addFeature);
       if (configBuilder == null) {
-        configBuilder = beanScope.getOptional(WebServerConfig.Builder.class).orElse(WebServer.builder());
+        configBuilder = beanScope.get(WebServerConfig.Builder.class);
       }
       configBuilder.addRouting(routeBuilder.build());
       configBuilder.port(port);
