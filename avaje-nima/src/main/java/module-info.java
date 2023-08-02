@@ -6,8 +6,11 @@ module io.avaje.nima {
 
   requires transitive io.avaje.config;
   requires transitive io.avaje.http.api;
+  requires transitive io.avaje.http.client;
   requires transitive io.avaje.inject;
   requires transitive io.avaje.jsonb;
+  requires transitive io.avaje.jsonb.plugin;
+  requires transitive io.avaje.validation.http;
   requires transitive io.helidon.nima.webserver;
 
   provides io.avaje.inject.spi.Plugin with DefaultConfigProvider;
