@@ -1,10 +1,10 @@
-package org.example;
+package org.example.web;
 
-import io.avaje.http.api.Controller;
-import io.avaje.http.api.Get;
-import io.avaje.http.api.Path;
-import io.avaje.jsonb.Json;
+import io.avaje.http.api.*;
+import org.example.api.Foo;
 
+
+@Valid(groups = {Default.class, Object.class})
 @Path("/foo")
 @Controller
 public class FooController {
@@ -21,8 +21,11 @@ public class FooController {
     return new Foo(82, "Foo here " + val);
   }
 
-  @Json
-  public record Foo(int id, String name) {
-
+  @Valid(groups = {Default.class, Object.class})
+  @Produces("text/plain")
+  @Post
+  String perform(Foo foo) {
+    return "ok";
   }
+
 }

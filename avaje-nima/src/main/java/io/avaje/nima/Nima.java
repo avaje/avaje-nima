@@ -26,12 +26,12 @@ public interface Nima {
   final class DNima implements Nima {
 
     private BeanScope beanScope;
-    private WebServerConfig.Builder builder;
+    private WebServerConfig.Builder configBuilder;
     private int port = Config.getInt("avaje.nima.port", 8080);
 
     @Override
-    public Nima configure(WebServerConfig.Builder builder) {
-      this.builder = builder;
+    public Nima configure(WebServerConfig.Builder configBuilder) {
+      this.configBuilder = configBuilder;
       return this;
     }
 
@@ -51,21 +51,24 @@ public interface Nima {
      * Build the WebServer without starting it.
      */
     @Override
-  public WebServer build() {
+    public WebServer build() {
       if (beanScope == null) {
-        beanScope = BeanScope.builder().build();
+        final var scopeBuilder = BeanScope.builder();
+        if (configBuilder != null) {
+          scopeBuilder.bean(WebServerConfig.Builder.class, configBuilder);
+        }
+        beanScope = scopeBuilder.build();
       }
       final HttpRouting.Builder routeBuilder = beanScope.getOptional(HttpRouting.Builder.class)
         .orElse(HttpRouting.builder());
 
       beanScope.list(HttpFeature.class).forEach(routeBuilder::addFeature);
-
-      if (builder == null) {
-        builder = beanScope.getOptional(WebServerConfig.Builder.class).orElse(WebServer.builder());
+      if (configBuilder == null) {
+        configBuilder = beanScope.getOptional(WebServerConfig.Builder.class).orElse(WebServer.builder());
       }
-      builder.addRouting(routeBuilder.build());
-      builder.port(port);
-      return builder.build();
+      configBuilder.addRouting(routeBuilder.build());
+      configBuilder.port(port);
+      return configBuilder.build();
     }
   }
 }

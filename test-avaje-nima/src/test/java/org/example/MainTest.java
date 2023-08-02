@@ -1,8 +1,12 @@
 package org.example;
 
+import io.avaje.http.client.BodyReader;
 import io.avaje.http.client.HttpClient;
 import io.avaje.inject.test.InjectTest;
 import jakarta.inject.Inject;
+import org.example.api.Foo;
+import org.example.api.ValidationErrorMessage;
+import org.example.web.HelloController;
 import org.junit.jupiter.api.Test;
 
 import java.net.http.HttpResponse;
@@ -35,12 +39,59 @@ class MainTest {
 
   @Test
   void fooBean() {
-    FooController.Foo bean = httpClient.request()
+    Foo bean = httpClient.request()
       .path("foo")
-      .GET().bean(FooController.Foo.class);
+      .GET().bean(Foo.class);
 
     assertThat(bean.id()).isEqualTo(82);
     assertThat(bean.name()).isEqualTo("Foo here 42");
+  }
+
+  @Test
+  void fooPostValid() {
+    var response = httpClient.request()
+      .path("foo")
+      .body(new Foo(42, "good"))
+      .POST().asString();
+
+    assertThat(response.statusCode()).isEqualTo(200);
+    assertThat(response.body()).isEqualTo("ok");
+  }
+
+  @Test
+  void fooPostInValid() {
+    var response = httpClient.request()
+      .path("foo")
+      .body(new Foo(42, ""))
+      .POST()
+      .asString();
+
+    assertThat(response.statusCode()).isEqualTo(422);
+
+    String body = response.body();
+    System.out.println("body: "+body);
+    BodyReader<ValidationErrorMessage> reader = httpClient.bodyAdapter().beanReader(ValidationErrorMessage.class);
+    ValidationErrorMessage validationErrorMessage = reader.readBody(body);
+
+    assertThat(validationErrorMessage.forPath("name").getMessage()).isEqualTo("must not be blank");
+  }
+
+  @Test
+  void fooPostInValid_LanguageGerman() {
+    var response = httpClient.request()
+      .header("Accept-Language", "de")
+      .path("foo")
+      .body(new Foo(42, ""))
+      .POST().asString();
+
+    assertThat(response.statusCode()).isEqualTo(422);
+
+    String body = response.body();
+    System.out.println("body: "+body);
+    BodyReader<ValidationErrorMessage> reader = httpClient.bodyAdapter().beanReader(ValidationErrorMessage.class);
+    ValidationErrorMessage validationErrorMessage = reader.readBody(body);
+
+    assertThat(validationErrorMessage.forPath("name").getMessage()).isEqualTo("darf nicht leer sein");
   }
 
   @Test

@@ -40,7 +40,21 @@
       <artifactId>avaje-inject</artifactId>
       <version>${avaje-inject.version}</version>
     </dependency>
-
+    <dependency>
+      <groupId>io.avaje</groupId>
+      <artifactId>validator-constraints</artifactId>
+      <version>${avaje-validator.version}</version>
+    </dependency>
+    <dependency>
+      <groupId>io.avaje</groupId>
+      <artifactId>avaje-validator</artifactId>
+      <version>${avaje-validator.version}</version>
+    </dependency>
+    <dependency>
+      <groupId>io.avaje</groupId>
+      <artifactId>avaje-validator-http-plugin</artifactId>
+      <version>${avaje-validator.version}</version>
+    </dependency>
     <dependency>
       <groupId>io.helidon.nima.webserver</groupId>
       <artifactId>helidon-nima-webserver</artifactId>

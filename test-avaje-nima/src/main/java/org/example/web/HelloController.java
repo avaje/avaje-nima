@@ -1,4 +1,4 @@
-package org.example;
+package org.example.web;
 
 import io.avaje.http.api.Controller;
 import io.avaje.http.api.Get;
