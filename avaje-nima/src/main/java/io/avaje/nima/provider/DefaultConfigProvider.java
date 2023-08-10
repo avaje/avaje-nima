@@ -10,7 +10,7 @@ public class DefaultConfigProvider implements io.avaje.inject.spi.Plugin {
 
   @Override
   public Class<?>[] provides() {
-    return new Class[]{WebServerConfig.Builder.class, HttpRouting.Builder.class};
+    return new Class[] {WebServerConfig.Builder.class, HttpRouting.Builder.class};
   }
 
   @Override
@@ -18,5 +18,4 @@ public class DefaultConfigProvider implements io.avaje.inject.spi.Plugin {
     builder.provideDefault(WebServerConfig.Builder.class, WebServer::builder);
     builder.provideDefault(HttpRouting.Builder.class, HttpRouting::builder);
   }
-
 }
