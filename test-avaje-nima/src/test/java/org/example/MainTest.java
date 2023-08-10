@@ -54,7 +54,7 @@ class MainTest {
       .body(new Foo(42, "good"))
       .POST().asString();
 
-    assertThat(response.statusCode()).isEqualTo(200);
+    assertThat(response.statusCode()).isEqualTo(201);
     assertThat(response.body()).isEqualTo("ok");
   }
 
