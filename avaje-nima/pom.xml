@@ -53,11 +53,6 @@
       <version>${avaje-validator.version}</version>
     </dependency>
     <dependency>
-      <groupId>io.avaje</groupId>
-      <artifactId>avaje-validator-http-plugin</artifactId>
-      <version>${avaje-validator.version}</version>
-    </dependency>
-    <dependency>
       <groupId>io.helidon.webserver</groupId>
       <artifactId>helidon-webserver</artifactId>
       <version>${nima.version}</version>
