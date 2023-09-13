@@ -41,6 +41,11 @@
       <artifactId>avaje-record-builder</artifactId>
       <version>1.0-RC1</version>
     </dependency>
+	  <dependency>
+      <groupId>io.avaje</groupId>
+      <artifactId>avaje-spi-service</artifactId>
+      <version>1.0</version>
+    </dependency>
   </dependencies>
 
 </project>
