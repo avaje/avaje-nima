@@ -1,9 +1,9 @@
 package org.example.api;
 
 import io.avaje.jsonb.Json;
+import io.avaje.recordbuilder.RecordBuilder;
 import io.avaje.validation.constraints.NotBlank;
 import io.avaje.validation.constraints.Valid;
-import io.soabase.recordbuilder.core.RecordBuilder;
 
 @RecordBuilder
 @Valid

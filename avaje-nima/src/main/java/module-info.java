@@ -9,7 +9,7 @@ module io.avaje.nima {
   requires transitive io.avaje.inject;
   requires transitive io.avaje.jsonb;
   requires transitive io.avaje.jsonb.plugin;
-  requires transitive io.helidon.nima.webserver;
+  requires transitive io.helidon.webserver;
 
   provides io.avaje.inject.spi.Plugin with DefaultConfigProvider;
 }

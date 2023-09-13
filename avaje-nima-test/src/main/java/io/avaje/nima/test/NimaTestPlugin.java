@@ -4,7 +4,7 @@ import io.avaje.http.client.HttpClient;
 import io.avaje.inject.BeanScope;
 import io.avaje.inject.test.Plugin;
 import io.avaje.nima.Nima;
-import io.helidon.nima.webserver.WebServer;
+import io.helidon.webserver.WebServer;
 
 import java.lang.annotation.Annotation;
 

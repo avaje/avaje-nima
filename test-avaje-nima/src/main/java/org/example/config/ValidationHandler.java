@@ -6,7 +6,7 @@ import io.avaje.inject.Factory;
 import io.avaje.jsonb.JsonType;
 import io.avaje.jsonb.Jsonb;
 import io.avaje.jsonb.stream.JsonOutput;
-import io.helidon.nima.webserver.http.HttpRouting;
+import io.helidon.webserver.http.HttpRouting;
 import org.example.api.ValidationErrorMessage;
 
 @Factory

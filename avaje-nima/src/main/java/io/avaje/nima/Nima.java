@@ -2,10 +2,10 @@ package io.avaje.nima;
 
 import io.avaje.config.Config;
 import io.avaje.inject.BeanScope;
-import io.helidon.nima.webserver.WebServer;
-import io.helidon.nima.webserver.WebServerConfig;
-import io.helidon.nima.webserver.http.HttpFeature;
-import io.helidon.nima.webserver.http.HttpRouting;
+import io.helidon.webserver.WebServer;
+import io.helidon.webserver.WebServerConfig;
+import io.helidon.webserver.http.HttpFeature;
+import io.helidon.webserver.http.HttpRouting;
 
 public interface Nima {
 

@@ -22,11 +22,10 @@ class CreateOrderTest {
   void createOrder() {
 
     CustomerBuilder.builder().name("asd")
-      .build()
-      .withId("asd");
+      .build();
 
     var address = new Address("", "line2", "foo", "ak");
-    var customer = CustomerBuilder.Customer("C67", "Rob", address);
+    var customer = Customer.from(new Customer("C67", "Rob", address)).build();
 
     var lines = List.of(new OrderLine(54,3, "aaa"),
       new OrderLine(55,10, "bb"),

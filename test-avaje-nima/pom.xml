@@ -36,6 +36,13 @@
 
     <dependency>
       <groupId>io.avaje</groupId>
+      <artifactId>avaje-record-builder</artifactId>
+      <version>1.0-RC1</version>
+      <scope>provided</scope>
+    </dependency>
+
+    <dependency>
+      <groupId>io.avaje</groupId>
       <artifactId>avaje-nima-test</artifactId>
       <version>0.1</version>
       <scope>test</scope>
@@ -48,12 +55,6 @@
       <scope>test</scope>
     </dependency>
 
-    <dependency>
-      <groupId>io.soabase.record-builder</groupId>
-      <artifactId>record-builder-core</artifactId>
-      <version>${record.builder.version}</version>
-    </dependency>
-
   </dependencies>
 
 
@@ -64,18 +65,12 @@
         <artifactId>maven-compiler-plugin</artifactId>
         <version>3.11.0</version>
         <configuration>
-          <release>20</release>
-          <enablePreview>true</enablePreview>
+          <release>21</release>
           <annotationProcessorPaths>
             <path>
               <groupId>io.avaje</groupId>
               <artifactId>avaje-nima-generator</artifactId>
               <version>0.1</version>
-            </path>
-            <path>
-              <groupId>io.soabase.record-builder</groupId>
-              <artifactId>record-builder-processor</artifactId>
-              <version>${record.builder.version}</version>
             </path>
           </annotationProcessorPaths>
         </configuration>

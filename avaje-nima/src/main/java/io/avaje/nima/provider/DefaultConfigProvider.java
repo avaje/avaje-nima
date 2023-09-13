@@ -1,9 +1,9 @@
 package io.avaje.nima.provider;
 
 import io.avaje.inject.BeanScopeBuilder;
-import io.helidon.nima.webserver.WebServer;
-import io.helidon.nima.webserver.WebServerConfig;
-import io.helidon.nima.webserver.http.HttpRouting;
+import io.helidon.webserver.WebServer;
+import io.helidon.webserver.WebServerConfig;
+import io.helidon.webserver.http.HttpRouting;
 
 /** Provides defaults for Nima HttpRouting Builder and WebServerConfig Builder */
 public class DefaultConfigProvider implements io.avaje.inject.spi.Plugin {

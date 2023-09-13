@@ -1,9 +1,9 @@
 package io.avaje.nima;
 
 import io.avaje.inject.BeanScope;
-import io.helidon.common.http.Http;
-import io.helidon.nima.webserver.WebServer;
-import io.helidon.nima.webserver.http.HttpRouting;
+import io.helidon.http.Http;
+import io.helidon.webserver.WebServer;
+import io.helidon.webserver.http.HttpRouting;
 import org.junit.jupiter.api.Test;
 
 import java.net.URI;

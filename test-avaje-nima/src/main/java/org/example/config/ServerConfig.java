@@ -2,8 +2,8 @@ package org.example.config;
 
 import io.avaje.inject.Bean;
 import io.avaje.inject.Factory;
-import io.helidon.nima.webserver.WebServerConfig;
-import io.helidon.nima.webserver.http.HttpRouting;
+import io.helidon.webserver.WebServerConfig;
+import io.helidon.webserver.http.HttpRouting;
 
 @Factory
 class ServerConfig {
