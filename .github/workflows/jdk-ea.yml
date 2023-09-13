@@ -16,7 +16,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        java_version: [GA,EA] ## valhalla (fails javadoc)
+        java_version: [EA] ## valhalla (fails javadoc)
         os: [ubuntu-latest]
 
     steps:
@@ -37,5 +37,5 @@ jobs:
     - name: Maven version
       run: mvn --version
     - name: Build with Maven
-      run: mvn clean verify package
+      run: mvn clean verify package -Ptest
 

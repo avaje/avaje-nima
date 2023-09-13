@@ -36,23 +36,18 @@
     <module>avaje-nima</module>
     <module>avaje-nima-generator</module>
     <module>avaje-nima-test</module>
-    <module>test-avaje-nima</module>
   </modules>
 
-<!--  <profiles>-->
-<!--    <profile>-->
-<!--      <id>jdk21plus</id>-->
-<!--      <activation>-->
-<!--        <activeByDefault/>-->
-<!--&lt;!&ndash;        <jdk>[21,22]</jdk>&ndash;&gt;-->
-<!--      </activation>-->
-<!--      <modules>-->
-<!--        <module>avaje-nima</module>-->
-<!--        <module>avaje-nima-generator</module>-->
-<!--        <module>avaje-nima-test</module>-->
-<!--        &lt;!&ndash; <module>test-avaje-nima</module> &ndash;&gt;-->
-<!--      </modules>-->
-<!--    </profile>-->
-<!--  </profiles>-->
+  <profiles>
+    <profile>
+      <id>test</id>
+      <activation>
+        <activeByDefault/>
+      </activation>
+      <modules>
+        <module>test-avaje-nima</module>
+      </modules>
+    </profile>
+  </profiles>
 
 </project>
