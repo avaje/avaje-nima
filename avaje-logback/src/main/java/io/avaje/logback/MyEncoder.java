@@ -1,11 +1,13 @@
 package io.avaje.logback;
 
 import ch.qos.logback.classic.pattern.ExtendedThrowableProxyConverter;
+import ch.qos.logback.classic.pattern.ThrowableHandlingConverter;
 import ch.qos.logback.classic.spi.ILoggingEvent;
 import ch.qos.logback.core.encoder.EncoderBase;
 import io.avaje.jsonb.JsonWriter;
 import io.avaje.jsonb.spi.PropertyNames;
 import io.avaje.jsonb.stream.JsonStream;
+import io.avaje.logback.abbreviator.DefaultTargetLengthAbbreviator;
 
 import java.io.ByteArrayOutputStream;
 import java.time.Instant;
@@ -19,11 +21,21 @@ public class MyEncoder extends EncoderBase<ILoggingEvent> {
   private byte[] headerBytes = EMPTY_BYTES;
   private byte[] footerBytes = EMPTY_BYTES;
 
-  private final ExtendedThrowableProxyConverter throwableConverter = new ExtendedThrowableProxyConverter();
+  //private final ExtendedThrowableProxyConverter throwableConverter = new ExtendedThrowableProxyConverter();
+  private final ThrowableHandlingConverter throwableConverter;
 
   public MyEncoder() {
     this.json = JsonStream.builder().build();
     this.properties = json.properties("@timestamp", "level", "logger", "message", "thread", "stack_trace");
+
+    var converter = new ShortenedThrowableConverter();
+    converter.setMaxDepthPerThrowable(3);
+
+    var de = new DefaultTargetLengthAbbreviator();
+    de.setTargetLength(20);
+    converter.setClassNameAbbreviator(de);
+    converter.setRootCauseFirst(true);
+    throwableConverter = converter;//new ExtendedThrowableProxyConverter(); // converter
   }
 
   @Override

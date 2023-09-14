@@ -25,7 +25,6 @@ import ch.qos.logback.core.boolex.EvaluationException;
 import ch.qos.logback.core.boolex.EventEvaluator;
 import ch.qos.logback.core.pattern.Converter;
 import org.junit.jupiter.api.Test;
-import org.mockito.Mockito;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -450,9 +449,10 @@ public class ShortenedThrowableConverterTest {
 
 
     @Test
-    public void testExclusion_commaSeparated() {
+    public void testAddExclusion() {
         ShortenedThrowableConverter converter = new ShortenedThrowableConverter();
-        converter.addExclusions(",.*, foo.bar ,, , \n");
+        converter.addExclude(".*");
+        converter.addExclude("foo.bar");
         converter.start();
 
         assertThat(converter.getExcludes()).containsExactly(".*", "foo.bar");
@@ -668,7 +668,7 @@ public class ShortenedThrowableConverterTest {
             String formatted = convert(converter, e);
             assertThat(formatted)
                 .doesNotContain(getClass().getPackage().getName())
-                .contains("n.l.l.s.");
+                .contains("i.a.l.");
         }
     }
 
@@ -699,110 +699,6 @@ public class ShortenedThrowableConverterTest {
 
         assertThat(converter.getClassNameAbbreviator()).isEqualTo(abbreviator);
         assertThat(getLines(formatted)).allMatch(l -> l.startsWith("foo:") || l.trim().startsWith("at foo."));
-    }
-
-
-
-    @Test
-    public void test_inline_hash() {
-        try {
-            StackTraceElementGenerator.generateCausedBy();
-            fail("Exception must have been thrown");
-        } catch (RuntimeException e) {
-            // GIVEN
-            StackHasher mockedHasher = Mockito.mock(StackHasher.class);
-            List<String> expectedHashes = Arrays.asList("11111111", "22222222");
-            Mockito.when(mockedHasher.hexHashes(any(Throwable.class))).thenReturn(new ArrayDeque<String>(expectedHashes));
-            ShortenedThrowableConverter converter = new ShortenedThrowableConverter();
-            converter.setInlineHash(true);
-            converter.start();
-            converter.setStackHasher(mockedHasher);
-
-            // WHEN
-            String formatted = convert(converter, e);
-
-            // THEN
-            // verify we have expected stack hashes inlined
-            List<String> actualHashes = extractStackHashes(formatted);
-            assertThat(actualHashes).containsExactlyElementsOf(expectedHashes);
-        }
-    }
-
-    @Test
-    public void test_inline_hash_root_cause_first() {
-        try {
-            StackTraceElementGenerator.generateCausedBy();
-            fail("Exception must have been thrown");
-        } catch (RuntimeException e) {
-            // GIVEN
-            StackHasher mockedHasher = Mockito.mock(StackHasher.class);
-            List<String> expectedHashes = Arrays.asList("11111111", "22222222");
-            Mockito.when(mockedHasher.hexHashes(any(Throwable.class))).thenReturn(new ArrayDeque<String>(expectedHashes));
-            ShortenedThrowableConverter converter = new ShortenedThrowableConverter();
-            converter.setInlineHash(true);
-            converter.setRootCauseFirst(true);
-            converter.start();
-            converter.setStackHasher(mockedHasher);
-
-            // WHEN
-            String formatted = convert(converter, e);
-
-            // THEN
-            // verify we have expected stack hashes inlined
-            List<String> actualHashes = extractStackHashes(formatted);
-            List<String> expectedHashesInReverseOrder = new ArrayList<String>(expectedHashes);
-            Collections.reverse(expectedHashesInReverseOrder);
-            assertThat(actualHashes).containsExactlyElementsOf(expectedHashesInReverseOrder);
-        }
-    }
-
-    @Test
-    public void test_inline_stack() {
-        try {
-            StackTraceElementGenerator.generateCausedBy();
-            fail("Exception must have been thrown");
-        } catch (RuntimeException e) {
-            // GIVEN
-            StackHasher mockedHasher = Mockito.mock(StackHasher.class);
-            ShortenedThrowableConverter converter = new ShortenedThrowableConverter();
-            converter.setLineSeparator(ShortenedThrowableConverter.DEFAULT_INLINE_SEPARATOR);
-            converter.setRootCauseFirst(true);
-            converter.start();
-            converter.setStackHasher(mockedHasher);
-
-            // WHEN
-            String formatted = convert(converter, e);
-
-            // THEN
-            // verify we have the expected stack trace line separator inlined
-            assertThat(formatted).doesNotContain(CoreConstants.LINE_SEPARATOR);
-            assertThat(formatted).contains(ShortenedThrowableConverter.DEFAULT_INLINE_SEPARATOR);
-        }
-    }
-
-    @Test
-    public void test_inline_hash_with_suppressed() {
-        try {
-            StackTraceElementGenerator.generateSuppressed();
-            fail("Exception must have been thrown");
-        } catch (RuntimeException e) {
-            // GIVEN
-            StackHasher mockedHasher = Mockito.mock(StackHasher.class);
-            List<String> expectedHashes = Arrays.asList("11111111"); // only one exception, no cause
-            Mockito.when(mockedHasher.hexHashes(any(Throwable.class))).thenReturn(new ArrayDeque<String>(expectedHashes));
-            ShortenedThrowableConverter converter = new ShortenedThrowableConverter();
-            converter.setInlineHash(true);
-            converter.start();
-            converter.setStackHasher(mockedHasher);
-
-            // WHEN
-            String formatted = convert(converter, e);
-
-            // THEN
-            // verify we have expected stack hashes inlined
-            List<String> actualHashes = extractStackHashes(formatted);
-            assertThat(actualHashes).containsExactlyElementsOf(expectedHashes);
-        }
     }
 
 

@@ -30,5 +30,11 @@
       <artifactId>avaje-jsonb</artifactId>
       <version>1.8-RC3</version>
     </dependency>
+    <dependency>
+      <groupId>io.avaje</groupId>
+      <artifactId>junit</artifactId>
+      <version>1.1</version>
+      <scope>test</scope>
+    </dependency>
   </dependencies>
 </project>

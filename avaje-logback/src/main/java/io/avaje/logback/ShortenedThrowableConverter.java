@@ -24,6 +24,7 @@ import ch.qos.logback.core.CoreConstants;
 import ch.qos.logback.core.boolex.EvaluationException;
 import ch.qos.logback.core.boolex.EventEvaluator;
 import ch.qos.logback.core.joran.spi.DefaultClass;
+import ch.qos.logback.core.spi.LifeCycle;
 import ch.qos.logback.core.status.ErrorStatus;
 import io.avaje.logback.abbreviator.DefaultTargetLengthAbbreviator;
 //import net.logstash.logback.abbreviator.DefaultTargetLengthAbbreviator;
@@ -59,15 +60,6 @@ import java.util.stream.Collectors;
  *     See {@link #rootCauseFirst}.</li>
  * </ul>
  *
- * To use this with a {@link PatternLayout}, you must configure {@code conversionRule}
- * as described <a href="http://logback.qos.ch/manual/layouts.html#customConversionSpecifier">here</a>.
- * Options can be specified in the pattern in the following order:
- * <ol>
- * <li>maxDepthPerThrowable = "full" or "short" or an integer value</li>
- * <li>shortenedClassNameLength = "full" or "short" or an integer value</li>
- * <li>maxLength = "full" or "short" or an integer value</li>
- * </ol>
- *
  * The other options can be listed in any order and are interpreted as follows:
  * <ul>
  * <li>"rootFirst" - indicating that stacks should be printed root-cause first
@@ -78,21 +70,6 @@ import java.util.stream.Collectors;
  * <li>evaluator name - name of evaluators that will determine if the stacktrace is ignored
  * <li>exclusion pattern - pattern for stack trace elements to exclude
  * </ul>
- *
- * <p>
- * For example,
- * <pre>
- * {@code
- *     <conversionRule conversionWord="stack"
- *                   converterClass="net.logstash.logback.stacktrace.ShortenedThrowableConverter" />
- *
- *     <appender name="STDOUT" class="ch.qos.logback.core.ConsoleAppender">
- *         <encoder>
- *             <pattern>[%thread] - %msg%n%stack{5,1024,10,rootFirst,omitCommonFrames,regex1,regex2,evaluatorName}</pattern>
- *         </encoder>
- *     </appender>
- * }
- * </pre>
  */
 public class ShortenedThrowableConverter extends ThrowableHandlingConverter {
 
@@ -186,8 +163,6 @@ public class ShortenedThrowableConverter extends ThrowableHandlingConverter {
 
     private StackElementFilter stackElementFilter;
 
-//    private StackHasher stackHasher;
-
     private StackElementFilter truncateAfterFilter;
 
     /**
@@ -212,19 +187,22 @@ public class ShortenedThrowableConverter extends ThrowableHandlingConverter {
             // use patterns filter
             stackElementFilter = StackElementFilter.byPattern(excludes);
         }
-        // instantiate stack hasher if "inline hash" is active
-        if (inlineHash) {
-            stackHasher = new StackHasher(stackElementFilter);
-        }
+
         truncateAfterFilter = StackElementFilter.byPattern(truncateAfterPatterns);
-        LogbackUtils.start(getContext(), abbreviator);
+        if (abbreviator instanceof LifeCycle) {
+          ((LifeCycle)abbreviator).start();
+        }
+        //LogbackUtils.start(getContext(), abbreviator);
         super.start();
     }
 
     @Override
     public void stop() {
         super.stop();
-        LogbackUtils.stop(this.abbreviator);
+        if (abbreviator instanceof LifeCycle) {
+          ((LifeCycle)abbreviator).stop();
+        }
+        //LogbackUtils.stop(this.abbreviator);
     }
 
     private void parseOptions() {
@@ -323,21 +301,15 @@ public class ShortenedThrowableConverter extends ThrowableHandlingConverter {
             return CoreConstants.EMPTY_STRING;
         }
 
-        // compute stack trace hashes
-        Deque<String> stackHashes = null;
-        if (inlineHash && (throwableProxy instanceof ThrowableProxy)) {
-            stackHashes = stackHasher.hexHashes(((ThrowableProxy) throwableProxy).getThrowable());
-        }
-
         /*
          * The extra 100 gives a little more buffer room since we actually
          * go over the maxLength before detecting it and truncating.
          */
         StringBuilder builder = new StringBuilder(Math.min(BUFFER_INITIAL_CAPACITY, this.maxLength + 100 > 0 ? this.maxLength + 100 : this.maxLength));
         if (rootCauseFirst) {
-            appendRootCauseFirst(builder, null, ThrowableProxyUtil.REGULAR_EXCEPTION_INDENT, throwableProxy, stackHashes);
+            appendRootCauseFirst(builder, null, ThrowableProxyUtil.REGULAR_EXCEPTION_INDENT, throwableProxy);
         } else {
-            appendRootCauseLast(builder, null, ThrowableProxyUtil.REGULAR_EXCEPTION_INDENT, throwableProxy, stackHashes);
+            appendRootCauseLast(builder, null, ThrowableProxyUtil.REGULAR_EXCEPTION_INDENT, throwableProxy);
         }
         if (builder.length() > this.maxLength) {
             builder.setLength(this.maxLength - ELLIPSIS.length() - getLineSeparator().length());
@@ -364,7 +336,7 @@ public class ShortenedThrowableConverter extends ThrowableHandlingConverter {
      * @param lineSeparator the line separator
      */
     public void setLineSeparator(String lineSeparator) {
-        this.lineSeparator = SeparatorParser.parseSeparator(lineSeparator);
+        this.lineSeparator = lineSeparator;//SeparatorParser.parseSeparator(lineSeparator);
     }
 
     public String getLineSeparator() {
@@ -409,25 +381,23 @@ public class ShortenedThrowableConverter extends ThrowableHandlingConverter {
             StringBuilder builder,
             String prefix,
             int indent,
-            IThrowableProxy throwableProxy,
-            Deque<String> stackHashes) {
+            IThrowableProxy throwableProxy) {
 
         if (throwableProxy == null || builder.length() > this.maxLength) {
             return;
         }
 
-        String hash = stackHashes == null || stackHashes.isEmpty() ? null : stackHashes.removeFirst();
-        appendFirstLine(builder, prefix, indent, throwableProxy, hash);
+        appendFirstLine(builder, prefix, indent, throwableProxy);
         appendStackTraceElements(builder, indent, throwableProxy);
 
         IThrowableProxy[] suppressedThrowableProxies = throwableProxy.getSuppressed();
         if (suppressedThrowableProxies != null) {
             for (IThrowableProxy suppressedThrowableProxy : suppressedThrowableProxies) {
                 // stack hashes are not computed/inlined on suppressed errors
-                appendRootCauseLast(builder, CoreConstants.SUPPRESSED, indent + ThrowableProxyUtil.SUPPRESSED_EXCEPTION_INDENT, suppressedThrowableProxy, null);
+                appendRootCauseLast(builder, CoreConstants.SUPPRESSED, indent + ThrowableProxyUtil.SUPPRESSED_EXCEPTION_INDENT, suppressedThrowableProxy);
             }
         }
-        appendRootCauseLast(builder, CoreConstants.CAUSED_BY, indent, throwableProxy.getCause(), stackHashes);
+        appendRootCauseLast(builder, CoreConstants.CAUSED_BY, indent, throwableProxy.getCause());
     }
 
     /**
@@ -438,27 +408,25 @@ public class ShortenedThrowableConverter extends ThrowableHandlingConverter {
             StringBuilder builder,
             String prefix,
             int indent,
-            IThrowableProxy throwableProxy,
-            Deque<String> stackHashes) {
+            IThrowableProxy throwableProxy) {
 
         if (throwableProxy == null || builder.length() > this.maxLength) {
             return;
         }
 
         if (throwableProxy.getCause() != null) {
-            appendRootCauseFirst(builder, prefix, indent, throwableProxy.getCause(), stackHashes);
+            appendRootCauseFirst(builder, prefix, indent, throwableProxy.getCause());
             prefix = CoreConstants.WRAPPED_BY;
         }
 
-        String hash = stackHashes == null || stackHashes.isEmpty() ? null : stackHashes.removeLast();
-        appendFirstLine(builder, prefix, indent, throwableProxy, hash);
+        appendFirstLine(builder, prefix, indent, throwableProxy);
         appendStackTraceElements(builder, indent, throwableProxy);
 
         IThrowableProxy[] suppressedThrowableProxies = throwableProxy.getSuppressed();
         if (suppressedThrowableProxies != null) {
             for (IThrowableProxy suppressedThrowableProxy : suppressedThrowableProxies) {
                 // stack hashes are not computed/inlined on suppressed errors
-                appendRootCauseFirst(builder, CoreConstants.SUPPRESSED, indent + ThrowableProxyUtil.SUPPRESSED_EXCEPTION_INDENT, suppressedThrowableProxy, null);
+                appendRootCauseFirst(builder, CoreConstants.SUPPRESSED, indent + ThrowableProxyUtil.SUPPRESSED_EXCEPTION_INDENT, suppressedThrowableProxy);
             }
         }
     }
@@ -664,17 +632,13 @@ public class ShortenedThrowableConverter extends ThrowableHandlingConverter {
     /**
      * Appends the first line containing the prefix and throwable message
      */
-    private void appendFirstLine(StringBuilder builder, String prefix, int indent, IThrowableProxy throwableProxy, String hash) {
+    private void appendFirstLine(StringBuilder builder, String prefix, int indent, IThrowableProxy throwableProxy) {
         if (builder.length() > this.maxLength) {
             return;
         }
         indent(builder, indent - 1);
         if (prefix != null) {
             builder.append(prefix);
-        }
-        if (hash != null) {
-            // inline stack hash
-            builder.append("<#" + hash + "> ");
         }
         builder.append(abbreviator.abbreviate(throwableProxy.getClassName()))
             .append(": ")
@@ -803,23 +767,9 @@ public class ShortenedThrowableConverter extends ThrowableHandlingConverter {
         this.inlineHash = inlineHash;
     }
 
-    /* visible for testing */
-    void setStackHasher(StackHasher stackHasher) {
-        this.stackHasher = stackHasher;
-    }
 
     public void addExclude(String exclusionPattern) {
         excludes.add(Pattern.compile(exclusionPattern));
-    }
-
-    /**
-     * Add multiple exclusion patterns as a list of comma separated patterns
-     * @param commaSeparatedPatterns list of comma separated patterns
-     */
-    public void addExclusions(String commaSeparatedPatterns) {
-        for (String regex: StringUtils.commaDelimitedListToStringArray(commaSeparatedPatterns)) {
-            addExclude(regex);
-        }
     }
 
     public void setExcludes(List<String> patterns) {
@@ -845,17 +795,6 @@ public class ShortenedThrowableConverter extends ThrowableHandlingConverter {
                         .stream()
                         .map(Pattern::pattern)
                         .collect(Collectors.toList());
-    }
-
-    /**
-     * Add multiple truncate after patterns as a list of comma separated patterns.
-     *
-     * @param commaSeparatedPatterns list of comma separated patterns
-     */
-    public void addTruncateAfters(String commaSeparatedPatterns) {
-        for (String regex: StringUtils.commaDelimitedListToStringArray(commaSeparatedPatterns)) {
-            addTruncateAfter(regex);
-        }
     }
 
     public void setTruncateAfters(List<String> patterns) {

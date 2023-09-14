@@ -7,11 +7,15 @@ import io.avaje.http.api.Produces;
 import io.avaje.inject.PreDestroy;
 import io.avaje.jsonb.Json;
 import io.avaje.metrics.Metrics;
+import org.example.service.HelloService;
 
 @Controller
 public class HelloController {
 
-  HelloController() {
+  private final HelloService helloService;
+
+  HelloController(HelloService helloService) {
+    this.helloService = helloService;
     Metrics.jvmMetrics().registerJvmMetrics();
   }
 
@@ -37,6 +41,13 @@ public class HelloController {
   String asJson() {
     String asJson = Metrics.collectAsJson().asJson();
     return asJson;
+  }
+
+  @Produces("text/plain")
+  @Get("ithrow")
+  String ithrow() {
+    helloService.ithrow();
+    return "hi";
   }
 
   @Json
