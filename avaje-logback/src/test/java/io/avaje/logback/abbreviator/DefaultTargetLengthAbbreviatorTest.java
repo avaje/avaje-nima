@@ -22,32 +22,31 @@ import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 /**
  * @author brenuart
- *
  */
 public class DefaultTargetLengthAbbreviatorTest {
 
-    @Test
-    public void test() {
-        String txt = "com.foo.Bar";
+  @Test
+  public void test() {
+    String txt = "com.foo.Bar";
 
-        validate(-1, txt, txt);
-        validate(0,  txt, "Bar");
-        validate(3,  txt, "c.f.Bar");
-        validate(10, txt, "c.foo.Bar");
-    }
+    validate(-1, txt, txt);
+    validate(0, txt, "Bar");
+    validate(3, txt, "c.f.Bar");
+    validate(10, txt, "c.foo.Bar");
+  }
 
-    @Test
-    public void testNotStarted() {
-        DefaultTargetLengthAbbreviator abbreviator = new DefaultTargetLengthAbbreviator();
+  @Test
+  public void testNotStarted() {
+    DefaultTargetLengthAbbreviator abbreviator = new DefaultTargetLengthAbbreviator();
 
-        assertThatThrownBy(() -> abbreviator.abbreviate("foo")).isInstanceOf(IllegalStateException.class);
-    }
+    assertThatThrownBy(() -> abbreviator.abbreviate("foo")).isInstanceOf(IllegalStateException.class);
+  }
 
-    private void validate(int targetLength, String txt, String expected) {
-        DefaultTargetLengthAbbreviator abbreviator = new DefaultTargetLengthAbbreviator();
-        abbreviator.setTargetLength(targetLength);
-        abbreviator.start();
+  private void validate(int targetLength, String txt, String expected) {
+    DefaultTargetLengthAbbreviator abbreviator = new DefaultTargetLengthAbbreviator();
+    abbreviator.setTargetLength(targetLength);
+    abbreviator.start();
 
-        assertThat(abbreviator.abbreviate(txt)).isEqualTo(expected);
-    }
+    assertThat(abbreviator.abbreviate(txt)).isEqualTo(expected);
+  }
 }

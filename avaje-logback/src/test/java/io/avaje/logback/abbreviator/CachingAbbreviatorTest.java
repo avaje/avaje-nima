@@ -17,9 +17,6 @@ package io.avaje.logback.abbreviator;
 
 import ch.qos.logback.classic.pattern.Abbreviator;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.Mock;
-import org.mockito.Mockito;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.*;
@@ -27,23 +24,23 @@ import static org.mockito.Mockito.*;
 public class CachingAbbreviatorTest {
 
 
-    @Test
-    public void test() {
-        Abbreviator delegate = mock(Abbreviator.class);
-        when(delegate.abbreviate("full")).thenReturn("abbreviation");
+  @Test
+  public void test() {
+    Abbreviator delegate = mock(Abbreviator.class);
+    when(delegate.abbreviate("full")).thenReturn("abbreviation");
 
-        CachingAbbreviator abbreviator = new CachingAbbreviator(delegate);
+    CachingAbbreviator abbreviator = new CachingAbbreviator(delegate);
 
-        assertThat(abbreviator.abbreviate("full")).isEqualTo("abbreviation");
-        assertThat(abbreviator.abbreviate("full")).isEqualTo("abbreviation");
+    assertThat(abbreviator.abbreviate("full")).isEqualTo("abbreviation");
+    assertThat(abbreviator.abbreviate("full")).isEqualTo("abbreviation");
 
-        verify(delegate, times(1)).abbreviate("full");
+    verify(delegate, times(1)).abbreviate("full");
 
-        abbreviator.clear();
+    abbreviator.clear();
 
-        assertThat(abbreviator.abbreviate("full")).isEqualTo("abbreviation");
+    assertThat(abbreviator.abbreviate("full")).isEqualTo("abbreviation");
 
-        verify(delegate, times(2)).abbreviate("full");
-    }
+    verify(delegate, times(2)).abbreviate("full");
+  }
 
 }

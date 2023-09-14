@@ -22,31 +22,31 @@ import java.util.concurrent.ConcurrentMap;
 
 /**
  * An {@link Abbreviator} that caches results from a {@link #delegate} abbreviator.
- *
+ * <p>
  * Logger names are typically reused constantly, so caching abbreviations
  * of class names helps performance.
  */
 public class CachingAbbreviator implements Abbreviator {
 
-    private final Abbreviator delegate;
+  private final Abbreviator delegate;
 
-    private final ConcurrentMap<String, String> cache = new ConcurrentHashMap<>();
+  private final ConcurrentMap<String, String> cache = new ConcurrentHashMap<>();
 
-    public CachingAbbreviator(Abbreviator delegate) {
-        super();
-        this.delegate = delegate;
-    }
+  public CachingAbbreviator(Abbreviator delegate) {
+    super();
+    this.delegate = delegate;
+  }
 
-    @Override
-    public String abbreviate(String in) {
-        return cache.computeIfAbsent(in, delegate::abbreviate);
-    }
+  @Override
+  public String abbreviate(String in) {
+    return cache.computeIfAbsent(in, delegate::abbreviate);
+  }
 
-    /**
-     * Clears the cache.
-     */
-    public void clear() {
-        cache.clear();
-    }
+  /**
+   * Clears the cache.
+   */
+  public void clear() {
+    cache.clear();
+  }
 
 }

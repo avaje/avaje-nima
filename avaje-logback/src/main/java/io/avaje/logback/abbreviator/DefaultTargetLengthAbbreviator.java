@@ -44,75 +44,74 @@ import ch.qos.logback.core.spi.LifeCycle;
  */
 public class DefaultTargetLengthAbbreviator implements Abbreviator, LifeCycle {
 
-    /**
-     * Whether the component is started or not
-     */
-    private boolean started;
+  /**
+   * Whether the component is started or not
+   */
+  private boolean started;
 
-    /**
-     * The desired target length, or {@code -1} to disable abbreviation
-     */
-    private int targetLength = -1;
+  /**
+   * The desired target length, or {@code -1} to disable abbreviation
+   */
+  private int targetLength = -1;
 
-    /**
-     * The actual {@link Abbreviator} to delegate
-     */
-    private Abbreviator delegate;
+  /**
+   * The actual {@link Abbreviator} to delegate
+   */
+  private Abbreviator delegate;
 
 
-    @Override
-    public boolean isStarted() {
-        return started;
+  @Override
+  public boolean isStarted() {
+    return started;
+  }
+
+  @Override
+  public void start() {
+    if (!isStarted()) {
+      this.delegate = createAbbreviator();
+      this.started = true;
+    }
+  }
+
+  private Abbreviator createAbbreviator() {
+    if (this.targetLength < 0 || this.targetLength == Integer.MAX_VALUE) {
+      return NullAbbreviator.INSTANCE;
     }
 
-    @Override
-    public void start() {
-        if (!isStarted()) {
-            this.delegate = createAbbreviator();
-            this.started = true;
-        }
+    Abbreviator abbreviator;
+    if (this.targetLength == 0) {
+      abbreviator = new ClassNameOnlyAbbreviator();
+    } else {
+      abbreviator = new TargetLengthBasedClassNameAbbreviator(this.targetLength);
     }
+    return new CachingAbbreviator(abbreviator);
+  }
 
-    private Abbreviator createAbbreviator() {
-        if (this.targetLength < 0 || this.targetLength == Integer.MAX_VALUE) {
-            return NullAbbreviator.INSTANCE;
-        }
-
-        Abbreviator abbreviator;
-        if (this.targetLength == 0) {
-            abbreviator = new ClassNameOnlyAbbreviator();
-        }
-        else {
-            abbreviator = new TargetLengthBasedClassNameAbbreviator(this.targetLength);
-        }
-        return new CachingAbbreviator(abbreviator);
+  @Override
+  public void stop() {
+    if (isStarted()) {
+      this.started = false;
+      this.delegate = null;
     }
+  }
 
-    @Override
-    public void stop() {
-        if (isStarted()) {
-            this.started = false;
-            this.delegate = null;
-        }
-    }
+  @Override
+  public String abbreviate(String in) {
+    assertStarted();
+    return delegate.abbreviate(in);
+  }
 
-    @Override
-    public String abbreviate(String in) {
-        assertStarted();
-        return delegate.abbreviate(in);
-    }
+  public void setTargetLength(int targetLength) {
+    this.targetLength = targetLength;
+  }
 
-    public void setTargetLength(int targetLength) {
-        this.targetLength = targetLength;
-    }
+  public int getTargetLength() {
+    return targetLength;
+  }
 
-    public int getTargetLength() {
-        return targetLength;
+  protected void assertStarted() {
+    if (!isStarted()) {
+      throw new IllegalStateException("Component is not started");
     }
-
-    protected void assertStarted() {
-        if (!isStarted()) {
-            throw new IllegalStateException("Component is not started");
-        }
-    }
+  }
 }

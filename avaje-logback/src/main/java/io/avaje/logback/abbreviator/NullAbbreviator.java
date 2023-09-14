@@ -18,10 +18,10 @@ package io.avaje.logback.abbreviator;
 import ch.qos.logback.classic.pattern.Abbreviator;
 
 public class NullAbbreviator implements Abbreviator {
-    public static final NullAbbreviator INSTANCE = new NullAbbreviator();
+  public static final NullAbbreviator INSTANCE = new NullAbbreviator();
 
-    @Override
-    public String abbreviate(String in) {
-        return in;
-    }
+  @Override
+  public String abbreviate(String in) {
+    return in;
+  }
 }
