@@ -15,8 +15,6 @@
  */
 package io.avaje.logback;
 
-//import ch.qos.logback.access.PatternLayout;
-
 import ch.qos.logback.classic.pattern.Abbreviator;
 import ch.qos.logback.classic.pattern.ThrowableHandlingConverter;
 import ch.qos.logback.classic.pattern.ThrowableProxyConverter;
@@ -30,7 +28,7 @@ import ch.qos.logback.core.boolex.EventEvaluator;
 import ch.qos.logback.core.joran.spi.DefaultClass;
 import ch.qos.logback.core.spi.LifeCycle;
 import ch.qos.logback.core.status.ErrorStatus;
-import io.avaje.logback.abbreviator.DefaultTargetLengthAbbreviator;
+import io.avaje.logback.abbreviator.TrimPackageAbbreviator;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -74,7 +72,7 @@ import java.util.stream.Collectors;
  * <li>exclusion pattern - pattern for stack trace elements to exclude
  * </ul>
  */
-public class ShortenedThrowableConverter extends ThrowableHandlingConverter {
+public final class ShortenedThrowableConverter extends ThrowableHandlingConverter {
 
   public static final int FULL_MAX_DEPTH_PER_THROWABLE = Integer.MAX_VALUE;
   public static final int SHORT_MAX_DEPTH_PER_THROWABLE = 3;
@@ -94,7 +92,6 @@ public class ShortenedThrowableConverter extends ThrowableHandlingConverter {
   private static final String OPTION_VALUE_FULL = "full";
   private static final String OPTION_VALUE_SHORT = "short";
   private static final String OPTION_VALUE_ROOT_FIRST = "rootFirst";
-  private static final String OPTION_VALUE_INLINE_HASH = "inlineHash";
   private static final String OPTION_VALUE_OMITCOMMONFRAMES = "omitCommonFrames";
   private static final String OPTION_VALUE_KEEPCOMMONFRAMES = "keepCommonFrames";
   private static final String OPTION_VALUE_INLINE_STACK = "inline";
@@ -125,7 +122,7 @@ public class ShortenedThrowableConverter extends ThrowableHandlingConverter {
    * Abbreviator used to shorten the classnames.
    * Initialized during {@link #start()}.
    */
-  private Abbreviator abbreviator = new DefaultTargetLengthAbbreviator();
+  private Abbreviator abbreviator = new TrimPackageAbbreviator();
 
   /**
    * Patterns used to determine which stacktrace elements to exclude.
@@ -152,11 +149,6 @@ public class ShortenedThrowableConverter extends ThrowableHandlingConverter {
   private boolean rootCauseFirst;
 
   /**
-   * True to compute and inline stack hashes.
-   */
-  private boolean inlineHash;
-
-  /**
    * True to omit common frames
    */
   private boolean omitCommonFrames = true;
@@ -180,16 +172,8 @@ public class ShortenedThrowableConverter extends ThrowableHandlingConverter {
     parseOptions();
     // instantiate stack element filter
     if (excludes == null || excludes.isEmpty()) {
-      if (inlineHash) {
-        // filter out elements with no source info
-        addInfo("[inlineHash] is active with no exclusion pattern: use non null source info filter to exclude generated classnames (see doc)");
-        stackElementFilter = StackElementFilter.withSourceInfo();
-      } else {
-        // use any filter
-        stackElementFilter = StackElementFilter.any();
-      }
+      stackElementFilter = StackElementFilter.any();
     } else {
-      // use patterns filter
       stackElementFilter = StackElementFilter.byPattern(excludes);
     }
 
@@ -197,7 +181,6 @@ public class ShortenedThrowableConverter extends ThrowableHandlingConverter {
     if (abbreviator instanceof LifeCycle) {
       ((LifeCycle) abbreviator).start();
     }
-    //LogbackUtils.start(getContext(), abbreviator);
     super.start();
   }
 
@@ -207,7 +190,6 @@ public class ShortenedThrowableConverter extends ThrowableHandlingConverter {
     if (abbreviator instanceof LifeCycle) {
       ((LifeCycle) abbreviator).stop();
     }
-    //LogbackUtils.stop(this.abbreviator);
   }
 
   private void parseOptions() {
@@ -243,10 +225,6 @@ public class ShortenedThrowableConverter extends ThrowableHandlingConverter {
           switch (option) {
             case OPTION_VALUE_ROOT_FIRST:
               setRootCauseFirst(true);
-              break;
-
-            case OPTION_VALUE_INLINE_HASH:
-              setInlineHash(true);
               break;
 
             case OPTION_VALUE_INLINE_STACK:
@@ -354,27 +332,26 @@ public class ShortenedThrowableConverter extends ThrowableHandlingConverter {
    * the stack trace should not be logged.
    */
   private boolean isExcludedByEvaluator(ILoggingEvent event) {
-    for (int i = 0; i < evaluators.size(); i++) {
-      EventEvaluator<ILoggingEvent> evaluator = evaluators.get(i);
-      try {
-        if (evaluator.evaluate(event)) {
-          return true;
-        }
-      } catch (EvaluationException eex) {
-        int errors = errorCount.incrementAndGet();
-        if (errors < CoreConstants.MAX_ERROR_COUNT) {
-          addError(String.format("Exception thrown for evaluator named [%s]", evaluator.getName()), eex);
-        } else if (errors == CoreConstants.MAX_ERROR_COUNT) {
-          ErrorStatus errorStatus = new ErrorStatus(
-            String.format("Exception thrown for evaluator named [%s]", evaluator.getName()), this, eex);
-          errorStatus.add(new ErrorStatus(
-            "This was the last warning about this evaluator's errors. "
-              + "We don't want the StatusManager to get flooded.",
-            this));
-          addStatus(errorStatus);
-        }
+      for (EventEvaluator<ILoggingEvent> evaluator : evaluators) {
+          try {
+              if (evaluator.evaluate(event)) {
+                  return true;
+              }
+          } catch (EvaluationException eex) {
+              int errors = errorCount.incrementAndGet();
+              if (errors < CoreConstants.MAX_ERROR_COUNT) {
+                  addError(String.format("Exception thrown for evaluator named [%s]", evaluator.getName()), eex);
+              } else if (errors == CoreConstants.MAX_ERROR_COUNT) {
+                  ErrorStatus errorStatus = new ErrorStatus(
+                          String.format("Exception thrown for evaluator named [%s]", evaluator.getName()), this, eex);
+                  errorStatus.add(new ErrorStatus(
+                          "This was the last warning about this evaluator's errors. "
+                                  + "We don't want the StatusManager to get flooded.",
+                          this));
+                  addStatus(errorStatus);
+              }
+          }
       }
-    }
     return false;
   }
 
@@ -382,12 +359,7 @@ public class ShortenedThrowableConverter extends ThrowableHandlingConverter {
    * Appends a throwable and recursively appends its causedby/suppressed throwables
    * in "normal" order (Root cause last).
    */
-  private void appendRootCauseLast(
-    StringBuilder builder,
-    String prefix,
-    int indent,
-    IThrowableProxy throwableProxy) {
-
+  private void appendRootCauseLast(StringBuilder builder, String prefix, int indent, IThrowableProxy throwableProxy) {
     if (throwableProxy == null || builder.length() > this.maxLength) {
       return;
     }
@@ -409,12 +381,7 @@ public class ShortenedThrowableConverter extends ThrowableHandlingConverter {
    * Appends a throwable and recursively appends its causedby/suppressed throwables
    * in "reverse" order (Root cause first).
    */
-  private void appendRootCauseFirst(
-    StringBuilder builder,
-    String prefix,
-    int indent,
-    IThrowableProxy throwableProxy) {
-
+  private void appendRootCauseFirst(StringBuilder builder, String prefix, int indent, IThrowableProxy throwableProxy) {
     if (throwableProxy == null || builder.length() > this.maxLength) {
       return;
     }
@@ -440,7 +407,6 @@ public class ShortenedThrowableConverter extends ThrowableHandlingConverter {
    * Appends the frames of the throwable.
    */
   private void appendStackTraceElements(StringBuilder builder, int indent, IThrowableProxy throwableProxy) {
-
     if (builder.length() > this.maxLength) {
       return;
     }
@@ -455,29 +421,20 @@ public class ShortenedThrowableConverter extends ThrowableHandlingConverter {
     int i = 0;
     for (; i < stackTraceElements.length - commonFrames; i++) {
       if (this.maxDepthPerThrowable > 0 && appended >= this.maxDepthPerThrowable) {
-        /*
-         * We reached the configured limit. Bail out.
-         */
+        // We reached the configured limit. Bail out.
         break;
       }
       StackTraceElementProxy stackTraceElement = stackTraceElements[i];
       if (i < 1 || isIncluded(stackTraceElement)) { // First 2 frames are always included
-        /*
-         * We should append this line.
-         *
-         * consecutiveExcluded will be > 0 if we were previously skipping lines based on excludes
-         */
+        // We should append this line
+        // consecutiveExcluded will be > 0 if we were previously skipping lines based on excludes
         if (consecutiveExcluded >= 2) {
-          /*
-           * Multiple consecutive lines were excluded, so append a placeholder
-           */
+          // Multiple consecutive lines were excluded, so append a placeholder
           appendPlaceHolder(builder, indent, consecutiveExcluded, "frames excluded");
           consecutiveExcluded = 0;
         } else if (consecutiveExcluded == 1) {
-          /*
-           * We only excluded one line, so just go back and include it
-           * instead of printing the excluding message for it.
-           */
+          // We only excluded one line, so just go back and include it
+          // instead of printing the excluding message for it.
           appendingExcluded = true;
           consecutiveExcluded = 0;
           i -= 2;
@@ -488,9 +445,7 @@ public class ShortenedThrowableConverter extends ThrowableHandlingConverter {
         appendingExcluded = false;
         appended++;
       } else if (appendingExcluded) {
-        /*
-         * We're going back and appending something we previously excluded
-         */
+        // We're going back and appending something we previously excluded
         appendStackTraceElement(builder, indent, stackTraceElement, previousWrittenStackTraceElement);
         previousWrittenStackTraceElement = stackTraceElement;
         appended++;
@@ -499,21 +454,15 @@ public class ShortenedThrowableConverter extends ThrowableHandlingConverter {
       }
 
       if (shouldTruncateAfter(stackTraceElement)) {
-        /*
-         * Truncate after this line. Bail out.
-         */
+        // Truncate after this line. Bail out.
         break;
       }
     }
 
 
-    /*
-     * We did not process the stack up to the last element (max depth, truncate line)
-     */
+     // We did not process the stack up to the last element (max depth, truncate line)
     if (i + commonFrames < stackTraceElements.length) {
-      /*
-       * We were excluding elements but we want the truncateAfter element to be printed
-       */
+       // We were excluding elements but we want the truncateAfter element to be printed
       if (consecutiveExcluded > 0) {
         consecutiveExcluded--;
         appendPlaceHolder(builder, indent, consecutiveExcluded, "frames excluded");
@@ -529,16 +478,12 @@ public class ShortenedThrowableConverter extends ThrowableHandlingConverter {
       }
     } else {
       if (consecutiveExcluded > 0) {
-        /*
-         * We were excluding stuff at the end, so append a placeholder
-         */
+        // We were excluding stuff at the end, so append a placeholder
         appendPlaceHolder(builder, indent, consecutiveExcluded, "frames excluded");
       }
 
       if (commonFrames > 0) {
-        /*
-         * Common frames found, append a placeholder
-         */
+        // Common frames found, append a placeholder
         appendPlaceHolder(builder, indent, commonFrames, "common frames omitted");
       }
     }
@@ -651,7 +596,6 @@ public class ShortenedThrowableConverter extends ThrowableHandlingConverter {
     ThrowableProxyUtil.indent(builder, indent);
   }
 
-
   /**
    * Set the length to which class names should be abbreviated.
    * Cannot be used if a custom {@link Abbreviator} has been set through {@link #setClassNameAbbreviator(Abbreviator)}.
@@ -659,8 +603,8 @@ public class ShortenedThrowableConverter extends ThrowableHandlingConverter {
    * @param length the desired maximum length or {@code -1} to disable the feature and allow for any arbitrary length.
    */
   public void setShortenedClassNameLength(int length) {
-    if (this.abbreviator instanceof DefaultTargetLengthAbbreviator) {
-      ((DefaultTargetLengthAbbreviator) this.abbreviator).setTargetLength(length);
+    if (this.abbreviator instanceof TrimPackageAbbreviator) {
+      ((TrimPackageAbbreviator) this.abbreviator).setTargetLength(length);
     } else {
       throw new IllegalStateException("Cannot set shortenedClassNameLength on non default Abbreviator");
     }
@@ -673,20 +617,19 @@ public class ShortenedThrowableConverter extends ThrowableHandlingConverter {
    * @return the abbreviation target length
    */
   public int getShortenedClassNameLength() {
-    if (this.abbreviator instanceof DefaultTargetLengthAbbreviator) {
-      return ((DefaultTargetLengthAbbreviator) this.abbreviator).getTargetLength();
+    if (this.abbreviator instanceof TrimPackageAbbreviator) {
+      return ((TrimPackageAbbreviator) this.abbreviator).getTargetLength();
     } else {
       throw new IllegalStateException("Cannot invoke getShortenedClassNameLength on non default abbreviator");
     }
   }
-
 
   /**
    * Set a custom {@link Abbreviator} used to shorten class names.
    *
    * @param abbreviator the {@link Abbreviator} to use.
    */
-  @DefaultClass(DefaultTargetLengthAbbreviator.class)
+  @DefaultClass(TrimPackageAbbreviator.class)
   public void setClassNameAbbreviator(Abbreviator abbreviator) {
     this.abbreviator = Objects.requireNonNull(abbreviator);
   }
@@ -694,7 +637,6 @@ public class ShortenedThrowableConverter extends ThrowableHandlingConverter {
   public Abbreviator getClassNameAbbreviator() {
     return this.abbreviator;
   }
-
 
   /**
    * Set a limit on the number of stackTraceElements per throwable.
@@ -717,7 +659,6 @@ public class ShortenedThrowableConverter extends ThrowableHandlingConverter {
     return maxDepthPerThrowable;
   }
 
-
   /**
    * Set a hard limit on the size of the rendered stacktrace, all throwables included.
    * Use {@code -1} to disable the feature and allows for any size.
@@ -737,7 +678,6 @@ public class ShortenedThrowableConverter extends ThrowableHandlingConverter {
   public int getMaxLength() {
     return maxLength;
   }
-
 
   /**
    * Control whether common frames should be omitted for nested throwables or not.
@@ -759,15 +699,6 @@ public class ShortenedThrowableConverter extends ThrowableHandlingConverter {
   public void setRootCauseFirst(boolean rootCauseFirst) {
     this.rootCauseFirst = rootCauseFirst;
   }
-
-  public boolean isInlineHash() {
-    return inlineHash;
-  }
-
-  public void setInlineHash(boolean inlineHash) {
-    this.inlineHash = inlineHash;
-  }
-
 
   public void addExclude(String exclusionPattern) {
     excludes.add(Pattern.compile(exclusionPattern));

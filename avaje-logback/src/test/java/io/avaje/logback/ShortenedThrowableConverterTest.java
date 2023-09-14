@@ -603,7 +603,7 @@ public class ShortenedThrowableConverterTest {
     converter.setContext(context);
 
     // test full values
-    converter.setOptionList(Arrays.asList("full", "full", "full", "rootFirst", "inlineHash", "evaluator", "regex", "omitCommonFrames"));
+    converter.setOptionList(Arrays.asList("full", "full", "full", "rootFirst", "evaluator", "regex", "omitCommonFrames"));
     converter.start();
 
     assertThat(converter.getMaxDepthPerThrowable()).isEqualTo(ShortenedThrowableConverter.FULL_MAX_DEPTH_PER_THROWABLE);

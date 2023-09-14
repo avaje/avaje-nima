@@ -42,7 +42,7 @@ import ch.qos.logback.core.spi.LifeCycle;
  *
  * @author brenuart
  */
-public class DefaultTargetLengthAbbreviator implements Abbreviator, LifeCycle {
+public final class TrimPackageAbbreviator implements Abbreviator, LifeCycle {
 
   /**
    * Whether the component is started or not
@@ -67,7 +67,7 @@ public class DefaultTargetLengthAbbreviator implements Abbreviator, LifeCycle {
 
   @Override
   public void start() {
-    if (!isStarted()) {
+    if (!started) {
       this.delegate = createAbbreviator();
       this.started = true;
     }
@@ -89,7 +89,7 @@ public class DefaultTargetLengthAbbreviator implements Abbreviator, LifeCycle {
 
   @Override
   public void stop() {
-    if (isStarted()) {
+    if (started) {
       this.started = false;
       this.delegate = null;
     }
@@ -109,8 +109,8 @@ public class DefaultTargetLengthAbbreviator implements Abbreviator, LifeCycle {
     return targetLength;
   }
 
-  protected void assertStarted() {
-    if (!isStarted()) {
+  private void assertStarted() {
+    if (!started) {
       throw new IllegalStateException("Component is not started");
     }
   }

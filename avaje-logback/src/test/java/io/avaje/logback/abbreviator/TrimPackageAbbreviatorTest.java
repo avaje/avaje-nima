@@ -23,7 +23,7 @@ import static org.assertj.core.api.Assertions.assertThatThrownBy;
 /**
  * @author brenuart
  */
-public class DefaultTargetLengthAbbreviatorTest {
+public class TrimPackageAbbreviatorTest {
 
   @Test
   public void test() {
@@ -37,13 +37,13 @@ public class DefaultTargetLengthAbbreviatorTest {
 
   @Test
   public void testNotStarted() {
-    DefaultTargetLengthAbbreviator abbreviator = new DefaultTargetLengthAbbreviator();
+    TrimPackageAbbreviator abbreviator = new TrimPackageAbbreviator();
 
     assertThatThrownBy(() -> abbreviator.abbreviate("foo")).isInstanceOf(IllegalStateException.class);
   }
 
   private void validate(int targetLength, String txt, String expected) {
-    DefaultTargetLengthAbbreviator abbreviator = new DefaultTargetLengthAbbreviator();
+    TrimPackageAbbreviator abbreviator = new TrimPackageAbbreviator();
     abbreviator.setTargetLength(targetLength);
     abbreviator.start();
 

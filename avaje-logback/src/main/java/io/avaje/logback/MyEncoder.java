@@ -6,7 +6,7 @@ import ch.qos.logback.core.encoder.EncoderBase;
 import io.avaje.jsonb.JsonWriter;
 import io.avaje.jsonb.spi.PropertyNames;
 import io.avaje.jsonb.stream.JsonStream;
-import io.avaje.logback.abbreviator.DefaultTargetLengthAbbreviator;
+import io.avaje.logback.abbreviator.TrimPackageAbbreviator;
 
 import java.io.ByteArrayOutputStream;
 import java.time.Instant;
@@ -30,7 +30,7 @@ public class MyEncoder extends EncoderBase<ILoggingEvent> {
     var converter = new ShortenedThrowableConverter();
     converter.setMaxDepthPerThrowable(3);
 
-    var de = new DefaultTargetLengthAbbreviator();
+    var de = new TrimPackageAbbreviator();
     de.setTargetLength(20);
     converter.setClassNameAbbreviator(de);
     converter.setRootCauseFirst(true);
