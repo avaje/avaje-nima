@@ -36,6 +36,7 @@
     <module>avaje-nima</module>
     <module>avaje-nima-generator</module>
     <module>avaje-nima-test</module>
+    <module>avaje-logback</module>
   </modules>
 
   <profiles>

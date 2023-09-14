@@ -1,5 +1,6 @@
 package org.example.web;
 
+import io.avaje.applog.AppLog;
 import io.avaje.http.api.Controller;
 import io.avaje.http.api.Get;
 import io.avaje.http.api.Produces;
@@ -27,6 +28,8 @@ public class HelloController {
 
   @Get("/one")
   Something one() {
+    System.Logger log = AppLog.getLogger(HelloController.class);
+    log.log(System.Logger.Level.INFO, "Hello one here \n again");
     return new Something(52, "Asdasd");
   }
 

@@ -3,7 +3,8 @@
     <filter class="ch.qos.logback.classic.filter.ThresholdFilter">
       <level>TRACE</level>
     </filter>
-    <encoder class="net.logstash.logback.encoder.LogstashEncoder" />
+    <encoder class="io.avaje.logback.MyEncoder" />
+<!--    <encoder class="net.logstash.logback.encoder.LogstashEncoder" />-->
 <!--    <encoder class="ch.qos.logback.classic.encoder.PatternLayoutEncoder">-->
 <!--      <pattern>%d{HH:mm:ss.SSS} [%thread] %-5level %logger{36} - %msg%n</pattern>-->
 <!--    </encoder>-->
@@ -29,8 +30,9 @@
     <appender-ref ref="STDOUT"/>
   </root>
 
-  <logger name="io.helidon" level="DEBUG"/>
+  <logger name="io.helidon" level="INFO"/>
   <logger name="io.ebean" level="INFO"/>
   <logger name="io.avaje" level="INFO"/>
+  <logger name="org.example" level="INFO"/>
 
 </configuration>
