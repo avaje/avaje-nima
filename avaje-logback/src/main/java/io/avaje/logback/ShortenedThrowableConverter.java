@@ -215,7 +215,6 @@ public final class ShortenedThrowableConverter extends ThrowableHandlingConverte
           /*
            * Remaining options are either
            *     - "rootFirst" - indicating that stacks should be printed root-cause first
-           *     - "inlineHash" - indicating that hexadecimal error hashes should be computed and inlined
            *     - "inline" - indicating that the whole stack trace should be inlined, using "\\n" as separator
            *     - "omitCommonFrames" - omit common frames
            *     - "keepCommonFrames" - keep common frames
@@ -305,7 +304,6 @@ public final class ShortenedThrowableConverter extends ThrowableHandlingConverte
   /**
    * Sets which lineSeparator to use between events.
    * <p>
-   * <p>
    * The following values have special meaning:
    * <ul>
    * <li>{@code null} or empty string = no new line.</li>
@@ -319,13 +317,12 @@ public final class ShortenedThrowableConverter extends ThrowableHandlingConverte
    * @param lineSeparator the line separator
    */
   public void setLineSeparator(String lineSeparator) {
-    this.lineSeparator = lineSeparator;//SeparatorParser.parseSeparator(lineSeparator);
+    this.lineSeparator = lineSeparator;
   }
 
   public String getLineSeparator() {
     return lineSeparator;
   }
-
 
   /**
    * Return true if any evaluator returns true, indicating that

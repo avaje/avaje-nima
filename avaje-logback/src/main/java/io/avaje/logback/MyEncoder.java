@@ -11,16 +11,12 @@ import io.avaje.logback.abbreviator.TrimPackageAbbreviator;
 import java.io.ByteArrayOutputStream;
 import java.time.Instant;
 
-public class MyEncoder extends EncoderBase<ILoggingEvent> {
+public final class MyEncoder extends EncoderBase<ILoggingEvent> {
 
   private static final byte[] EMPTY_BYTES = new byte[0];
   private final PropertyNames properties;
   private final JsonStream json;
 
-  private byte[] headerBytes = EMPTY_BYTES;
-  private byte[] footerBytes = EMPTY_BYTES;
-
-  //private final ExtendedThrowableProxyConverter throwableConverter = new ExtendedThrowableProxyConverter();
   private final ThrowableHandlingConverter throwableConverter;
 
   public MyEncoder() {
@@ -51,7 +47,12 @@ public class MyEncoder extends EncoderBase<ILoggingEvent> {
 
   @Override
   public byte[] headerBytes() {
-    return headerBytes;
+    return EMPTY_BYTES;
+  }
+
+  @Override
+  public byte[] footerBytes() {
+    return EMPTY_BYTES;
   }
 
   @Override
@@ -66,33 +67,29 @@ public class MyEncoder extends EncoderBase<ILoggingEvent> {
     final var outputStream = new ByteArrayOutputStream(bufferSize);
 
     Instant instant = Instant.ofEpochMilli(event.getTimeStamp());
-    JsonWriter writer = json.writer(outputStream);
-    writer.beginObject(properties);
-    writer.name(0);
-    writer.rawValue(instant.toString());
-    writer.name(1);
-    writer.rawValue(event.getLevel().toString());
-    writer.name(2);
-    writer.value(loggerName);
-    writer.name(3);
-    writer.value(message);
-    writer.name(4);
-    writer.value(threadName);
+    try (JsonWriter writer = json.writer(outputStream)) {
+      writer.beginObject(properties);
+      writer.name(0);
+      writer.rawValue(instant.toString());
+      writer.name(1);
+      writer.rawValue(event.getLevel().toString());
+      writer.name(2);
+      writer.value(loggerName);
+      writer.name(3);
+      writer.value(message);
+      writer.name(4);
+      writer.value(threadName);
 
-    if (!stackTraceBody.isEmpty()) {
-      writer.name(5);
-      writer.value(stackTraceBody);
+      if (!stackTraceBody.isEmpty()) {
+        writer.name(5);
+        writer.value(stackTraceBody);
+      }
+
+      writer.endObject();
+      writer.writeNewLine();
     }
-
-    writer.endObject();
-    writer.writeNewLine();
-    writer.flush();
 
     return outputStream.toByteArray();
   }
 
-  @Override
-  public byte[] footerBytes() {
-    return footerBytes;
-  }
 }
