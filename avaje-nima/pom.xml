@@ -11,7 +11,7 @@
   <artifactId>avaje-nima</artifactId>
 
   <properties>
-    <java.release>20</java.release>
+    <java.release>21</java.release>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     <surefire.useModulePath>false</surefire.useModulePath>
   </properties>
