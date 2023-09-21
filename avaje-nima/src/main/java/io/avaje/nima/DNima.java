@@ -116,7 +116,7 @@ final class DNima implements Nima {
       }
       beanScope = scopeBuilder.build();
     }
-    lifecycle.register(new BeanScopeClose(beanScope));
+    lifecycle.postStop(beanScope::close, 1000);
 
     final HttpRouting.Builder routeBuilder = beanScope.get(HttpRouting.Builder.class);
     if (health) {
@@ -145,16 +145,4 @@ final class DNima implements Nima {
     return new DWebServer(configBuilder.build(), lifecycle);
   }
 
-
-  private static final class BeanScopeClose implements AppLifecycle.Callback {
-    private final BeanScope beanScope;
-
-    private BeanScopeClose(BeanScope beanScope) {
-      this.beanScope = beanScope;
-    }
-    @Override
-    public void postStop() {
-      beanScope.close();
-    }
-  }
 }
