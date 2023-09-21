@@ -1,11 +1,8 @@
 package io.avaje.nima;
 
-import io.avaje.config.Config;
 import io.avaje.inject.BeanScope;
 import io.helidon.webserver.WebServer;
 import io.helidon.webserver.WebServerConfig;
-import io.helidon.webserver.http.HttpFeature;
-import io.helidon.webserver.http.HttpRouting;
 
 public interface Nima {
 
@@ -19,51 +16,41 @@ public interface Nima {
 
   Nima configure(WebServerConfig.Builder builder);
 
+  Nima maxConcurrentRequests(int maxConcurrentRequests);
+
+  Nima maxTcpConnections(int maxTcpConnections);
+
+  Nima maxPayloadSize(long maxPayloadSize);
+
+  Nima shutdownGraceMillis(long shutdownGraceMillis);
+
+  /**
+   * Register a Runnable to run on shutdown of the server with ordering.
+   * <p>
+   * The callbacks are executed with order from low to high (0 means run first).
+   * <p>
+   * This will execute after the server has deemed there are no active requests.
+   *
+   * @param callback The lifecycle callback function
+   * @param order    The relative order to execute with 0 meaning run first
+   */
+  Nima register(AppLifecycle.Callback callback, int order);
+
+  /**
+   * Set if the default health endpoints should be included (defaults to true).
+   * <p>
+   * Defaults to true and add the following 2 routes to the web server that respond
+   * based on the {@link AppLifecycle}.
+   * <pre>{@code
+   *
+   *   /health/liveness
+   *   /health/readiness
+   *
+   * }</pre>
+   * @param health Set false to not include the health endpoints
+   */
+  Nima health(boolean health);
+
   WebServer build();
 
-  final class DNima implements Nima {
-
-    private BeanScope beanScope;
-    private WebServerConfig.Builder configBuilder;
-    private int port = Config.getInt("server.port", 8080);
-
-    @Override
-    public Nima configure(WebServerConfig.Builder configBuilder) {
-      this.configBuilder = configBuilder;
-      return this;
-    }
-
-    @Override
-    public Nima configure(BeanScope beanScope) {
-      this.beanScope = beanScope;
-      return this;
-    }
-
-    @Override
-    public Nima port(int port) {
-      this.port = port;
-      return this;
-    }
-
-    /** Build the WebServer without starting it. */
-    @Override
-    public WebServer build() {
-      if (beanScope == null) {
-        final var scopeBuilder = BeanScope.builder();
-        if (configBuilder != null) {
-          scopeBuilder.bean(WebServerConfig.Builder.class, configBuilder);
-        }
-        beanScope = scopeBuilder.build();
-      }
-      final HttpRouting.Builder routeBuilder = beanScope.get(HttpRouting.Builder.class);
-
-      beanScope.list(HttpFeature.class).forEach(routeBuilder::addFeature);
-      if (configBuilder == null) {
-        configBuilder = beanScope.get(WebServerConfig.Builder.class);
-      }
-      configBuilder.addRouting(routeBuilder.build());
-      configBuilder.port(port);
-      return configBuilder.build();
-    }
-  }
 }

@@ -1,6 +1,9 @@
 package io.avaje.nima;
 
+import io.avaje.http.client.HttpClient;
 import io.avaje.inject.BeanScope;
+import io.avaje.inject.spi.Builder;
+import io.avaje.inject.spi.Module;
 import io.helidon.http.Http;
 import io.helidon.webserver.WebServer;
 import io.helidon.webserver.http.HttpRouting;
@@ -8,10 +11,59 @@ import org.junit.jupiter.api.Test;
 
 import java.net.URI;
 
+import static org.assertj.core.api.Assertions.assertThat;
+
 class NimaTest {
 
-  public static void main(String[] args) {
-    var builder = HttpRouting.builder()
+//  static final class Slow implements Runnable {
+//    @Override
+//    public void run() {
+//      try {
+//        for (int i = 0; i < 10; i++) {
+//          System.out.print(" stopping " + i);
+//          Thread.sleep(1000);
+//        }
+//        System.out.println("slow stopped now");
+//      } catch (InterruptedException e) {
+//        e.printStackTrace();
+//      }
+//    }
+//  }
+
+  @Test
+  void initTest() {
+
+    BeanScope scope = BeanScope.builder()
+      .modules(new EmptyModule())
+      .bean(HttpRouting.Builder.class, routes())
+      .build();
+
+    WebServer webServer = Nima.builder()
+      .configure(scope)
+      .port(8085)
+      .maxConcurrentRequests(100)
+      .maxPayloadSize(4_000)
+      .maxTcpConnections(200)
+      .shutdownGraceMillis(5_000)
+      .build()
+      .start();
+
+    var httpClient = HttpClient.builder().baseUrl("http://localhost:8085")
+      .build();
+
+    var res = httpClient.request()
+      .path("hi")
+      .GET()
+      .asString();
+
+    assertThat(res.statusCode()).isEqualTo(200);
+
+    //webServer.stop();
+    //webServer.stop();
+  }
+
+  static HttpRouting.Builder routes() {
+    return HttpRouting.builder()
 
       .any("/*", (req, res) -> {
         System.out.println("before any /*");
@@ -54,21 +106,18 @@ class NimaTest {
 //        System.out.println("Filter222 After" + req.path());
 //      })
       ;
-    BeanScope scope = BeanScope.builder()
-      .bean(HttpRouting.Builder.class, builder)
-      .build();
-
-    WebServer webServer = Nima.builder()
-      .configure(scope)
-      .port(8082)
-      .build()
-      .start();
   }
 
-  @Test
-  void initTest() {
+  static class EmptyModule implements Module {
 
-    //nima.port();
+    @Override
+    public Class<?>[] classes() {
+      return new Class[0];
+    }
 
+    @Override
+    public void build(Builder builder) {
+
+    }
   }
 }
