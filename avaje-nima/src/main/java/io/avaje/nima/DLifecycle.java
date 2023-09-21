@@ -15,9 +15,9 @@ final class DLifecycle implements AppLifecycle {
 
   private static final System.Logger log = AppLog.getLogger("io.avaje.nima");
 
-  private final List<Pair> callbacks = new ArrayList<>();
+  private final List<CallbackOrder> callbacks = new ArrayList<>();
   private final ReentrantLock lock = new ReentrantLock();
-  private Status status = STARTING;
+  private volatile Status status = STARTING;
 
   @Override
   public void register(Callback callback) {
@@ -28,7 +28,7 @@ final class DLifecycle implements AppLifecycle {
   public void register(Callback callback, int order) {
     lock.lock();
     try {
-      callbacks.add(new Pair(callback, order));
+      callbacks.add(new CallbackOrder(callback, order));
     } finally {
       lock.unlock();
     }
@@ -39,20 +39,18 @@ final class DLifecycle implements AppLifecycle {
     return status;
   }
 
-  void setStatus(Status newStatus) {
-    status = newStatus;
-  }
-
-  private void fire(AppLifecycle.Status status) {
-    setStatus(status);
-    Collections.sort(callbacks);
-    for (Pair pair : callbacks) {
+  private void invokeCallbacks(AppLifecycle.Status status) {
+    this.status = status;
+    if (status == STARTING) {
+      Collections.sort(callbacks);
+    }
+    for (CallbackOrder callbackOrder : callbacks) {
       try {
         switch (status) {
-          case STARTING -> pair.callback.preStart();
-          case STARTED -> pair.callback.postStart();
-          case STOPPING -> pair.callback.preStop();
-          case STOPPED -> pair.callback.postStop();
+          case STARTING -> callbackOrder.callback.preStart();
+          case STARTED -> callbackOrder.callback.postStart();
+          case STOPPING -> callbackOrder.callback.preStop();
+          case STOPPED -> callbackOrder.callback.postStop();
         }
       } catch (Exception e) {
         log.log(Level.ERROR, "Error running shutdown runnable", e);
@@ -63,9 +61,14 @@ final class DLifecycle implements AppLifecycle {
   }
 
   void start(WebServer delegate) {
-    fire(STARTING);
-    delegate.start();
-    fire(STARTED);
+    lock.lock();
+    try {
+      invokeCallbacks(STARTING);
+      delegate.start();
+      invokeCallbacks(STARTED);
+    } finally {
+      lock.unlock();
+    }
   }
 
   void stop(WebServer delegate) {
@@ -74,27 +77,26 @@ final class DLifecycle implements AppLifecycle {
       if (status == STOPPED) {
         log.log(Level.INFO, "already stopped");
       } else {
-        fire(STOPPING);
+        invokeCallbacks(STOPPING);
         delegate.stop();
-        fire(STOPPED);
+        invokeCallbacks(STOPPED);
       }
     } finally {
       lock.unlock();
     }
   }
 
-
-  static final class Pair implements Comparable<Pair> {
+  static final class CallbackOrder implements Comparable<CallbackOrder> {
     private final Callback callback;
     private final int order;
 
-    Pair(Callback callback, int order) {
+    CallbackOrder(Callback callback, int order) {
       this.callback = callback;
       this.order = order;
     }
 
     @Override
-    public int compareTo(Pair other) {
+    public int compareTo(CallbackOrder other) {
       return Integer.compare(order, other.order);
     }
   }
