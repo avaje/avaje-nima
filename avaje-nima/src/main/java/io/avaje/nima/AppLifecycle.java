@@ -12,11 +12,9 @@ public interface AppLifecycle {
     STOPPED
   }
 
-  interface Event {
-    Status status();
-  }
 
   interface Callback {
+
     default void preStart() {
       // do nothing by default
     }
@@ -33,6 +31,7 @@ public interface AppLifecycle {
       // do nothing by default
     }
   }
+
 
   /**
    * Return the current status.
@@ -56,16 +55,14 @@ public interface AppLifecycle {
   }
 
   /**
-   * Register a Runnable to run on shutdown of the server.
-   * <p>
-   * This will execute after the server has deemed there are no active requests.
+   * Register a lifecycle callback.
    */
   void register(Callback callback);
 
   /**
-   * Register a Runnable to run on shutdown of the server with ordering.
+   * Register a lifecycle callback.
    * <p>
-   * The runnables are executed with order from low to high (0 means run first).
+   * The callbacks are executed with order from low to high (0 means run first).
    * <p>
    * This will execute after the server has deemed there are no active requests.
    *
@@ -73,4 +70,24 @@ public interface AppLifecycle {
    * @param order    The relative order to execute with 0 meaning run first
    */
   void register(Callback callback, int order);
+
+  /**
+   * Register a preStart lifecycle callback.
+   */
+  void preStart(Runnable preStartAction, int order);
+
+  /**
+   * Register a postStart lifecycle callback.
+   */
+  void postStart(Runnable postStartAction, int order);
+
+  /**
+   * Register a preStop lifecycle callback.
+   */
+  void preStop(Runnable preStopAction, int order);
+
+  /**
+   * Register a postStop lifecycle callback.
+   */
+  void postStop(Runnable postStopAction, int order);
 }

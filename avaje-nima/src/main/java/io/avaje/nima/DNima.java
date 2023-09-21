@@ -79,6 +79,30 @@ final class DNima implements Nima {
     return this;
   }
 
+  @Override
+  public Nima preStart(Runnable preStartAction, int order) {
+    lifecycle.preStart(preStartAction, order);
+    return this;
+  }
+
+  @Override
+  public Nima postStart(Runnable postStartAction, int order) {
+    lifecycle.postStart(postStartAction, order);
+    return this;
+  }
+
+  @Override
+  public Nima preStop(Runnable preStopAction, int order) {
+    lifecycle.preStop(preStopAction, order);
+    return this;
+  }
+
+  @Override
+  public Nima postStop(Runnable postStopAction, int order) {
+    lifecycle.postStop(postStopAction, order);
+    return this;
+  }
+
   /**
    * Build the WebServer without starting it.
    */

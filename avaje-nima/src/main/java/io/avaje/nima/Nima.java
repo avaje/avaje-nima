@@ -37,6 +37,26 @@ public interface Nima {
   Nima register(AppLifecycle.Callback callback, int order);
 
   /**
+   * Register a preStart lifecycle callback.
+   */
+  Nima preStart(Runnable preStartAction, int order);
+
+  /**
+   * Register a postStart lifecycle callback.
+   */
+  Nima postStart(Runnable postStartAction, int order);
+
+  /**
+   * Register a preStop lifecycle callback.
+   */
+  Nima preStop(Runnable preStopAction, int order);
+
+  /**
+   * Register a postStop lifecycle callback.
+   */
+  Nima postStop(Runnable postStopAction, int order);
+
+  /**
    * Set if the default health endpoints should be included (defaults to true).
    * <p>
    * Defaults to true and add the following 2 routes to the web server that respond

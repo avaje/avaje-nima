@@ -35,6 +35,26 @@ final class DLifecycle implements AppLifecycle {
   }
 
   @Override
+  public void preStart(Runnable preStartAction, int order) {
+    register(DCallback.preStart(preStartAction), order);
+  }
+
+  @Override
+  public void postStart(Runnable postStartAction, int order) {
+    register(DCallback.postStart(postStartAction), order);
+  }
+
+  @Override
+  public void preStop(Runnable preStopAction, int order) {
+    register(DCallback.preStop(preStopAction), order);
+  }
+
+  @Override
+  public void postStop(Runnable postStopAction, int order) {
+    register(DCallback.postStop(postStopAction), order);
+  }
+
+  @Override
   public Status status() {
     return status;
   }
