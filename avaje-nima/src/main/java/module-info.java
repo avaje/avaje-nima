@@ -11,5 +11,7 @@ module io.avaje.nima {
   requires transitive io.avaje.jsonb.plugin;
   requires transitive io.helidon.webserver;
 
+  requires static java.net.http;
+
   provides io.avaje.inject.spi.Plugin with DefaultConfigProvider;
 }
