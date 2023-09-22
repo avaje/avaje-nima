@@ -40,9 +40,12 @@
 
   <profiles>
     <profile>
-      <id>test</id>
+      <id>central</id>
+    </profile>
+    <profile>
+      <id>default</id>
       <activation>
-        <activeByDefault/>
+        <activeByDefault>true</activeByDefault>
       </activation>
       <modules>
         <module>test-avaje-nima</module>
