@@ -11,7 +11,7 @@ class SlowController {
   void stopMe() throws InterruptedException {
     System.out.println("stopMe");
     for (int i = 0; i < 3; i++) {
-      Thread.sleep(500);
+      Thread.sleep(100);
       System.out.print(" " + i);
     }
     System.out.println("stop slow");
@@ -19,9 +19,9 @@ class SlowController {
 
   @Produces("text/plain")
   @Get
-  String slow(@Default("10") int count ) throws InterruptedException {
+  String slow(@Default("3") int count ) throws InterruptedException {
     for (int i = 0; i < count; i++) {
-      Thread.sleep(500);
+      Thread.sleep(100);
       System.out.print(" " + i);
     }
     System.out.println("slow");
