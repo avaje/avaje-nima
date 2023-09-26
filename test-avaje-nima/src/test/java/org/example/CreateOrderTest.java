@@ -1,22 +1,29 @@
 package org.example;
 
-import io.avaje.http.client.HttpClient;
-import io.avaje.http.client.HttpException;
-import io.avaje.inject.test.InjectTest;
-import jakarta.inject.Inject;
-import org.example.api.*;
-import org.junit.jupiter.api.Test;
+import static org.assertj.core.api.Assertions.assertThat;
 
 import java.net.http.HttpResponse;
 import java.time.LocalDate;
 import java.util.List;
-import static org.assertj.core.api.Assertions.assertThat;
+
+import org.example.api.Address;
+import org.example.api.CreateOrderResponse;
+import org.example.api.Customer;
+import org.example.api.CustomerBuilder;
+import org.example.api.OrderBuilder;
+import org.example.api.OrderLine;
+import org.junit.jupiter.api.Test;
+
+import io.avaje.http.client.HttpException;
+import io.avaje.inject.test.InjectTest;
+import io.avaje.nima.test.TestClient;
+import jakarta.inject.Inject;
 
 @InjectTest
 class CreateOrderTest {
 
   @Inject
-  static HttpClient httpClient;
+  static TestClient httpClient;
 
   @Test
   void createOrder() {

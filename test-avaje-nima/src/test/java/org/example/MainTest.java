@@ -1,23 +1,24 @@
 package org.example;
 
-import io.avaje.http.client.BodyReader;
-import io.avaje.http.client.HttpClient;
-import io.avaje.inject.test.InjectTest;
-import jakarta.inject.Inject;
+import static org.assertj.core.api.Assertions.assertThat;
+
+import java.net.http.HttpResponse;
+
 import org.example.api.Foo;
 import org.example.api.ValidationErrorMessage;
 import org.example.web.HelloController;
 import org.junit.jupiter.api.Test;
 
-import java.net.http.HttpResponse;
-
-import static org.assertj.core.api.Assertions.assertThat;
+import io.avaje.http.client.BodyReader;
+import io.avaje.inject.test.InjectTest;
+import io.avaje.nima.test.TestClient;
+import jakarta.inject.Inject;
 
 @InjectTest
 class MainTest {
 
   @Inject
-  static HttpClient httpClient;
+  static TestClient httpClient;
 
   @Test
   void one() {
