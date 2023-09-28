@@ -5,7 +5,7 @@
   <parent>
     <groupId>io.avaje</groupId>
     <artifactId>avaje-nima-parent</artifactId>
-    <version>0.3-SNAPSHOT</version>
+    <version>0.0.3-SNAPSHOT</version>
   </parent>
 
   <artifactId>test-avaje-nima</artifactId>
@@ -35,7 +35,7 @@
     <dependency>
       <groupId>io.avaje</groupId>
       <artifactId>avaje-nima</artifactId>
-      <version>0.3-SNAPSHOT</version>
+      <version>0.0.3-SNAPSHOT</version>
     </dependency>
 
     <dependency>
@@ -48,7 +48,7 @@
     <dependency>
       <groupId>io.avaje</groupId>
       <artifactId>avaje-nima-test</artifactId>
-      <version>0.3-SNAPSHOT</version>
+      <version>0.0.3-SNAPSHOT</version>
       <scope>test</scope>
     </dependency>
 
@@ -74,7 +74,7 @@
             <path>
               <groupId>io.avaje</groupId>
               <artifactId>avaje-nima-generator</artifactId>
-              <version>0.3-SNAPSHOT</version>
+              <version>0.0.3-SNAPSHOT</version>
             </path>
           </annotationProcessorPaths>
         </configuration>
