@@ -4,7 +4,7 @@ import io.avaje.http.client.HttpClient;
 import io.avaje.inject.BeanScope;
 import io.avaje.inject.spi.Builder;
 import io.avaje.inject.spi.Module;
-import io.helidon.http.Http;
+import io.helidon.http.Status;
 import io.helidon.webserver.WebServer;
 import io.helidon.webserver.http.HttpRouting;
 import org.junit.jupiter.api.Test;
@@ -71,7 +71,7 @@ class NimaTest {
       })
       .get("/redir", (req, res) -> {
         System.out.println("redir");
-        res.status(Http.Status.MOVED_PERMANENTLY_301);
+        res.status(Status.MOVED_PERMANENTLY_301);
         res.headers().location(URI.create("/hi"));
         res.send();
         //res.send("hi");

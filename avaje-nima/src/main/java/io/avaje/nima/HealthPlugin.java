@@ -1,6 +1,7 @@
 package io.avaje.nima;
 
-import io.helidon.http.Http;
+import io.helidon.http.HeaderName;
+import io.helidon.http.HeaderNames;
 import io.helidon.webserver.http.HttpRouting;
 import io.helidon.webserver.http.ServerRequest;
 import io.helidon.webserver.http.ServerResponse;
@@ -11,7 +12,7 @@ import io.helidon.webserver.http.ServerResponse;
  */
 final class HealthPlugin {
 
-  private static final Http.HeaderName contentType = Http.HeaderNames.CONTENT_TYPE;
+  private static final HeaderName contentType = HeaderNames.CONTENT_TYPE;
 
   private final AppLifecycle lifecycle;
 
