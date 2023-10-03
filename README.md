@@ -26,7 +26,7 @@ The generator module transitively brings in the following avaje services and ann
 # How to use
 
 ## Step 1 - Add dependencies
-Add the dependency.
+Add the `avaje-nima` dependency.
 
 ```xml
 <dependency>
@@ -36,7 +36,20 @@ Add the dependency.
 </dependency>
 ```
 
-And add avaje-jsonb-generator as an annotation processor. (it will transitively include all the avaje processors)
+Add the `avaje-nima-test` as a test dependency. This is to support testing
+the application by starting the webserver on a random port for tests.
+
+```xml
+<dependency>
+    <groupId>io.avaje</groupId>
+    <artifactId>avaje-nima-test</artifactId>
+    <version>0.4-SNAPSHOT</version>
+    <scope>test</scope>
+</dependency>
+```
+
+And add `avaje-nima-generator` as an annotation processor. This will transitively
+include all the avaje processors.
 ```xml
 <dependency>
     <groupId>io.avaje</groupId>
@@ -47,16 +60,93 @@ And add avaje-jsonb-generator as an annotation processor. (it will transitively 
 </dependency>
 ```
 
-## Step 2 - Use the `Nima` Class to start your application
-The `Nima` class will start a `BeanScope`, register generated controller routes, and start the helidon server.
-
-The `Nima` class will search your `BeanScope` for a `WebServerConfig.Builder` class, if you provide one in your `BeanScope` it will be used to configure the webserver.
+## Step 2 - Create a controller
 
 ```java
-void main() {
-    Nima.builder().build();
+@Controller
+class HelloController {
+
+    @Produces("text/plain")
+    @Get("/")
+    String hello() {
+        return "hello world";
+    }
 }
 ```
+On compilation, a `HelloController$Route` will be generated into `generated-sources`. This will
+have Helidon SE adapter code for the HelloController registering the path and handling the
+request and response.
+
+On compilation, a `HelloController$DI` and `HelloController$Route$DI` will be generated to handle
+dependency injection for the controller and the route adapter.
+
+
+## Step 3 - Use the `Nima` Class to start the application
+The `Nima` class will start a `BeanScope`, register generated controller routes, and start the helidon webserver.
+
+The `Nima` class will search your `BeanScope` for a `WebServerConfig.Builder` class, if you provide one in your
+`BeanScope` it will be used to configure the webserver.
+
+```java
+  void main() {
+
+    var webServer = Nima.builder()
+      .port(8080)
+      .build();
+
+    webServer.start();
+  }
+```
+
+## Step 4 - Run and curl test
+Run the application and use curl to test
+
+```java
+curl localhost:8080
+```
+
+## Step 5 - Create a unit test
+
+Create a unit test that will start the application on a random port, and make a call to
+the controller method and assert the response is as expected.
+
+```java
+package org.example;
+
+import io.avaje.http.client.HttpClient;
+import io.avaje.inject.test.InjectTest;
+import jakarta.inject.Inject;
+import org.junit.jupiter.api.Test;
+
+import java.net.http.HttpResponse;
+
+import static org.assertj.core.api.Assertions.assertThat;
+
+@InjectTest
+class MainTest {
+
+    // Injecting a HttpClient means the test plugin will
+    // automatically start the application on a random port
+    // and inject the client (and shutdown the webserver after
+    // the test has completed).
+    @Inject
+    static HttpClient httpClient;
+
+    @Test
+    void hello() {
+        HttpResponse<String> res = httpClient.request()
+          .GET()
+          .asString();
+
+      assertThat(res.statusCode()).isEqualTo(200);
+      assertThat(res.body()).isEqualTo("hello world");
+    }
+
+}
+
+```
+
+
 
 ## module use
 
