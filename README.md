@@ -63,11 +63,14 @@ include all the avaje processors.
 ## Step 2 - Create a controller
 
 ```java
+import io.avaje.http.api.*;
+
 @Controller
+@Path("/")
 class HelloController {
 
     @Produces("text/plain")
-    @Get("/")
+    @Get
     String hello() {
         return "hello world";
     }
@@ -123,7 +126,7 @@ import java.net.http.HttpResponse;
 import static org.assertj.core.api.Assertions.assertThat;
 
 @InjectTest
-class MainTest {
+class HelloTest {
 
     // Injecting a HttpClient means the test plugin will
     // automatically start the application on a random port
