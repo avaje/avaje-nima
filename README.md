@@ -7,20 +7,20 @@
 Convenience Library to make using the varios avaje libraries with helidon easier.
 
 Along with Helidon SE, It transitively brings in the following avaje services:
-- `config`
-- `http-api`
-- `http-client`
-- `inject`
-- `jsonb`
-- `validator`
+- [`config`](https://avaje.io/config)
+- [`http-api`](https://avaje.io/http/)
+- [`http-client`](https://avaje.io/http-client/)
+- [`inject`](https://avaje.io/inject/)
+- [`jsonb`](https://avaje.io/jsonb/)
+- [`validator`](https://avaje.io/validator/)
 
-The generator module transitively brings in the following avaje services and annotation processors:
+The generator module transitively brings in the following avaje services and annotation processors (which will not be included into your final jar):
 - `http-client-generator`
 - `http-helidon-generator`
 - `inject-generator`
 - `jsonb-generator`
-- `record-builder`
-- `spi-service`
+- [`record-builder`](https://github.com/avaje/avaje-record-builder)
+- [`spi-service`](https://github.com/avaje/avaje-spi-service)
 - `validator-generator`
 
 # How to use
@@ -43,7 +43,7 @@ the application by starting the webserver on a random port for tests.
 <dependency>
     <groupId>io.avaje</groupId>
     <artifactId>avaje-nima-test</artifactId>
-    <version>0.4-SNAPSHOT</version>
+    <version>${version}</version>
     <scope>test</scope>
 </dependency>
 ```
@@ -128,9 +128,9 @@ import static org.assertj.core.api.Assertions.assertThat;
 @InjectTest
 class HelloTest {
 
-    // Injecting a HttpClient means the test plugin will
+    // Injecting a HttpClient into a test means the test plugin will
     // automatically start the application on a random port
-    // and inject the client (and shutdown the webserver after
+    // and inject a client with a base url pointing to the server (and shutdown the webserver after
     // the test has completed).
     @Inject
     static HttpClient httpClient;
@@ -148,10 +148,7 @@ class HelloTest {
 }
 
 ```
-
-
-
-## module use
+## Module use
 
 The `io.avaje.nima` module transitively includes:
 - `io.avaje.config`
@@ -160,7 +157,6 @@ The `io.avaje.nima` module transitively includes:
 - `io.avaje.jsonb`
 - `io.avaje.jsonb.plugin`
 - `io.helidon.webserver`
-
 
 ```java
 module nima.example {
