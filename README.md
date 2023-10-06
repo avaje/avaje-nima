@@ -6,7 +6,7 @@
 
 Convenience Library to make using the varios avaje libraries with helidon easier.
 
-Along with Helidon SE, It transitively brings in the following avaje services:
+Along with Helidon SE, It transitively brings in the following avaje libraries:
 - [`config`](https://avaje.io/config)
 - [`http-api`](https://avaje.io/http/)
 - [`http-client`](https://avaje.io/http-client/)
