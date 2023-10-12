@@ -24,7 +24,7 @@
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 
     <avaje-config.version>3.8</avaje-config.version>
-    <avaje-inject.version>9.7</avaje-inject.version>
+    <avaje-inject.version>9.8-RC1</avaje-inject.version>
     <avaje-jsonb.version>1.8</avaje-jsonb.version>
     <avaje-http.version>2.0-RC10</avaje-http.version>
     <avaje-validator.version>1.1</avaje-validator.version>
