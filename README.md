@@ -60,6 +60,19 @@ include all the avaje processors.
 </dependency>
 ```
 
+**JDK 22+**
+
+In JDK 22+, annotation processors are disabled by default, you will need to add a flag in maven to re-enable.
+```xml
+<plugin>
+  <groupId>org.apache.maven.plugins</groupId>
+  <artifactId>maven-compiler-plugin</artifactId>
+  <configuration>
+    <compilerArgument>-proc:full</compilerArgument>
+  </configuration>
+</plugin>
+```
+
 ## Step 2 - Create a controller
 
 ```java
