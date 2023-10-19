@@ -59,26 +59,17 @@
       <scope>test</scope>
     </dependency>
 
-  </dependencies>
+    <dependency>
+      <groupId>io.avaje</groupId>
+      <artifactId>avaje-nima-generator</artifactId>
+      <version>0.5-SNAPSHOT</version>
+      <scope>provided</scope>
+    </dependency>
 
+  </dependencies>
 
   <build>
     <plugins>
-      <plugin>
-        <groupId>org.apache.maven.plugins</groupId>
-        <artifactId>maven-compiler-plugin</artifactId>
-        <version>3.11.0</version>
-        <configuration>
-          <release>21</release>
-          <annotationProcessorPaths>
-            <path>
-              <groupId>io.avaje</groupId>
-              <artifactId>avaje-nima-generator</artifactId>
-              <version>0.5-SNAPSHOT</version>
-            </path>
-          </annotationProcessorPaths>
-        </configuration>
-      </plugin>
 
       <plugin>
         <groupId>io.avaje</groupId>
