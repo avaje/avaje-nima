@@ -140,7 +140,7 @@ final class DNima implements Nima {
       configBuilder.shutdownGracePeriod(Duration.ofMillis(shutdownGraceMillis));
     }
     configBuilder.shutdownHook(false);
-    configBuilder.addRouting(routeBuilder.build());
+    configBuilder.addRouting(routeBuilder);
     configBuilder.port(port);
     return new DWebServer(configBuilder.build(), lifecycle);
   }

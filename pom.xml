@@ -28,7 +28,7 @@
     <avaje-jsonb.version>1.8</avaje-jsonb.version>
     <avaje-http.version>2.0-RC12</avaje-http.version>
     <avaje-validator.version>1.1</avaje-validator.version>
-    <nima.version>4.0.0-RC1</nima.version>
+    <nima.version>4.0.0-RC2</nima.version>
 
   </properties>
 
