@@ -15,7 +15,6 @@
     <dependency>
       <groupId>io.avaje</groupId>
       <artifactId>avaje-nima</artifactId>
-      <version>0.5-SNAPSHOT</version>
       <scope>provided</scope>
     </dependency>
 
