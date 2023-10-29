@@ -1,15 +1,16 @@
 package io.avaje.nima;
 
+import java.time.Duration;
+
 import io.avaje.config.Config;
 import io.avaje.inject.BeanScope;
 import io.helidon.webserver.WebServer;
 import io.helidon.webserver.WebServerConfig;
 import io.helidon.webserver.http.HttpFeature;
 import io.helidon.webserver.http.HttpRouting;
+import io.helidon.webserver.spi.ServerFeature;
 
-import java.time.Duration;
-
-final class DNima implements Nima {
+final class DNimaBuilder implements Nima.Builder {
 
   private BeanScope beanScope;
   private WebServerConfig.Builder configBuilder;
@@ -18,7 +19,7 @@ final class DNima implements Nima {
   private int maxConcurrentRequests = Config.getInt("server.maxConcurrentRequests", 0);
   private int maxTcpConnections = Config.getInt("server.maxTcpConnections", 0);
   private long maxPayloadSize = Config.getLong("server.maxPayloadSize", 0);
-  //private boolean shutdownHook = Config.getBool("server.shutdownHook", false);
+  // private boolean shutdownHook = Config.getBool("server.shutdownHook", false);
   private long shutdownGraceMillis = Config.getInt("server.shutdownGraceMillis", 0);
 
   private boolean health = Config.getBool("server.health", true);
@@ -26,88 +27,86 @@ final class DNima implements Nima {
   private final DLifecycle lifecycle = new DLifecycle();
 
   @Override
-  public Nima configure(WebServerConfig.Builder configBuilder) {
+  public Nima.Builder configure(WebServerConfig.Builder configBuilder) {
     this.configBuilder = configBuilder;
     return this;
   }
 
   @Override
-  public Nima configure(BeanScope beanScope) {
+  public Nima.Builder configure(BeanScope beanScope) {
     this.beanScope = beanScope;
     return this;
   }
 
   @Override
-  public Nima port(int port) {
+  public Nima.Builder port(int port) {
     this.port = port;
     return this;
   }
 
   @Override
-  public Nima maxConcurrentRequests(int maxConcurrentRequests) {
+  public Nima.Builder maxConcurrentRequests(int maxConcurrentRequests) {
     this.maxConcurrentRequests = maxConcurrentRequests;
     return this;
   }
 
   @Override
-  public Nima maxTcpConnections(int maxTcpConnections) {
+  public Nima.Builder maxTcpConnections(int maxTcpConnections) {
     this.maxTcpConnections = maxTcpConnections;
     return this;
   }
 
   @Override
-  public Nima maxPayloadSize(long maxPayloadSize) {
+  public Nima.Builder maxPayloadSize(long maxPayloadSize) {
     this.maxPayloadSize = maxPayloadSize;
     return this;
   }
 
   @Override
-  public Nima shutdownGraceMillis(long shutdownGraceMillis) {
+  public Nima.Builder shutdownGraceMillis(long shutdownGraceMillis) {
     this.shutdownGraceMillis = shutdownGraceMillis;
     return this;
   }
 
   @Override
-  public Nima health(boolean health) {
+  public Nima.Builder health(boolean health) {
     this.health = health;
     return this;
   }
 
   @Override
-  public Nima register(AppLifecycle.Callback callback, int order) {
+  public Nima.Builder register(AppLifecycle.Callback callback, int order) {
     lifecycle.register(callback, order);
     return this;
   }
 
   @Override
-  public Nima preStart(Runnable preStartAction, int order) {
+  public Nima.Builder preStart(Runnable preStartAction, int order) {
     lifecycle.preStart(preStartAction, order);
     return this;
   }
 
   @Override
-  public Nima postStart(Runnable postStartAction, int order) {
+  public Nima.Builder postStart(Runnable postStartAction, int order) {
     lifecycle.postStart(postStartAction, order);
     return this;
   }
 
   @Override
-  public Nima preStop(Runnable preStopAction, int order) {
+  public Nima.Builder preStop(Runnable preStopAction, int order) {
     lifecycle.preStop(preStopAction, order);
     return this;
   }
 
   @Override
-  public Nima postStop(Runnable postStopAction, int order) {
+  public Nima.Builder postStop(Runnable postStopAction, int order) {
     lifecycle.postStop(postStopAction, order);
     return this;
   }
 
-  /**
-   * Build the WebServer without starting it.
-   */
+  /** Build the WebServer without starting it. */
   @Override
-  public WebServer build() {
+  public Nima build() {
     if (beanScope == null) {
       final var scopeBuilder = BeanScope.builder();
       if (configBuilder != null) {
@@ -127,6 +126,9 @@ final class DNima implements Nima {
     if (configBuilder == null) {
       configBuilder = beanScope.get(WebServerConfig.Builder.class);
     }
+
+    beanScope.list(ServerFeature.class).forEach(configBuilder::addFeature);
+
     if (maxConcurrentRequests > 0) {
       configBuilder.maxConcurrentRequests(maxConcurrentRequests);
     }
@@ -142,7 +144,34 @@ final class DNima implements Nima {
     configBuilder.shutdownHook(false);
     configBuilder.addRouting(routeBuilder);
     configBuilder.port(port);
-    return new DWebServer(configBuilder.build(), lifecycle);
+    return new DNima(beanScope, new DWebServer(configBuilder.build(), lifecycle));
   }
 
+  static final class DNima implements Nima {
+
+    private final BeanScope beanScope;
+    private final WebServer webServer;
+
+    public DNima(BeanScope beanScope, WebServer webServer) {
+      this.beanScope = beanScope;
+      this.webServer = webServer;
+    }
+
+    @Override
+    public BeanScope beanScope() {
+      return beanScope;
+    }
+
+    @Override
+    public WebServer server() {
+      return webServer;
+    }
+
+    @Override
+    public WebServer start() {
+      return webServer.start();
+    }
+  }
 }
+
+

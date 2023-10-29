@@ -6,71 +6,73 @@ import io.helidon.webserver.WebServerConfig;
 
 public interface Nima {
 
-  static Nima builder() {
-    return new DNima();
+  static Builder builder() {
+    return new DNimaBuilder();
   }
 
-  Nima port(int port);
+  BeanScope beanScope();
 
-  Nima configure(BeanScope beanScope);
+  WebServer server();
 
-  Nima configure(WebServerConfig.Builder builder);
+  WebServer start();
 
-  Nima maxConcurrentRequests(int maxConcurrentRequests);
+  public interface Builder {
 
-  Nima maxTcpConnections(int maxTcpConnections);
+    Builder port(int port);
 
-  Nima maxPayloadSize(long maxPayloadSize);
+    Builder configure(BeanScope beanScope);
 
-  Nima shutdownGraceMillis(long shutdownGraceMillis);
+    Builder configure(WebServerConfig.Builder builder);
 
-  /**
-   * Register a Runnable to run on shutdown of the server with ordering.
-   * <p>
-   * The callbacks are executed with order from low to high (0 means run first).
-   * <p>
-   * This will execute after the server has deemed there are no active requests.
-   *
-   * @param callback The lifecycle callback function
-   * @param order    The relative order to execute with 0 meaning run first
-   */
-  Nima register(AppLifecycle.Callback callback, int order);
+    Builder maxConcurrentRequests(int maxConcurrentRequests);
 
-  /**
-   * Register a preStart lifecycle callback.
-   */
-  Nima preStart(Runnable preStartAction, int order);
+    Builder maxTcpConnections(int maxTcpConnections);
 
-  /**
-   * Register a postStart lifecycle callback.
-   */
-  Nima postStart(Runnable postStartAction, int order);
+    Builder maxPayloadSize(long maxPayloadSize);
 
-  /**
-   * Register a preStop lifecycle callback.
-   */
-  Nima preStop(Runnable preStopAction, int order);
+    Builder shutdownGraceMillis(long shutdownGraceMillis);
 
-  /**
-   * Register a postStop lifecycle callback.
-   */
-  Nima postStop(Runnable postStopAction, int order);
+    /**
+     * Register a Runnable to run on shutdown of the server with ordering.
+     *
+     * <p>The callbacks are executed with order from low to high (0 means run first).
+     *
+     * <p>This will execute after the server has deemed there are no active requests.
+     *
+     * @param callback The lifecycle callback function
+     * @param order The relative order to execute with 0 meaning run first
+     */
+    Builder register(AppLifecycle.Callback callback, int order);
 
-  /**
-   * Set if the default health endpoints should be included (defaults to true).
-   * <p>
-   * Defaults to true and add the following 2 routes to the web server that respond
-   * based on the {@link AppLifecycle}.
-   * <pre>{@code
-   *
-   *   /health/liveness
-   *   /health/readiness
-   *
-   * }</pre>
-   * @param health Set false to not include the health endpoints
-   */
-  Nima health(boolean health);
+    /** Register a preStart lifecycle callback. */
+    Builder preStart(Runnable preStartAction, int order);
 
-  WebServer build();
+    /** Register a postStart lifecycle callback. */
+    Builder postStart(Runnable postStartAction, int order);
+
+    /** Register a preStop lifecycle callback. */
+    Builder preStop(Runnable preStopAction, int order);
+
+    /** Register a postStop lifecycle callback. */
+    Builder postStop(Runnable postStopAction, int order);
+
+    /**
+     * Set if the default health endpoints should be included (defaults to true).
+     *
+     * <p>Defaults to true and add the following 2 routes to the web server that respond based on
+     * the {@link AppLifecycle}.
+     *
+     * <pre>{@code
+     * /health/liveness
+     * /health/readiness
+     *
+     * }</pre>
+     *
+     * @param health Set false to not include the health endpoints
+     */
+    Builder health(boolean health);
+
+    Nima build();
+  }
 
 }

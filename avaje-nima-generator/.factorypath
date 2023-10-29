@@ -1,0 +1,11 @@
+<factorypath>
+    <factorypathentry kind="VARJAR" id="M2_REPO/io/avaje/avaje-http-client-generator/2.0/avaje-http-client-generator-2.0.jar" enabled="true" runInBatchMode="false"/>
+    <factorypathentry kind="VARJAR" id="M2_REPO/io/avaje/avaje-http-helidon-generator/2.0/avaje-http-helidon-generator-2.0.jar" enabled="true" runInBatchMode="false"/>
+    <factorypathentry kind="VARJAR" id="M2_REPO/jakarta/inject/jakarta.inject-api/2.0.1/jakarta.inject-api-2.0.1.jar" enabled="true" runInBatchMode="false"/>
+    <factorypathentry kind="VARJAR" id="M2_REPO/io/avaje/avaje-lang/1.1/avaje-lang-1.1.jar" enabled="true" runInBatchMode="false"/>
+    <factorypathentry kind="VARJAR" id="M2_REPO/io/avaje/avaje-applog/1.0/avaje-applog-1.0.jar" enabled="true" runInBatchMode="false"/>
+    <factorypathentry kind="VARJAR" id="M2_REPO/io/avaje/avaje-jsonb-generator/1.8/avaje-jsonb-generator-1.8.jar" enabled="true" runInBatchMode="false"/>
+    <factorypathentry kind="VARJAR" id="M2_REPO/io/avaje/avaje-validator-generator/1.2/avaje-validator-generator-1.2.jar" enabled="true" runInBatchMode="false"/>
+    <factorypathentry kind="VARJAR" id="M2_REPO/io/avaje/avaje-spi-service/1.1/avaje-spi-service-1.1.jar" enabled="true" runInBatchMode="false"/>
+    <factorypathentry kind="VARJAR" id="M2_REPO/io/avaje/avaje-spi-core/1.1/avaje-spi-core-1.1.jar" enabled="true" runInBatchMode="false"/>
+</factorypath>
