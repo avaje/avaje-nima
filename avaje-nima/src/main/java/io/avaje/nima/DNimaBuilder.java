@@ -1,7 +1,5 @@
 package io.avaje.nima;
 
-import java.time.Duration;
-
 import io.avaje.config.Config;
 import io.avaje.inject.BeanScope;
 import io.helidon.webserver.WebServer;
@@ -9,6 +7,8 @@ import io.helidon.webserver.WebServerConfig;
 import io.helidon.webserver.http.HttpFeature;
 import io.helidon.webserver.http.HttpRouting;
 import io.helidon.webserver.spi.ServerFeature;
+
+import java.time.Duration;
 
 final class DNimaBuilder implements Nima.Builder {
 
@@ -104,7 +104,9 @@ final class DNimaBuilder implements Nima.Builder {
     return this;
   }
 
-  /** Build the WebServer without starting it. */
+  /**
+   * Build the WebServer without starting it.
+   */
   @Override
   public Nima build() {
     if (beanScope == null) {
