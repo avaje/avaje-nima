@@ -4,32 +4,91 @@ import io.avaje.inject.BeanScope;
 import io.helidon.webserver.WebServer;
 import io.helidon.webserver.WebServerConfig;
 
+/**
+ * Nima is used to bootstrap the application.
+ *
+ * <pre>{@code
+ *
+ *  var webServer = Nima.builder()
+ *    .port(8082)
+ *    .build();
+ *
+ *  webServer.start();
+ *
+ * }</pre>
+ */
 public interface Nima {
 
+  /**
+   * Create the Nima builder.
+   *
+   * <pre>{@code
+   *
+   *  var webServer = Nima.builder()
+   *    .port(8082)
+   *    .build();
+   *
+   *  webServer.start();
+   *
+   * }</pre>
+   */
   static Builder builder() {
     return new DNimaBuilder();
   }
 
+  /**
+   * Return the BeanScope.
+   */
   BeanScope beanScope();
 
+  /**
+   * Return the Helidon WebServer.
+   */
   WebServer server();
 
+  /**
+   * Start the Helidon WebServer and return it.
+   */
   WebServer start();
 
-  public interface Builder {
+  /**
+   * Builder for Nima.
+   */
+  interface Builder {
 
+    /**
+     * Set the port to use. The default port is 8080.
+     */
     Builder port(int port);
 
+    /**
+     * Configure using the explicit BeanScope.
+     */
     Builder configure(BeanScope beanScope);
 
+    /**
+     * Configure using an explicit Helidon WebServerConfig.Builder.
+     */
     Builder configure(WebServerConfig.Builder builder);
 
+    /**
+     * Set the max current requests.
+     */
     Builder maxConcurrentRequests(int maxConcurrentRequests);
 
+    /**
+     * Set the max tcp connections.
+     */
     Builder maxTcpConnections(int maxTcpConnections);
 
+    /**
+     * Set the allowed max payload size.
+     */
     Builder maxPayloadSize(long maxPayloadSize);
 
+    /**
+     * Set the maximum graceful shutdown time.
+     */
     Builder shutdownGraceMillis(long shutdownGraceMillis);
 
     /**
@@ -40,20 +99,28 @@ public interface Nima {
      * <p>This will execute after the server has deemed there are no active requests.
      *
      * @param callback The lifecycle callback function
-     * @param order The relative order to execute with 0 meaning run first
+     * @param order    The relative order to execute with 0 meaning run first
      */
     Builder register(AppLifecycle.Callback callback, int order);
 
-    /** Register a preStart lifecycle callback. */
+    /**
+     * Register a preStart lifecycle callback.
+     */
     Builder preStart(Runnable preStartAction, int order);
 
-    /** Register a postStart lifecycle callback. */
+    /**
+     * Register a postStart lifecycle callback.
+     */
     Builder postStart(Runnable postStartAction, int order);
 
-    /** Register a preStop lifecycle callback. */
+    /**
+     * Register a preStop lifecycle callback.
+     */
     Builder preStop(Runnable preStopAction, int order);
 
-    /** Register a postStop lifecycle callback. */
+    /**
+     * Register a postStop lifecycle callback.
+     */
     Builder postStop(Runnable postStopAction, int order);
 
     /**
@@ -72,6 +139,22 @@ public interface Nima {
      */
     Builder health(boolean health);
 
+    /**
+     * Build and return the Nima instance.
+     * <p>
+     * The Nima instance contains the underlying Helidon WebServer and BeanScope
+     * and the WebServer has not yet been started.
+     *
+     * <pre>{@code
+     *
+     *  var webServer = Nima.builder()
+     *    .port(8082)
+     *    .build();
+     *
+     *  webServer.start();
+     *
+     * }</pre>
+     */
     Nima build();
   }
 
