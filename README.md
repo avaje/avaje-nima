@@ -4,7 +4,7 @@
 [![Discord](https://img.shields.io/discord/1074074312421683250?color=%237289da&label=discord)](https://discord.gg/Qcqf9R27BR)
 # avaje-nima
 
-Convenience Library to make using the varios avaje libraries with helidon easier.
+Convenience Library to make using the various avaje libraries with helidon easier.
 
 Along with Helidon SE, It transitively brings in the following avaje libraries:
 - [`config`](https://avaje.io/config)
@@ -37,7 +37,7 @@ Add the `avaje-nima` dependency.
 ```
 
 Add the `avaje-nima-test` as a test dependency. This is to support testing
-the application by starting the webserver on a random port for tests.
+the application by starting the web server on a random port for tests.
 
 ```xml
 <dependency>
@@ -100,7 +100,7 @@ dependency injection for the controller and the route adapter.
 ## Step 3 - Use the `Nima` Class to start the application
 The `Nima` class will start a `BeanScope`, register generated controller routes, and start the helidon webserver.
 
-The `Nima` class will search your `BeanScope` for a `WebServerConfig.Builder` class, if you provide one in your
+The `Nima` class will search your `BeanScope` for a `WebServerConfig.Builder`, if you provide one in your
 `BeanScope` it will be used to configure the webserver.
 
 ```java

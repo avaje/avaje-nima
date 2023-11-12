@@ -35,10 +35,7 @@ public final class NimaTestPlugin implements Plugin {
     }
     for (Annotation annotation : type.getAnnotations()) {
       String name = annotation.annotationType().getName();
-      if (AVAJE_HTTP_CLIENT.equals(name)) {
-        return true;
-      }
-      if (AVAJE_HTTP_PATH.equals(name)) {
+      if (AVAJE_HTTP_CLIENT.equals(name) || AVAJE_HTTP_PATH.equals(name)) {
         return true;
       }
     }
@@ -61,11 +58,11 @@ public final class NimaTestPlugin implements Plugin {
     private final HttpClient httpClient;
 
     LocalScope(BeanScope beanScope) {
-      this.server = beanScope.getOptional(Nima.class)
-        .orElse(Nima.builder())
-        .configure(beanScope)
-        .port(0)
-        .build();
+      this.server =
+          beanScope
+              .getOptional(Nima.class)
+              .orElse(Nima.builder().configure(beanScope).port(0).build())
+              .server();
 
       // get a HttpClientContext.Builder provided by dependency injection test scope or new one up
       server.start();
