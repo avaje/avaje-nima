@@ -1,7 +1,14 @@
 package org.example.web;
 
-import io.avaje.http.api.*;
 import org.example.api.Foo;
+
+import io.avaje.http.api.Controller;
+import io.avaje.http.api.Get;
+import io.avaje.http.api.Path;
+import io.avaje.http.api.Post;
+import io.avaje.http.api.Produces;
+import io.avaje.http.api.Valid;
+import io.avaje.validation.groups.Default;
 
 
 @Valid(groups = {Default.class, Object.class})
