@@ -7,6 +7,7 @@ import io.avaje.nima.Nima;
 import io.helidon.webserver.WebServer;
 
 import java.lang.annotation.Annotation;
+import java.lang.reflect.Type;
 
 /**
  * avaje-inject-test plugin that:
@@ -25,14 +26,16 @@ public final class NimaTestPlugin implements Plugin {
    * Return true if it's a http client this plugin supports.
    */
   @Override
-  public boolean forType(Class<?> type) {
+  public boolean forType(Type type) {
     return HttpClient.class.equals(type) || isHttpClientApi(type);
   }
 
-  private boolean isHttpClientApi(Class<?> type) {
-    if (!type.isInterface()) {
+  private boolean isHttpClientApi(Type rawtype) {
+
+    if (!(rawtype instanceof Class<?> type) || !type.isInterface()) {
       return false;
     }
+
     for (Annotation annotation : type.getAnnotations()) {
       String name = annotation.annotationType().getName();
       if (AVAJE_HTTP_CLIENT.equals(name) || AVAJE_HTTP_PATH.equals(name)) {
@@ -75,15 +78,16 @@ public final class NimaTestPlugin implements Plugin {
     }
 
     @Override
-    public Object create(Class<?> type) {
+    public Object create(Type type) {
       if (HttpClient.class.equals(type)) {
         return httpClient;
       }
       return apiClient(type);
     }
 
-    private Object apiClient(Class<?> clientInterface) {
-      return httpClient.create(clientInterface);
+    private Object apiClient(Type clientInterface) {
+
+      return httpClient.create((Class<?>) clientInterface);
     }
 
     @Override
