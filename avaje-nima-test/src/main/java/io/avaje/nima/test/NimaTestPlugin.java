@@ -31,11 +31,9 @@ public final class NimaTestPlugin implements Plugin {
   }
 
   private boolean isHttpClientApi(Type rawtype) {
-
     if (!(rawtype instanceof Class<?> type) || !type.isInterface()) {
       return false;
     }
-
     for (Annotation annotation : type.getAnnotations()) {
       String name = annotation.annotationType().getName();
       if (AVAJE_HTTP_CLIENT.equals(name) || AVAJE_HTTP_PATH.equals(name)) {
@@ -86,7 +84,6 @@ public final class NimaTestPlugin implements Plugin {
     }
 
     private Object apiClient(Type clientInterface) {
-
       return httpClient.create((Class<?>) clientInterface);
     }
 
