@@ -48,7 +48,7 @@
       <dependency>
         <groupId>io.avaje</groupId>
         <artifactId>avaje-logback-encoder</artifactId>
-        <version>0.3</version>
+        <version>0.4</version>
       </dependency>
       <dependency>
         <groupId>io.avaje</groupId>
