@@ -1,5 +1,3 @@
-import io.avaje.nima.provider.DefaultConfigProvider;
-
 module io.avaje.nima {
 
   exports io.avaje.nima;
@@ -12,6 +10,6 @@ module io.avaje.nima {
   requires transitive io.helidon.webserver;
 
   requires static java.net.http;
-
-  provides io.avaje.inject.spi.Plugin with DefaultConfigProvider;
-}
+  requires static io.avaje.spi;
+  provides io.avaje.inject.spi.InjectExtension with io.avaje.nima.provider.DefaultConfigProvider;
+ }
