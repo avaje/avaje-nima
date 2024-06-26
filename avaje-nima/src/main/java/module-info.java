@@ -10,6 +10,5 @@ module io.avaje.nima {
   requires transitive io.helidon.webserver;
 
   requires static java.net.http;
-  requires static io.avaje.spi;
   provides io.avaje.inject.spi.InjectExtension with io.avaje.nima.provider.DefaultConfigProvider;
  }

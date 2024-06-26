@@ -2,13 +2,11 @@ package io.avaje.nima.provider;
 
 import io.avaje.inject.BeanScopeBuilder;
 import io.avaje.inject.spi.InjectPlugin;
-import io.avaje.spi.ServiceProvider;
 import io.helidon.webserver.WebServer;
 import io.helidon.webserver.WebServerConfig;
 import io.helidon.webserver.http.HttpRouting;
 
 /** Provides defaults for Nima HttpRouting Builder and WebServerConfig Builder */
-@ServiceProvider
 public class DefaultConfigProvider implements InjectPlugin {
 
   @Override
