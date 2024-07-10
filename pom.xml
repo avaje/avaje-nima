@@ -27,7 +27,7 @@
     <avaje-inject.version>10.0</avaje-inject.version>
     <avaje-jsonb.version>2.0</avaje-jsonb.version>
     <avaje-http.version>2.7</avaje-http.version>
-    <avaje-validator.version>2.0-RC5</avaje-validator.version>
+    <avaje-validator.version>2.0</avaje-validator.version>
     <nima.version>4.0.10</nima.version>
   </properties>
 
