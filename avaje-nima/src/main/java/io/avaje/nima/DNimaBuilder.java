@@ -9,6 +9,9 @@ import io.helidon.webserver.http.HttpRouting;
 import io.helidon.webserver.spi.ServerFeature;
 
 import java.time.Duration;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.function.Consumer;
 
 final class DNimaBuilder implements Nima.Builder {
 
@@ -25,10 +28,17 @@ final class DNimaBuilder implements Nima.Builder {
   private boolean health = Config.getBool("server.health", true);
 
   private final DLifecycle lifecycle = new DLifecycle();
+  private final List<Consumer<WebServerConfig.Builder>> configConsumers= new ArrayList<>();
 
   @Override
   public Nima.Builder configure(WebServerConfig.Builder configBuilder) {
     this.configBuilder = configBuilder;
+    return this;
+  }
+
+  @Override
+  public Nima.Builder configureServer(Consumer<WebServerConfig.Builder> configBuilder) {
+    configConsumers.add(configBuilder);
     return this;
   }
 
@@ -146,6 +156,7 @@ final class DNimaBuilder implements Nima.Builder {
     configBuilder.shutdownHook(false);
     configBuilder.addRouting(routeBuilder);
     configBuilder.port(port);
+    configConsumers.forEach(b -> b.accept(configBuilder));
     return new DNima(beanScope, new DWebServer(configBuilder.build(), lifecycle));
   }
 
