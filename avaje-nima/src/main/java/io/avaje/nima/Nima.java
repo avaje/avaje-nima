@@ -1,13 +1,10 @@
 package io.avaje.nima;
 
-import java.util.function.Consumer;
-
-import java.util.function.Consumer;
-
 import io.avaje.inject.BeanScope;
-import io.avaje.inject.BeanScopeBuilder;
 import io.helidon.webserver.WebServer;
 import io.helidon.webserver.WebServerConfig;
+
+import java.util.function.Consumer;
 
 /**
  * Nima is used to bootstrap the application.
