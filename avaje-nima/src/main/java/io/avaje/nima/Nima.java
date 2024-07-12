@@ -1,6 +1,11 @@
 package io.avaje.nima;
 
+import java.util.function.Consumer;
+
+import java.util.function.Consumer;
+
 import io.avaje.inject.BeanScope;
+import io.avaje.inject.BeanScopeBuilder;
 import io.helidon.webserver.WebServer;
 import io.helidon.webserver.WebServerConfig;
 
@@ -70,6 +75,11 @@ public interface Nima {
      * Configure using an explicit Helidon WebServerConfig.Builder.
      */
     Builder configure(WebServerConfig.Builder builder);
+
+    /**
+     * Apply the consumer to the Helidon WebServerConfig.Builder.
+     */
+    Builder configureServer(Consumer<WebServerConfig.Builder> consumer);
 
     /**
      * Set the max current requests.
@@ -156,6 +166,7 @@ public interface Nima {
      * }</pre>
      */
     Nima build();
+
   }
 
 }
