@@ -243,6 +243,20 @@
       </modules>
     </profile>
     <profile>
+      <id>jdk24Plus</id>
+      <activation>
+        <jdk>[24, 25]</jdk>
+      </activation>
+      <build>
+        <plugins>
+          <plugin>
+            <groupId>io.avaje</groupId>
+            <artifactId>avaje-provides-maven-plugin</artifactId>
+          </plugin>
+        </plugins>
+      </build>
+    </profile>
+    <profile>
       <id>create-modules</id>
       <build>
         <plugins>
