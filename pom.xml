@@ -245,7 +245,7 @@
     <profile>
       <id>jdk24Plus</id>
       <activation>
-        <jdk>[24, 25]</jdk>
+        <jdk>[24,)</jdk>
       </activation>
       <build>
         <plugins>
