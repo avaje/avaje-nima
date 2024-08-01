@@ -15,7 +15,6 @@
     <dependency>
       <groupId>io.avaje</groupId>
       <artifactId>avaje-nima</artifactId>
-      <scope>provided</scope>
     </dependency>
 
     <!-- dependency injection component testing -->
