@@ -32,7 +32,7 @@
     <avaje.spi.version>2.4</avaje.spi.version>
     <avaje.prisms.versionn>1.31</avaje.prisms.versionn>
     <ebean.version>15.5.0</ebean.version>
-    <helidon.version>4.0.11</helidon.version>
+    <helidon.version>4.1.0</helidon.version>
   </properties>
 
   <modules>
