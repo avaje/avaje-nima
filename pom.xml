@@ -27,9 +27,9 @@
     <avaje.jsonb.version>2.1</avaje.jsonb.version>
     <avaje.http.version>2.7</avaje.http.version>
     <avaje.metrics.version>9.4</avaje.metrics.version>
-    <avaje.validator.version>2.1</avaje.validator.version>
+    <avaje.validator.version>2.2-RC1</avaje.validator.version>
     <avaje.record.builder.version>1.0</avaje.record.builder.version>
-    <avaje.spi.version>2.4</avaje.spi.version>
+    <avaje.spi.version>2.6</avaje.spi.version>
     <avaje.prisms.versionn>1.31</avaje.prisms.versionn>
     <ebean.version>15.5.0</ebean.version>
     <helidon.version>4.1.0</helidon.version>
