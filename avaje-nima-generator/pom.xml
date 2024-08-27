@@ -40,5 +40,4 @@
       <artifactId>avaje-spi-service</artifactId>
     </dependency>
   </dependencies>
-
 </project>
