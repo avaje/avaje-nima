@@ -30,7 +30,7 @@
     <avaje.validator.version>2.2-RC1</avaje.validator.version>
     <avaje.record.builder.version>1.0</avaje.record.builder.version>
     <avaje.spi.version>2.6</avaje.spi.version>
-    <avaje.prisms.versionn>1.31</avaje.prisms.versionn>
+    <avaje.prisms.version>1.31</avaje.prisms.version>
     <ebean.version>15.5.0</ebean.version>
     <helidon.version>4.1.1</helidon.version>
   </properties>
