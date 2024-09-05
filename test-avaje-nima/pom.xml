@@ -5,7 +5,7 @@
   <parent>
     <groupId>io.avaje</groupId>
     <artifactId>avaje-nima-parent</artifactId>
-    <version>1.1-RC1</version>
+    <version>1.1-RC2</version>
   </parent>
 
   <artifactId>test-avaje-nima</artifactId>
@@ -26,29 +26,20 @@
       <artifactId>slf4j-jdk-platform-logging</artifactId>
       <version>2.0.16</version>
     </dependency>
+    
     <dependency>
       <groupId>io.avaje</groupId>
       <artifactId>avaje-metrics</artifactId>
-      <version>9.4</version>
     </dependency>
 
     <dependency>
       <groupId>io.avaje</groupId>
       <artifactId>avaje-nima</artifactId>
-      <version>1.1-RC1</version>
-    </dependency>
-
-    <dependency>
-      <groupId>io.avaje</groupId>
-      <artifactId>avaje-record-builder</artifactId>
-      <version>1.0</version>
-      <scope>provided</scope>
     </dependency>
 
     <dependency>
       <groupId>io.avaje</groupId>
       <artifactId>avaje-nima-test</artifactId>
-      <version>1.1-RC1</version>
       <scope>test</scope>
     </dependency>
 
@@ -62,7 +53,6 @@
     <dependency>
       <groupId>io.avaje</groupId>
       <artifactId>avaje-nima-generator</artifactId>
-      <version>1.1-RC1</version>
       <scope>provided</scope>
     </dependency>
 

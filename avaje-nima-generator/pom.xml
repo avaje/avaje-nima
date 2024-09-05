@@ -4,7 +4,7 @@
   <parent>
     <groupId>io.avaje</groupId>
     <artifactId>avaje-nima-parent</artifactId>
-    <version>1.1-RC1</version>
+    <version>1.1-RC2</version>
   </parent>
 
   <artifactId>avaje-nima-generator</artifactId>
@@ -14,38 +14,30 @@
     <dependency>
       <groupId>io.avaje</groupId>
       <artifactId>avaje-http-client-generator</artifactId>
-      <version>${avaje-http.version}</version>
     </dependency>
     <dependency>
       <groupId>io.avaje</groupId>
       <artifactId>avaje-http-helidon-generator</artifactId>
-      <version>${avaje-http.version}</version>
     </dependency>
     <dependency>
       <groupId>io.avaje</groupId>
       <artifactId>avaje-inject-generator</artifactId>
-      <version>${avaje-inject.version}</version>
     </dependency>
     <dependency>
       <groupId>io.avaje</groupId>
       <artifactId>avaje-jsonb-generator</artifactId>
-      <version>${avaje-jsonb.version}</version>
     </dependency>
     <dependency>
       <groupId>io.avaje</groupId>
       <artifactId>avaje-validator-generator</artifactId>
-      <version>${avaje-validator.version}</version>
     </dependency>
     <dependency>
       <groupId>io.avaje</groupId>
       <artifactId>avaje-record-builder</artifactId>
-      <version>1.0</version>
     </dependency>
 	  <dependency>
       <groupId>io.avaje</groupId>
       <artifactId>avaje-spi-service</artifactId>
-      <version>2.6</version>
     </dependency>
   </dependencies>
-
 </project>
