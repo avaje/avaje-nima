@@ -28,7 +28,7 @@
     <avaje.http.version>2.8-RC1</avaje.http.version>
     <avaje.metrics.version>9.4</avaje.metrics.version>
     <avaje.validator.version>2.2</avaje.validator.version>
-    <avaje.record.builder.version>1.1</avaje.record.builder.version>
+    <avaje.record.builder.version>1.2</avaje.record.builder.version>
     <avaje.spi.version>2.7</avaje.spi.version>
     <avaje.prisms.versionn>1.32</avaje.prisms.versionn>
     <ebean.version>15.7.0</ebean.version>
