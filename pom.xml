@@ -23,16 +23,16 @@
     <maven.compiler.release>21</maven.compiler.release>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     <avaje.config.version>4.0</avaje.config.version>
-    <avaje.inject.version>10.4-RC1</avaje.inject.version>
-    <avaje.jsonb.version>2.1</avaje.jsonb.version>
-    <avaje.http.version>2.7</avaje.http.version>
+    <avaje.inject.version>10.5-RC2</avaje.inject.version>
+    <avaje.jsonb.version>2.3</avaje.jsonb.version>
+    <avaje.http.version>2.8-RC1</avaje.http.version>
     <avaje.metrics.version>9.4</avaje.metrics.version>
-    <avaje.validator.version>2.2-RC1</avaje.validator.version>
-    <avaje.record.builder.version>1.0</avaje.record.builder.version>
-    <avaje.spi.version>2.6</avaje.spi.version>
-    <avaje.prisms.version>1.31</avaje.prisms.version>
-    <ebean.version>15.5.0</ebean.version>
-    <helidon.version>4.1.1</helidon.version>
+    <avaje.validator.version>2.2</avaje.validator.version>
+    <avaje.record.builder.version>1.2</avaje.record.builder.version>
+    <avaje.spi.version>2.7</avaje.spi.version>
+    <avaje.prisms.versionn>1.32</avaje.prisms.versionn>
+    <ebean.version>15.7.0</ebean.version>
+    <helidon.version>4.1.2</helidon.version>
   </properties>
 
   <modules>
@@ -219,7 +219,7 @@
         <plugin>
           <groupId>io.avaje</groupId>
           <artifactId>avaje-provides-maven-plugin</artifactId>
-          <version>0.10</version>
+          <version>1.1</version>
           <executions>
             <execution>
               <goals>
