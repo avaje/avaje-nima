@@ -2,8 +2,8 @@ package io.avaje.nima;
 
 import io.avaje.http.client.HttpClient;
 import io.avaje.inject.BeanScope;
+import io.avaje.inject.spi.AvajeModule;
 import io.avaje.inject.spi.Builder;
-import io.avaje.inject.spi.Module;
 import io.helidon.http.Status;
 import io.helidon.webserver.WebServer;
 import io.helidon.webserver.http.HttpRouting;
@@ -108,7 +108,7 @@ class NimaTest {
       ;
   }
 
-  static class EmptyModule implements Module {
+  static class EmptyModule implements AvajeModule {
 
     @Override
     public Class<?>[] classes() {
