@@ -39,5 +39,9 @@
       <groupId>io.avaje</groupId>
       <artifactId>avaje-spi-service</artifactId>
     </dependency>
+    <dependency>
+      <groupId>io.jstach</groupId>
+      <artifactId>jstachio-apt</artifactId>
+    </dependency>
   </dependencies>
 </project>
