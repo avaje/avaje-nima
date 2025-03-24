@@ -19,7 +19,7 @@
     <dependency>
       <groupId>ch.qos.logback</groupId>
       <artifactId>logback-classic</artifactId>
-      <version>1.5.17</version>
+      <version>1.5.18</version>
     </dependency>
     <dependency>
       <groupId>org.slf4j</groupId>
@@ -78,7 +78,7 @@
       <plugin> <!-- perform ebean enhancement -->
         <groupId>io.avaje.metrics</groupId>
         <artifactId>metrics-maven-plugin</artifactId>
-        <version>9.3</version>
+        <version>9.4</version>
         <extensions>true</extensions>
       </plugin>
 
