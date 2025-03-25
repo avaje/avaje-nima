@@ -4,6 +4,7 @@ import io.avaje.config.Config;
 import io.avaje.inject.BeanScope;
 import io.helidon.webserver.WebServer;
 import io.helidon.webserver.WebServerConfig;
+import io.helidon.webserver.http.Filter;
 import io.helidon.webserver.http.HttpFeature;
 import io.helidon.webserver.http.HttpRouting;
 import io.helidon.webserver.spi.ServerFeature;
@@ -130,17 +131,17 @@ final class DNimaBuilder implements Nima.Builder {
     lifecycle.postStop(beanScope::close, 1000);
 
     final HttpRouting.Builder routeBuilder = beanScope.get(HttpRouting.Builder.class);
-    if (health) {
-      HealthPlugin.apply(lifecycle, routeBuilder);
-    }
 
+    beanScope.list(Filter.class).forEach(routeBuilder::addFilter);
     beanScope.list(HttpFeature.class).forEach(routeBuilder::addFeature);
     if (configBuilder == null) {
       configBuilder = beanScope.get(WebServerConfig.Builder.class);
     }
 
     beanScope.list(ServerFeature.class).forEach(configBuilder::addFeature);
-
+    if (health) {
+      HealthPlugin.apply(lifecycle, routeBuilder);
+    }
     if (maxConcurrentRequests > 0) {
       configBuilder.maxConcurrentRequests(maxConcurrentRequests);
     }

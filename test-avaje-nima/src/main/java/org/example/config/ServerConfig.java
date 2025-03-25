@@ -1,12 +1,19 @@
 package org.example.config;
 
 import io.avaje.inject.Bean;
+import io.avaje.inject.BeanTypes;
 import io.avaje.inject.Factory;
+import io.avaje.inject.Secondary;
 import io.helidon.webserver.WebServerConfig;
-import io.helidon.webserver.http.HttpRouting;
+import io.helidon.webserver.http.*;
+import jakarta.inject.Named;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 @Factory
 class ServerConfig {
+
+  private static final Logger log = LoggerFactory.getLogger(ServerConfig.class);
 
   @Bean
   void server(WebServerConfig.Builder serverBuilder) {
@@ -23,5 +30,23 @@ class ServerConfig {
       exception.printStackTrace();
       res.send("General Barf");
     });
+  }
+
+  @Named("filterOne")
+  @Bean
+  Filter addFilter() {
+    return (filterChain, routingRequest, routingResponse) -> {
+      log.debug("Filter 1");
+      filterChain.proceed();
+    };
+  }
+
+  @Named("filterTwo")
+  @Bean
+  Filter addAnotherFilter() {
+    return (filterChain, routingRequest, routingResponse) -> {
+      log.debug("Filter 2");
+      filterChain.proceed();
+    };
   }
 }
