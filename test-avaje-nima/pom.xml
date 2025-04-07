@@ -85,7 +85,7 @@
       <plugin> <!-- perform ebean enhancement -->
         <groupId>io.ebean</groupId>
         <artifactId>ebean-maven-plugin</artifactId>
-        <version>15.10.0</version>
+        <version>15.11.0</version>
         <extensions>true</extensions>
       </plugin>
     </plugins>
