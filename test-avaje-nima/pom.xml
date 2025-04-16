@@ -78,7 +78,7 @@
       <plugin> <!-- perform ebean enhancement -->
         <groupId>io.avaje.metrics</groupId>
         <artifactId>metrics-maven-plugin</artifactId>
-        <version>9.4</version>
+        <version>9.5</version>
         <extensions>true</extensions>
       </plugin>
 
