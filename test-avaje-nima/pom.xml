@@ -5,7 +5,7 @@
   <parent>
     <groupId>io.avaje</groupId>
     <artifactId>avaje-nima-parent</artifactId>
-    <version>1.3-RC1</version>
+    <version>1.3-RC2</version>
   </parent>
 
   <artifactId>test-avaje-nima</artifactId>
