@@ -32,8 +32,7 @@ public class HelloController {
 
   @Get("/metrics")
   String asJson() {
-    String asJson = Metrics.collectAsJson().asJson();
-    return asJson;
+    return Metrics.collectAsJson().asJson();
   }
 
   @Json
