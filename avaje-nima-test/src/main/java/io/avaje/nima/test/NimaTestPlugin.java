@@ -27,7 +27,10 @@ public final class NimaTestPlugin implements Plugin {
    */
   @Override
   public boolean forType(Type type) {
-    return HttpClient.class.equals(type) || isHttpClientApi(type);
+    return HttpClient.class.equals(type)
+      || HttpClient.Builder.class.equals(type)
+      || WebServer.class.equals(type)
+      || isHttpClientApi(type);
   }
 
   private boolean isHttpClientApi(Type rawtype) {
@@ -57,6 +60,7 @@ public final class NimaTestPlugin implements Plugin {
 
     private final WebServer server;
     private final HttpClient httpClient;
+    private final String baseUrl;
 
     LocalScope(BeanScope beanScope) {
       this.server =
@@ -68,10 +72,11 @@ public final class NimaTestPlugin implements Plugin {
       // get a HttpClientContext.Builder provided by dependency injection test scope or new one up
       server.start();
       int port = server.port();
+      this.baseUrl = "http://localhost:" + port;
       this.httpClient = beanScope.getOptional(HttpClient.Builder.class)
         .orElse(HttpClient.builder())
         .configureWith(beanScope)
-        .baseUrl("http://localhost:" + port)
+        .baseUrl(baseUrl)
         .build();
     }
 
@@ -79,6 +84,12 @@ public final class NimaTestPlugin implements Plugin {
     public Object create(Type type) {
       if (HttpClient.class.equals(type)) {
         return httpClient;
+      }
+      if (HttpClient.Builder.class.equals(type)) {
+        return HttpClient.builder().baseUrl(baseUrl);
+      }
+      if (WebServer.class.equals(type)) {
+        return server;
       }
       return apiClient(type);
     }
