@@ -15,12 +15,14 @@
     <dependency>
       <groupId>io.avaje</groupId>
       <artifactId>avaje-nima</artifactId>
+      <version>1.4</version>
     </dependency>
 
     <!-- dependency injection component testing -->
     <dependency>
       <groupId>io.avaje</groupId>
       <artifactId>avaje-inject-test</artifactId>
+      <version>${avaje.inject.version}</version>
     </dependency>
 
     <dependency>

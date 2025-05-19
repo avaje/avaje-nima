@@ -14,34 +14,42 @@
     <dependency>
       <groupId>io.avaje</groupId>
       <artifactId>avaje-http-client-generator</artifactId>
+      <version>${avaje.http.version}</version>
     </dependency>
     <dependency>
       <groupId>io.avaje</groupId>
       <artifactId>avaje-http-helidon-generator</artifactId>
+      <version>${avaje.http.version}</version>
     </dependency>
     <dependency>
       <groupId>io.avaje</groupId>
       <artifactId>avaje-inject-generator</artifactId>
+      <version>${avaje.inject.version}</version>
     </dependency>
     <dependency>
       <groupId>io.avaje</groupId>
       <artifactId>avaje-jsonb-generator</artifactId>
+      <version>${avaje.jsonb.version}</version>
     </dependency>
     <dependency>
       <groupId>io.avaje</groupId>
       <artifactId>avaje-validator-generator</artifactId>
+      <version>${avaje.validator.version}</version>
     </dependency>
     <dependency>
       <groupId>io.avaje</groupId>
       <artifactId>avaje-record-builder</artifactId>
+      <version>${avaje.record.builder.version}</version>
     </dependency>
 	  <dependency>
       <groupId>io.avaje</groupId>
       <artifactId>avaje-spi-service</artifactId>
+      <version>${avaje.spi.version}</version>
     </dependency>
     <dependency>
       <groupId>io.jstach</groupId>
       <artifactId>jstachio-apt</artifactId>
+      <version>${jstachio.version}</version>
     </dependency>
   </dependencies>
 </project>
