@@ -1,0 +1,14 @@
+[
+  {"name": "io.helidon.common.mapper.spi.MapperProvider", "allDeclaredConstructors": true, "allDeclaredFields": true},
+  {"name": "io.helidon.common.mapper.DefaultMapperProvider__ServiceDescriptor", "allDeclaredConstructors": true, "allDeclaredFields": true},
+  {"name": "io.helidon.common.mapper.MappersFactory__ServiceDescriptor", "allDeclaredConstructors": true, "allDeclaredFields": true},
+  {"name": "io.helidon.common.mapper.MappersImpl__ServiceDescriptor", "allDeclaredConstructors": true, "allDeclaredFields": true},
+  {"name": "io.helidon.service.registry.EventManagerImpl__ServiceDescriptor", "allDeclaredConstructors": true, "allDeclaredFields": true},
+  {"name": "io.helidon.service.registry.InterceptionMetadata__ServiceDescriptor", "allDeclaredConstructors": true, "allDeclaredFields": true},
+  {"name": "io.helidon.service.registry.PerRequestScopeHandler__ServiceDescriptor", "allDeclaredConstructors": true, "allDeclaredFields": true},
+  {"name": "io.helidon.service.registry.ServiceRegistry__ServiceDescriptor", "allDeclaredConstructors": true, "allDeclaredFields": true},
+  {"name": "io.helidon.service.registry.ServiceLoader__ServiceDescriptor", "allDeclaredConstructors": true, "allDeclaredFields": true},
+  {"name": "io.helidon.service.registry.Scopes__ServiceDescriptor", "allDeclaredConstructors": true, "allDeclaredFields": true},
+  {"name": "io.helidon.config.ConfigProvider__ServiceDescriptor", "allDeclaredConstructors": true, "allDeclaredFields": true},
+  {"name": "io.helidon.config.MetaConfigFactory__ServiceDescriptor", "allDeclaredConstructors": true, "allDeclaredFields": true}
+]
