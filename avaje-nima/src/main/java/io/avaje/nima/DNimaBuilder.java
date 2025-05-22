@@ -120,6 +120,9 @@ final class DNimaBuilder implements Nima.Builder {
    */
   @Override
   public Nima build() {
+    // disable ebean (if used) from registering a shutdown hook
+    // as we want ebean to shutdown last via avaje-inject PreDestroy
+    System.setProperty("ebean.registerShutdownHook", "false");
     if (beanScope == null) {
       final var scopeBuilder = BeanScope.builder();
       if (configBuilder != null) {
@@ -128,10 +131,10 @@ final class DNimaBuilder implements Nima.Builder {
       }
       beanScope = scopeBuilder.build();
     }
+    // the DI BeanScope is shutdown after the web server
     lifecycle.postStop(beanScope::close, 1000);
 
     final HttpRouting.Builder routeBuilder = beanScope.get(HttpRouting.Builder.class);
-
     beanScope.list(Filter.class).forEach(routeBuilder::addFilter);
     beanScope.list(HttpFeature.class).forEach(routeBuilder::addFeature);
     if (configBuilder == null) {
