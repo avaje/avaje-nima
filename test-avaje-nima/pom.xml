@@ -30,16 +30,19 @@
     <dependency>
       <groupId>io.avaje</groupId>
       <artifactId>avaje-metrics</artifactId>
+      <version>${avaje.metrics.version}</version>
     </dependency>
 
     <dependency>
       <groupId>io.avaje</groupId>
       <artifactId>avaje-nima</artifactId>
+      <version>1.4</version>
     </dependency>
 
     <dependency>
       <groupId>io.avaje</groupId>
       <artifactId>avaje-nima-test</artifactId>
+      <version>1.4</version>
       <scope>test</scope>
     </dependency>
 
@@ -53,6 +56,7 @@
     <dependency>
       <groupId>io.avaje</groupId>
       <artifactId>avaje-nima-generator</artifactId>
+      <version>1.4</version>
       <scope>provided</scope>
     </dependency>
 
@@ -64,7 +68,7 @@
       <plugin>
         <groupId>io.avaje</groupId>
         <artifactId>avaje-inject-maven-plugin</artifactId>
-        <version>11.5</version>
+        <version>${avaje.inject.version}</version>
         <executions>
           <execution>
             <phase>process-sources</phase>
@@ -78,7 +82,7 @@
       <plugin> <!-- perform ebean enhancement -->
         <groupId>io.avaje.metrics</groupId>
         <artifactId>metrics-maven-plugin</artifactId>
-        <version>9.6</version>
+        <version>${avaje.metrics.version}</version>
         <extensions>true</extensions>
       </plugin>
 
