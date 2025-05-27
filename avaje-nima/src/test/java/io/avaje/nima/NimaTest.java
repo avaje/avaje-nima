@@ -45,6 +45,7 @@ class NimaTest {
       .maxPayloadSize(4_000)
       .maxTcpConnections(200)
       .shutdownGraceMillis(5_000)
+      .shutdownDelay(200)
       .build()
       .start();
 

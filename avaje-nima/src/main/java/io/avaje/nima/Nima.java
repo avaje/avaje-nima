@@ -99,6 +99,14 @@ public interface Nima {
     Builder shutdownGraceMillis(long shutdownGraceMillis);
 
     /**
+     * Set a shutdown delay in milliseconds.
+     *
+     * <p>This delay is used to wait for active requests to complete before shutting down the server.
+     * @param shutdownDelayMillis The delay in milliseconds before the server is shut down
+     */
+    Builder shutdownDelay(long shutdownDelayMillis);
+
+    /**
      * Register a Runnable to run on shutdown of the server with ordering.
      *
      * <p>The callbacks are executed with order from low to high (0 means run first).
