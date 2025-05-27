@@ -24,7 +24,8 @@ final class DNimaBuilder implements Nima.Builder {
   private int maxTcpConnections = Config.getInt("server.maxTcpConnections", 0);
   private long maxPayloadSize = Config.getLong("server.maxPayloadSize", 0);
   // private boolean shutdownHook = Config.getBool("server.shutdownHook", false);
-  private long shutdownGraceMillis = Config.getInt("server.shutdownGraceMillis", 0);
+  private long shutdownGraceMillis = Config.getLong("server.shutdownGraceMillis", 0);
+  private long shutdownDelay = Config.getLong("server.shutdownDelay", 0);
 
   private boolean health = Config.getBool("server.health", true);
 
@@ -76,6 +77,12 @@ final class DNimaBuilder implements Nima.Builder {
   @Override
   public Nima.Builder shutdownGraceMillis(long shutdownGraceMillis) {
     this.shutdownGraceMillis = shutdownGraceMillis;
+    return this;
+  }
+
+  @Override
+  public Nima.Builder shutdownDelay(long shutdownDelay) {
+    this.shutdownDelay = shutdownDelay;
     return this;
   }
 
@@ -161,6 +168,7 @@ final class DNimaBuilder implements Nima.Builder {
     configBuilder.addRouting(routeBuilder);
     configBuilder.port(port);
     configConsumers.forEach(b -> b.accept(configBuilder));
+    lifecycle.shutdownDelay(shutdownDelay);
     return new DNima(beanScope, new DWebServer(configBuilder.build(), lifecycle));
   }
 

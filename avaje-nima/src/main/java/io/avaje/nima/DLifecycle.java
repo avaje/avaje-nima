@@ -4,9 +4,11 @@ import io.avaje.applog.AppLog;
 import io.helidon.webserver.WebServer;
 
 import java.lang.System.Logger.Level;
+import java.time.Duration;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.concurrent.locks.LockSupport;
 import java.util.concurrent.locks.ReentrantLock;
 
 import static io.avaje.nima.AppLifecycle.Status.*;
@@ -18,6 +20,7 @@ final class DLifecycle implements AppLifecycle {
   private final List<CallbackOrder> callbacks = new ArrayList<>();
   private final ReentrantLock lock = new ReentrantLock();
   private volatile Status status = STARTING;
+  private long shutdownDelay;
 
   @Override
   public void register(Callback callback) {
@@ -97,6 +100,9 @@ final class DLifecycle implements AppLifecycle {
       if (status == STOPPED) {
         log.log(Level.INFO, "already stopped");
       } else {
+        if (shutdownDelay > 0) {
+          LockSupport.parkNanos(Duration.ofMillis(shutdownDelay).toNanos());
+        }
         invokeCallbacks(STOPPING);
         delegate.stop();
         invokeCallbacks(STOPPED);
@@ -104,6 +110,10 @@ final class DLifecycle implements AppLifecycle {
     } finally {
       lock.unlock();
     }
+  }
+
+  void shutdownDelay(long shutdownDelay) {
+    this.shutdownDelay = shutdownDelay;
   }
 
   static final class CallbackOrder implements Comparable<CallbackOrder> {
