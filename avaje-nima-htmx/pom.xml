@@ -6,10 +6,11 @@
   <parent>
     <groupId>io.avaje</groupId>
     <artifactId>avaje-nima-parent</artifactId>
-    <version>1.5-RC3</version>
+    <version>1.5-RC4</version>
   </parent>
 
   <artifactId>avaje-nima-htmx</artifactId>
+  <name>avaje-nima-htmx</name>
 
   <properties>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
@@ -20,7 +21,7 @@
     <dependency>
       <groupId>io.avaje</groupId>
       <artifactId>avaje-nima</artifactId>
-      <version>1.5-RC3</version>
+      <version>1.5-RC4</version>
     </dependency>
     <dependency>
       <groupId>io.avaje</groupId>

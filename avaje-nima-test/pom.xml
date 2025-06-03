@@ -5,17 +5,18 @@
   <parent>
     <groupId>io.avaje</groupId>
     <artifactId>avaje-nima-parent</artifactId>
-    <version>1.5-RC3</version>
+    <version>1.5-RC4</version>
   </parent>
 
   <artifactId>avaje-nima-test</artifactId>
+  <name>avaje-nima-test</name>
 
   <dependencies>
 
     <dependency>
       <groupId>io.avaje</groupId>
       <artifactId>avaje-nima</artifactId>
-      <version>1.5-RC3</version>
+      <version>1.5-RC4</version>
     </dependency>
 
     <!-- dependency injection component testing -->

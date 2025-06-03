@@ -4,10 +4,11 @@
   <parent>
     <groupId>io.avaje</groupId>
     <artifactId>avaje-nima-parent</artifactId>
-    <version>1.5-RC3</version>
+    <version>1.5-RC4</version>
   </parent>
 
   <artifactId>avaje-nima-generator</artifactId>
+  <name>avaje-nima-generator</name>
 
   <dependencies>
 
