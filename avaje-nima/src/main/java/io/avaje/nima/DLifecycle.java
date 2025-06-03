@@ -100,6 +100,7 @@ final class DLifecycle implements AppLifecycle {
       if (status == STOPPED) {
         log.log(Level.INFO, "already stopped");
       } else {
+        log.log(Level.INFO, "Initiating shutdown");
         invokeCallbacks(STOPPING);
         if (shutdownDelay > 0) {
           LockSupport.parkNanos(Duration.ofMillis(shutdownDelay).toNanos());
