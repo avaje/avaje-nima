@@ -2,7 +2,7 @@
 [![Maven Central](https://img.shields.io/maven-central/v/io.avaje/avaje-nima.svg?label=Maven%20Central)](https://mvnrepository.com/artifact/io.avaje/avaje-nima)
 [![License](https://img.shields.io/badge/License-Apache%202.0-blue.svg)](https://github.com/avaje/avaje-nima/blob/master/LICENSE)
 [![Discord](https://img.shields.io/discord/1074074312421683250?color=%237289da&label=discord)](https://discord.gg/Qcqf9R27BR)
-# avaje-nima
+# [Avaje Nima](https://avaje.io/nima/)
 
 Convenience Library to make using the various avaje libraries with helidon easier.
 
