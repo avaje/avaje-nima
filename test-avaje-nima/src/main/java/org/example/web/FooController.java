@@ -10,6 +10,8 @@ import io.avaje.http.api.Produces;
 import io.avaje.http.api.Valid;
 import io.avaje.validation.groups.Default;
 
+import java.util.stream.Stream;
+
 
 @Valid(groups = {Default.class, Object.class})
 @Path("/foo")
@@ -33,6 +35,12 @@ public class FooController {
   @Post
   String perform(Foo foo) {
     return "ok";
+  }
+
+
+  @Get("stream")
+  Stream<Foo> stream() {
+    return Stream.of(new Foo(1,"a"), new Foo(2, "b"));
   }
 
 }

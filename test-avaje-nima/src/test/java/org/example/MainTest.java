@@ -118,4 +118,18 @@ class MainTest {
 
     assertThat(res.body()).isEqualTo("hello world");
   }
+
+  @Test
+  void fooStream() {
+    HttpResponse<String> res = httpClient.request()
+      .path("foo/stream")
+      .GET().asString();
+
+    assertThat(res.statusCode()).isEqualTo(200);
+    assertThat(res.headers()
+      .firstValue("Content-Type").orElse("Junk"))
+      .isEqualTo("application/stream+json");
+
+    assertThat(res.body()).isEqualTo("{\"id\":1,\"name\":\"a\"}\n{\"id\":2,\"name\":\"b\"}\n");
+  }
 }
