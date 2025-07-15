@@ -23,7 +23,6 @@
     <dependency>
       <groupId>io.avaje</groupId>
       <artifactId>avaje-inject-test</artifactId>
-      <version>${avaje.inject.version}</version>
     </dependency>
 
     <dependency>

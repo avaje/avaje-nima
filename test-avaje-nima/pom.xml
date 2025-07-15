@@ -30,7 +30,6 @@
     <dependency>
       <groupId>io.avaje</groupId>
       <artifactId>avaje-metrics</artifactId>
-      <version>${avaje.metrics.version}</version>
     </dependency>
 
     <dependency>
