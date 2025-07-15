@@ -26,22 +26,18 @@
     <dependency>
       <groupId>io.avaje</groupId>
       <artifactId>avaje-htmx-api</artifactId>
-      <version>${avaje.http.version}</version>
     </dependency>
     <dependency>
       <groupId>io.avaje</groupId>
       <artifactId>avaje-htmx-nima</artifactId>
-      <version>${avaje.http.version}</version>
     </dependency>
     <dependency>
       <groupId>io.jstach</groupId>
       <artifactId>jstachio</artifactId>
-      <version>${jstachio.version}</version>
     </dependency>
     <dependency>
       <groupId>io.helidon.webserver</groupId>
       <artifactId>helidon-webserver-static-content</artifactId>
-      <version>${helidon.version}</version>
     </dependency>
 
     <dependency>
