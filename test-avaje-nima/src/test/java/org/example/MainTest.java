@@ -1,17 +1,18 @@
 package org.example;
 
-import io.avaje.http.client.BodyReader;
-import io.avaje.http.client.HttpClient;
-import io.avaje.inject.test.InjectTest;
-import jakarta.inject.Inject;
+import static org.assertj.core.api.Assertions.assertThat;
+
+import java.net.http.HttpResponse;
+
 import org.example.api.Foo;
 import org.example.api.ValidationErrorMessage;
 import org.example.web.HelloController;
 import org.junit.jupiter.api.Test;
 
-import java.net.http.HttpResponse;
-
-import static org.assertj.core.api.Assertions.assertThat;
+import io.avaje.http.client.BodyReader;
+import io.avaje.http.client.HttpClient;
+import io.avaje.inject.test.InjectTest;
+import jakarta.inject.Inject;
 
 @InjectTest
 class MainTest {
@@ -130,6 +131,6 @@ class MainTest {
       .firstValue("Content-Type").orElse("Junk"))
       .isEqualTo("application/stream+json");
 
-    assertThat(res.body()).isEqualTo("{\"id\":1,\"name\":\"a\"}\n{\"id\":2,\"name\":\"b\"}\n");
+    assertThat(res.body()).isEqualTo("{\"id\":1,\"name\":\"a\"}\n{\"id\":2,\"name\":\"b\"}\n\n");
   }
 }
