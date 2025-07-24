@@ -24,9 +24,9 @@
     <maven.compiler.release>21</maven.compiler.release>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     <avaje.config.version>4.1</avaje.config.version>
-    <avaje.inject.version>11.6-RC8</avaje.inject.version>
+    <avaje.inject.version>11.6</avaje.inject.version>
     <avaje.jsonb.version>3.6</avaje.jsonb.version>
-    <avaje.http.version>3.4-RC4</avaje.http.version>
+    <avaje.http.version>3.4</avaje.http.version>
     <avaje.metrics.version>9.7</avaje.metrics.version>
     <avaje.validator.version>2.12</avaje.validator.version>
     <avaje.record.builder.version>1.2</avaje.record.builder.version>
