@@ -17,10 +17,11 @@
   <dependencies>
 
     <dependency>
-      <groupId>ch.qos.logback</groupId>
-      <artifactId>logback-classic</artifactId>
-      <version>1.5.20</version>
+      <groupId>io.avaje</groupId>
+      <artifactId>avaje-simple-logger</artifactId>
+      <version>1.1-RC1</version>
     </dependency>
+
     <dependency>
       <groupId>org.slf4j</groupId>
       <artifactId>slf4j-jdk-platform-logging</artifactId>
@@ -91,6 +92,42 @@
         <version>17.1.1</version>
         <extensions>true</extensions>
       </plugin>
+
     </plugins>
   </build>
+
+  <profiles>
+  <profile>
+    <id>native</id>
+    <build>
+      <plugins>
+
+        <plugin>
+          <groupId>org.graalvm.buildtools</groupId>
+          <artifactId>native-maven-plugin</artifactId>
+          <version>0.11.2</version>
+          <extensions>true</extensions>
+          <executions>
+            <execution>
+              <id>build-native</id>
+              <goals>
+                <goal>compile-no-fork</goal>
+              </goals>
+              <phase>package</phase>
+              <configuration>
+                <buildArgs>
+                  <buildArg>--emit build-report</buildArg>
+                  <buildArg>--no-fallback</buildArg>
+                </buildArgs>
+                <mainClass>org.example.Main</mainClass>
+              </configuration>
+            </execution>
+          </executions>
+
+        </plugin>
+
+      </plugins>
+    </build>
+  </profile>
+  </profiles>
 </project>
