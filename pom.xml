@@ -24,7 +24,7 @@
     <maven.compiler.release>21</maven.compiler.release>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     <avaje.config.version>5.0</avaje.config.version>
-    <avaje.inject.version>12.2-RC1</avaje.inject.version>
+    <avaje.inject.version>12.2</avaje.inject.version>
     <avaje.jsonb.version>3.9</avaje.jsonb.version>
     <avaje.http.version>3.7-RC1</avaje.http.version>
     <avaje.metrics.version>9.8</avaje.metrics.version>
@@ -33,7 +33,7 @@
     <avaje.spi.version>2.14</avaje.spi.version>
     <avaje.prisms.version>2.0</avaje.prisms.version>
     <ebean.version>17.2.0</ebean.version>
-    <helidon.version>4.3.2</helidon.version>
+    <helidon.version>4.3.3</helidon.version>
     <jstachio.version>1.3.7</jstachio.version>
   </properties>
 
