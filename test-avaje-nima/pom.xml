@@ -89,7 +89,7 @@
       <plugin> <!-- perform ebean enhancement -->
         <groupId>io.ebean</groupId>
         <artifactId>ebean-maven-plugin</artifactId>
-        <version>17.2.0</version>
+        <version>17.2.1</version>
         <extensions>true</extensions>
       </plugin>
 
