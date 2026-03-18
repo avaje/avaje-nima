@@ -21,6 +21,8 @@
   {"name": "io.helidon.service.registry.ServiceRegistry__ServiceDescriptor", "allDeclaredConstructors": true, "allDeclaredFields": true},
   {"name": "io.helidon.service.registry.ServiceLoader__ServiceDescriptor", "allDeclaredConstructors": true, "allDeclaredFields": true},
   {"name": "io.helidon.service.registry.Scopes__ServiceDescriptor", "allDeclaredConstructors": true, "allDeclaredFields": true},
+  {"name": "io.helidon.metrics.api.MeterRegistryFactory__ServiceDescriptor", "allDeclaredConstructors": true, "allDeclaredFields": true},
+  {"name": "io.helidon.metrics.api.MetricsFactoryFactory__ServiceDescriptor", "allDeclaredConstructors": true, "allDeclaredFields": true},
   {"name": "io.helidon.config.ConfigurationValueFactory__ServiceDescriptor", "allDeclaredConstructors": true, "allDeclaredFields": true},
   {"name": "io.helidon.config.ConfigProvider__ServiceDescriptor", "allDeclaredConstructors": true, "allDeclaredFields": true},
   {"name": "io.helidon.config.MetaConfigFactory__ServiceDescriptor", "allDeclaredConstructors": true, "allDeclaredFields": true}
