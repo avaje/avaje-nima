@@ -6,7 +6,7 @@
   <parent>
     <groupId>org.avaje</groupId>
     <artifactId>java11-oss</artifactId>
-    <version>5.1</version>
+    <version>5.2</version>
     <relativePath />
   </parent>
 
@@ -24,9 +24,9 @@
     <maven.compiler.release>21</maven.compiler.release>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     <avaje.config.version>5.1</avaje.config.version>
-    <avaje.inject.version>12.5-RC6</avaje.inject.version>
-    <avaje.jsonb.version>3.12-RC1</avaje.jsonb.version>
-    <avaje.http.version>3.8-RC5</avaje.http.version>
+    <avaje.inject.version>12.5-javax-RC7</avaje.inject.version>
+    <avaje.jsonb.version>3.12-RC2</avaje.jsonb.version>
+    <avaje.http.version>3.8</avaje.http.version>
     <avaje.metrics.version>9.8</avaje.metrics.version>
     <avaje.validator.version>2.17</avaje.validator.version>
     <avaje.record.builder.version>1.4</avaje.record.builder.version>
@@ -237,7 +237,7 @@
         <plugin>
           <groupId>io.avaje</groupId>
           <artifactId>openapi-maven-plugin</artifactId>
-          <version>1.1</version>
+          <version>3.8</version>
           <executions>
             <execution>
               <id>main</id>
