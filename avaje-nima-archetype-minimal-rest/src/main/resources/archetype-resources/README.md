@@ -85,3 +85,18 @@ curl http://localhost:8080/hi
 
 curl http://localhost:8080/hi/data
 ```
+
+---
+
+## AI coding instructions
+
+This project uses [avaje-nima](https://github.com/avaje/avaje-nima).
+The avaje-nima repository publishes step-by-step AI coding instructions for common tasks:
+[`.github/copilot-instructions.md`](https://github.com/avaje/avaje-nima/blob/main/.github/copilot-instructions.md)
+
+Topics covered:
+
+- Add a JVM Docker image build with Jib
+- Add a GraalVM native image Docker build with Jib
+- Add a global exception handler
+- Add controller tests
