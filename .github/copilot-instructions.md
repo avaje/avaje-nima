@@ -467,3 +467,149 @@ curl -i http://localhost:8080/no-such-path
 - Full how-to guide: [`docs/global-exception-handler.md`](docs/global-exception-handler.md)
 - avaje-http `@ExceptionHandler` docs: https://avaje.io/http/
 - avaje-record-builder: https://github.com/avaje/avaje-record-builder
+
+---
+
+## How to add a test for a controller
+
+When asked to *"add a test"*, *"test this endpoint"*, *"write a test for my controller"*, or *"add a controller test"* to an avaje-nima project, follow these steps exactly.
+
+### Step 1 — Confirm the test dependencies are present in `pom.xml`
+
+The following dependency must be in `<scope>test</scope>`. It is included in all projects generated from the avaje-nima archetype, but verify before proceeding:
+
+```xml
+<!-- Starts an embedded Helidon server and wires beans for tests -->
+<dependency>
+  <groupId>io.avaje</groupId>
+  <artifactId>avaje-nima-test</artifactId>
+  <version>${avaje.nima.version}</version>
+  <scope>test</scope>
+</dependency>
+
+
+If the dependency is missing, add it inside `<dependencies>`.
+
+### Step 2 — Choose a testing approach
+
+There are two ways to test a controller. Prefer **Approach 2** (generated typed API) for standard JSON endpoints; use **Approach 1** (raw `HttpClient`) when you need direct control over headers, raw body inspection, or are testing non-JSON endpoints.
+
+| | Approach 1: `HttpClient` | Approach 2: Generated typed API |
+|---|---|---|
+| Inject | `HttpClient` | `HelloControllerTestAPI` |
+| Response type | `HttpResponse<String>` | `HttpResponse<MyDto>` (typed) |
+| Path construction | manual string | generated method per endpoint |
+| Best for | raw/non-JSON, custom headers | standard CRUD/JSON endpoints |
+
+### Step 3 — Create or locate the test class
+
+Test classes live in `src/test/java` and mirror the main source package. If a test class already exists for the controller, open it. Otherwise create one at:
+
+```
+src/test/java/<base-package>/<ControllerName>Test.java
+```
+
+The class must carry `@InjectTest`. Declare the injections you need:
+
+```java
+package <base-package>;
+
+import static org.assertj.core.api.Assertions.assertThat;
+import java.net.http.HttpResponse;
+import org.junit.jupiter.api.Test;
+import io.avaje.http.client.HttpClient;
+import io.avaje.inject.test.InjectTest;
+import jakarta.inject.Inject;
+import <controller-package>.HelloControllerTestAPI;
+
+@InjectTest
+class HelloControllerTest {
+
+  @Inject HttpClient client;                    // Approach 1 — raw HTTP
+
+  @Inject HelloControllerTestAPI helloApi;      // Approach 2 — typed API
+```
+
+- `@InjectTest` starts a real Helidon server on a random port and builds the full `BeanScope` once per test class.
+- `HelloControllerTestAPI` is **auto-generated** by `avaje-nima-generator` during test compilation — one interface per `@Controller` class, named `<ControllerName>TestAPI`, located in the same package as the controller.
+
+### Step 4 — Write the test method
+
+#### Approach 1 — `HttpClient` (untyped)
+
+```java
+@Test
+void data_returnsJson() {
+  HttpResponse<String> res = client.request()
+    .path("hi/data")
+    .GET().asString();
+
+  assertThat(res.statusCode()).isEqualTo(200);
+  assertThat(res.body()).contains("message");
+  assertThat(res.body()).contains("timestamp");
+}
+```
+
+**Request builder reference:**
+
+| Scenario | Snippet |
+|---|---|
+| GET plain text | `.path("hi").GET().asString()` |
+| GET with path parameter | `.path("hi/data/Alice").GET().asString()` |
+| GET with query parameter | `.path("hi/search").queryParam("q", "foo").GET().asString()` |
+| POST with JSON body | `.path("hi").body(myDto).POST().asString()` |
+
+#### Approach 2 — Generated typed API (preferred for JSON)
+
+The generated API exposes one method per controller endpoint. Responses are typed, so you assert on fields directly rather than parsing raw JSON strings:
+
+```java
+@Test
+void dataByName_returnsTypedResponse() {
+  HttpResponse<GreetingResponse> res = helloApi.dataByName("World");
+
+  assertThat(res.statusCode()).isEqualTo(200);
+  assertThat(res.body().message()).isEqualTo("World");
+  assertThat(res.body().timestamp()).isGreaterThan(0);
+}
+```
+
+The generated interface mirrors the controller exactly:
+
+```java
+// Generated: <controller-package>.HelloControllerTestAPI
+@Client("/hi")
+public interface HelloControllerTestAPI {
+  @Get                   HttpResponse<String>           hi();
+  @Get("/data")          HttpResponse<GreetingResponse> data();
+  @Get("/data/{name}")   HttpResponse<GreetingResponse> dataByName(String name);
+}
+```
+
+### Step 5 — Verify
+
+```bash
+mvn test
+```
+
+The build should complete and all tests should pass:
+
+```
+Tests run: N, Failures: 0, Errors: 0, Skipped: 0
+```
+
+---
+
+## Notes (controller testing)
+
+- `@InjectTest` starts an embedded server on a **random port** — never hard-code a port number in tests.
+- `HttpClient` and `HelloControllerTestAPI` can be injected as `static` if desired for class-level lifecycle.
+- The `TestAPI` interface is generated into `target/generated-test-sources` during `mvn test-compile`. It will not exist on a clean checkout until at least one compilation has run.
+
+---
+
+## Reference (controller testing)
+
+- Full how-to guide: [`docs/controller-testing.md`](docs/controller-testing.md)
+- avaje-http client docs: https://avaje.io/http-client/
+- avaje-inject test docs: https://avaje.io/inject/#testing
