@@ -23,6 +23,14 @@ The generator module transitively brings in the following avaje services and ann
 - [`spi-service`](https://github.com/avaje/avaje-spi-service)
 - `validator-generator`
 
+# Documentation & Guides
+
+- [Avaje Nima docs](https://avaje.io/nima/)
+- [Add a global exception handler](docs/global-exception-handler.md)
+- [Add a JVM Docker build with Jib](docs/jib-jvm-docker.md)
+- [Add a native image Docker build with Jib](docs/jib-native-docker.md)
+- [AI coding instructions for Copilot / Cursor](.github/copilot-instructions.md)
+
 # How to use
 
 ## Step 1 - Add dependencies
@@ -56,7 +64,7 @@ include all the avaje processors.
     <artifactId>avaje-nima-generator</artifactId>
     <version>${version}</version>
     <optional>true</optional>
-    <scope>provided</scop>
+    <scope>provided</scope>
 </dependency>
 ```
 
