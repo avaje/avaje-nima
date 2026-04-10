@@ -63,6 +63,7 @@ class HelloControllerTest {
 1. **`@InjectTest`** — JUnit 5 extension that starts the embedded server and builds the full `BeanScope` before the first test in the class. The server is stopped after the last test.
 2. **`HttpClient`** — pre-configured with `http://localhost:<random-port>` as the base URL.
 3. **`HelloControllerTestAPI`** — generated interface, one per `@Controller`, named `<ControllerName>TestAPI`. Located in the same package as the controller. Injected as `static` to match the class-level lifecycle.
+4. **`HttpResponse`** - the response type for avaje HttpClient is JDK `java.net.http.HttpResponse`
 
 ---
 

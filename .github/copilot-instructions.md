@@ -605,6 +605,7 @@ Tests run: N, Failures: 0, Errors: 0, Skipped: 0
 - `@InjectTest` starts an embedded server on a **random port** — never hard-code a port number in tests.
 - `HttpClient` and `HelloControllerTestAPI` can be injected as `static` if desired for class-level lifecycle.
 - The `TestAPI` interface is generated into `target/generated-test-sources` during `mvn test-compile`. It will not exist on a clean checkout until at least one compilation has run.
+- The `HttpResponse` type used by avaje HttpClient is JDK `java.net.http.HttpResponse`.
 
 ---
 
