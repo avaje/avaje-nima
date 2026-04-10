@@ -43,6 +43,7 @@
     <module>avaje-nima-htmx</module>
     <module>avaje-nima-generator</module>
     <module>avaje-nima-test</module>
+    <module>avaje-nima-archetype-minimal-rest</module>
   </modules>
 
   <dependencyManagement>

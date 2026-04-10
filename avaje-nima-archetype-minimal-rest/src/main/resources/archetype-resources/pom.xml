@@ -1,0 +1,224 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+  <modelVersion>4.0.0</modelVersion>
+
+  <groupId>${groupId}</groupId>
+  <artifactId>${artifactId}</artifactId>
+  <version>${version}</version>
+  <packaging>jar</packaging>
+
+  <properties>
+    <maven.compiler.release>25</maven.compiler.release>
+    <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+    <avaje.nima.version>1.8</avaje.nima.version>
+    <avaje.http.version>3.8</avaje.http.version>
+    <helidon.version>4.4.0</helidon.version>
+    <surefire.useModulePath>false</surefire.useModulePath>
+  </properties>
+
+  <dependencyManagement>
+    <dependencies>
+      <dependency>
+        <groupId>io.helidon</groupId>
+        <artifactId>helidon-bom</artifactId>
+        <version>${helidon.version}</version>
+        <scope>import</scope>
+        <type>pom</type>
+      </dependency>
+    </dependencies>
+  </dependencyManagement>
+
+  <dependencies>
+
+    <!-- avaje-nima (Helidon + avaje-inject + avaje-jsonb etc) -->
+    <dependency>
+      <groupId>io.avaje</groupId>
+      <artifactId>avaje-nima</artifactId>
+      <version>${avaje.nima.version}</version>
+    </dependency>
+
+    <!-- Logging -->
+    <dependency>
+      <groupId>io.avaje</groupId>
+      <artifactId>avaje-simple-logger</artifactId>
+      <version>1.4</version>
+    </dependency>
+    <dependency>
+      <groupId>org.slf4j</groupId>
+      <artifactId>slf4j-jdk-platform-logging</artifactId>
+      <version>2.0.17</version>
+    </dependency>
+
+    <!-- Test -->
+    <dependency>
+      <groupId>io.avaje</groupId>
+      <artifactId>avaje-nima-test</artifactId>
+      <version>${avaje.nima.version}</version>
+      <scope>test</scope>
+    </dependency>
+    <dependency>
+      <groupId>io.avaje</groupId>
+      <artifactId>junit</artifactId>
+      <version>1.8</version>
+      <scope>test</scope>
+    </dependency>
+
+  </dependencies>
+
+  <build>
+    <plugins>
+
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-compiler-plugin</artifactId>
+        <version>3.15.0</version>
+        <configuration>
+          <annotationProcessorPaths>
+            <path>
+              <groupId>io.avaje</groupId>
+              <artifactId>avaje-nima-generator</artifactId>
+              <version>${avaje.nima.version}</version>
+            </path>
+          </annotationProcessorPaths>
+        </configuration>
+      </plugin>
+
+      <!-- Generate avaje-inject wiring classes -->
+      <plugin>
+        <groupId>io.avaje</groupId>
+        <artifactId>avaje-inject-maven-plugin</artifactId>
+        <version>12.5</version>
+        <executions>
+          <execution>
+            <phase>process-sources</phase>
+            <goals>
+              <goal>provides</goal>
+            </goals>
+          </execution>
+        </executions>
+      </plugin>
+
+    </plugins>
+  </build>
+
+  <profiles>
+    <profile>
+      <id>native</id>
+      <build>
+        <plugins>
+          <plugin> <!-- build the native executable -->
+            <groupId>org.graalvm.buildtools</groupId>
+            <artifactId>native-maven-plugin</artifactId>
+            <version>0.11.4</version>
+            <extensions>true</extensions>
+            <executions>
+              <execution>
+                <id>build-native</id>
+                <goals>
+                  <goal>compile-no-fork</goal>
+                </goals>
+                <phase>package</phase>
+                <configuration>
+                  <mainClass>${package}.Main</mainClass>
+                </configuration>
+              </execution>
+            </executions>
+            <configuration>
+              <buildArgs>
+                <!-- For linux only + non-community graalvm? specify G1 GC with options -->
+<!--                <buildArg>&#45;&#45;gc=G1</buildArg>-->
+<!--                <buildArg>-R:MaxGCPauseMillis=50</buildArg>-->
+<!--                <buildArg>-R:MaxHeapSize=400m</buildArg>-->
+                <buildArg>--emit build-report</buildArg>
+                <buildArg>--no-fallback</buildArg>
+                <buildArg>-march=compatibility</buildArg>
+                <buildArg>--static-nolibc</buildArg>
+              </buildArgs>
+            </configuration>
+          </plugin>
+
+          <plugin> <!-- build the native image docker container -->
+            <groupId>com.google.cloud.tools</groupId>
+            <artifactId>jib-maven-plugin</artifactId>
+            <version>3.5.1</version>
+            <executions>
+              <execution>
+                <goals>
+                  <goal>dockerBuild</goal>
+                </goals>
+                <phase>package</phase>
+              </execution>
+            </executions>
+            <dependencies>
+              <dependency>
+                <groupId>com.google.cloud.tools</groupId>
+                <artifactId>jib-native-image-extension-maven</artifactId>
+                <version>0.1.0</version>
+              </dependency>
+            </dependencies>
+
+            <configuration>
+              <pluginExtensions>
+                <pluginExtension>
+                  <implementation>com.google.cloud.tools.jib.maven.extension.nativeimage.JibNativeImageExtension</implementation>
+                  <properties>
+                    <imageName>${project.artifactId}</imageName>
+                  </properties>
+                </pluginExtension>
+              </pluginExtensions>
+              <container>
+                <mainClass>${package}.Main</mainClass>
+                <ports>8080</ports>
+              </container>
+              <from> <!-- UBI micro image with glibc support -->
+                <image>redhat/ubi10-micro:10.1-1762215812</image>
+              </from>
+              <to>
+                <image>${project.artifactId}-native:${project.version}</image>
+              </to>
+            </configuration>
+          </plugin>
+        </plugins>
+      </build>
+    </profile>
+
+    <!-- Activate with: mvn package -Pfat-jar
+         Produces a self-contained executable jar with all dependencies merged.
+         The ServicesResourceTransformer is required so that avaje-inject SPI
+         registrations from META-INF/services are merged correctly. -->
+    <profile>
+      <id>fat-jar</id>
+      <build>
+        <plugins>
+          <plugin>
+            <groupId>org.apache.maven.plugins</groupId>
+            <artifactId>maven-shade-plugin</artifactId>
+            <version>3.6.0</version>
+            <executions>
+              <execution>
+                <phase>package</phase>
+                <goals>
+                  <goal>shade</goal>
+                </goals>
+                <configuration>
+                  <transformers>
+                    <transformer
+                      implementation="org.apache.maven.plugins.shade.resource.ServicesResourceTransformer"/>
+                    <transformer
+                      implementation="org.apache.maven.plugins.shade.resource.ManifestResourceTransformer">
+                      <mainClass>${package}.Main</mainClass>
+                    </transformer>
+                  </transformers>
+                  <keepDependenciesWithProvidedScope>false</keepDependenciesWithProvidedScope>
+                </configuration>
+              </execution>
+            </executions>
+          </plugin>
+        </plugins>
+      </build>
+    </profile>
+  </profiles>
+
+</project>
