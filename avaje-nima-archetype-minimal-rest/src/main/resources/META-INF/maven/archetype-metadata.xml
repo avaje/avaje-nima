@@ -12,6 +12,14 @@
   </requiredProperties>
 
   <fileSets>
+    <!-- Project README at the root of the generated project -->
+    <fileSet filtered="true" encoding="UTF-8">
+      <directory/>
+      <includes>
+        <include>README.md</include>
+      </includes>
+    </fileSet>
+
     <!-- Main Java sources – files placed into src/main/java/<package>/ -->
     <fileSet filtered="true" packaged="true" encoding="UTF-8">
       <directory>src/main/java</directory>

@@ -23,7 +23,7 @@
       <dependency>
         <groupId>io.helidon</groupId>
         <artifactId>helidon-bom</artifactId>
-        <version>${symbol_dollar}{helidon.version}</version>
+        <version>${helidon.version}</version>
         <scope>import</scope>
         <type>pom</type>
       </dependency>
@@ -36,7 +36,7 @@
     <dependency>
       <groupId>io.avaje</groupId>
       <artifactId>avaje-nima</artifactId>
-      <version>${symbol_dollar}{avaje.nima.version}</version>
+      <version>${avaje.nima.version}</version>
     </dependency>
 
     <!-- Logging -->
@@ -55,7 +55,7 @@
     <dependency>
       <groupId>io.avaje</groupId>
       <artifactId>avaje-nima-test</artifactId>
-      <version>${symbol_dollar}{avaje.nima.version}</version>
+      <version>${avaje.nima.version}</version>
       <scope>test</scope>
     </dependency>
     <dependency>
@@ -79,7 +79,7 @@
             <path>
               <groupId>io.avaje</groupId>
               <artifactId>avaje-nima-generator</artifactId>
-              <version>${symbol_dollar}{avaje.nima.version}</version>
+              <version>${avaje.nima.version}</version>
             </path>
           </annotationProcessorPaths>
         </configuration>
@@ -111,7 +111,7 @@
           <plugin> <!-- build the native executable -->
             <groupId>org.graalvm.buildtools</groupId>
             <artifactId>native-maven-plugin</artifactId>
-            <version>1.0.0</version>
+            <version>0.11.4</version>
             <extensions>true</extensions>
             <executions>
               <execution>
