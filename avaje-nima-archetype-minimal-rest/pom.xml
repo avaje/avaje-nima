@@ -9,6 +9,7 @@
     <version>1.9-RC1</version>
   </parent>
 
+  <groupId>io.avaje.archetype</groupId>
   <artifactId>avaje-nima-archetype-minimal-rest</artifactId>
   <name>avaje-nima-archetype-minimal-rest</name>
   <packaging>maven-archetype</packaging>
