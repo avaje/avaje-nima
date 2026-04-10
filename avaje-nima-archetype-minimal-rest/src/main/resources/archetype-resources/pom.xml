@@ -10,7 +10,7 @@
   <packaging>jar</packaging>
 
   <properties>
-    <maven.compiler.release>21</maven.compiler.release>
+    <maven.compiler.release>25</maven.compiler.release>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     <avaje.nima.version>1.8</avaje.nima.version>
     <avaje.http.version>3.8</avaje.http.version>
@@ -104,6 +104,86 @@
   </build>
 
   <profiles>
+    <profile>
+      <id>native</id>
+      <build>
+        <plugins>
+          <plugin> <!-- build the native executable -->
+            <groupId>org.graalvm.buildtools</groupId>
+            <artifactId>native-maven-plugin</artifactId>
+            <version>1.0.0</version>
+            <extensions>true</extensions>
+            <executions>
+              <execution>
+                <id>build-native</id>
+                <goals>
+                  <goal>compile-no-fork</goal>
+                </goals>
+                <phase>package</phase>
+                <configuration>
+                  <mainClass>${package}.Main</mainClass>
+                </configuration>
+              </execution>
+            </executions>
+            <configuration>
+              <buildArgs>
+                <!-- For linux only + non-community graalvm? specify G1 GC with options -->
+<!--                <buildArg>&#45;&#45;gc=G1</buildArg>-->
+<!--                <buildArg>-R:MaxGCPauseMillis=50</buildArg>-->
+<!--                <buildArg>-R:MaxHeapSize=400m</buildArg>-->
+                <buildArg>--emit build-report</buildArg>
+                <buildArg>--no-fallback</buildArg>
+                <buildArg>-march=compatibility</buildArg>
+                <buildArg>--static-nolibc</buildArg>
+              </buildArgs>
+            </configuration>
+          </plugin>
+
+          <plugin> <!-- build the native image docker container -->
+            <groupId>com.google.cloud.tools</groupId>
+            <artifactId>jib-maven-plugin</artifactId>
+            <version>3.5.1</version>
+            <executions>
+              <execution>
+                <goals>
+                  <goal>dockerBuild</goal>
+                </goals>
+                <phase>package</phase>
+              </execution>
+            </executions>
+            <dependencies>
+              <dependency>
+                <groupId>com.google.cloud.tools</groupId>
+                <artifactId>jib-native-image-extension-maven</artifactId>
+                <version>0.1.0</version>
+              </dependency>
+            </dependencies>
+
+            <configuration>
+              <pluginExtensions>
+                <pluginExtension>
+                  <implementation>com.google.cloud.tools.jib.maven.extension.nativeimage.JibNativeImageExtension</implementation>
+                  <properties>
+                    <imageName>${project.artifactId}</imageName>
+                  </properties>
+                </pluginExtension>
+              </pluginExtensions>
+              <container>
+                <mainClass>${package}.Main</mainClass>
+                <ports>8080</ports>
+              </container>
+              <from> <!-- UBI micro image with glibc support -->
+                <image>redhat/ubi10-micro:10.1-1762215812</image>
+              </from>
+              <to>
+                <image>${project.artifactId}-native:${project.version}</image>
+              </to>
+            </configuration>
+          </plugin>
+        </plugins>
+      </build>
+    </profile>
+
     <!-- Activate with: mvn package -Pfat-jar
          Produces a self-contained executable jar with all dependencies merged.
          The ServicesResourceTransformer is required so that avaje-inject SPI
