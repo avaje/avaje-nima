@@ -26,10 +26,7 @@ The generator module transitively brings in the following avaje services and ann
 # Documentation & Guides
 
 - [Avaje Nima docs](https://avaje.io/nima/)
-- [Add a global exception handler](docs/global-exception-handler.md)
-- [Add a JVM Docker build with Jib](docs/jib-jvm-docker.md)
-- [Add a native image Docker build with Jib](docs/jib-native-docker.md)
-- [AI coding instructions for Copilot / Cursor](.github/copilot-instructions.md)
+- [Step-by-step guides for AI agents](docs/guides/README.md)
 
 # How to use
 

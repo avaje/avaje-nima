@@ -1,6 +1,14 @@
-# Adding a Global Exception Handler
+# Guide: Add a Global Exception Handler
 
-This guide explains how to add a centralised exception handler to an **avaje-nima** project. The handler catches exceptions thrown by any controller, maps them to structured JSON error responses, and sets the correct HTTP status codes — without repeating error-handling logic in every endpoint.
+## Purpose
+
+This guide provides step-by-step instructions for adding a centralised exception
+handler to an **avaje-nima** project. The handler catches exceptions thrown by any
+controller, maps them to structured JSON error responses, and sets the correct HTTP
+status codes — without repeating error-handling logic in every endpoint.
+
+When asked to *"add a global exception handler"*, *"add centralised error handling"*,
+or *"add an error response"* to an avaje-nima project, follow these steps exactly.
 
 ---
 
@@ -13,13 +21,19 @@ The pattern uses two classes in a `web/exception` package:
 | `ErrorResponse` | JSON record returned in the response body for all errors |
 | `GlobalExceptionController` | `@Controller` with `@ExceptionHandler` methods; one per exception type |
 
-avaje's annotation processor generates the routing glue at compile time — no runtime configuration needed.
+avaje's annotation processor generates the routing glue at compile time — no runtime
+configuration needed.
+
+> `avaje-nima` already transitively includes `avaje-jsonb` (`@Json`) and
+> `avaje-http-api` (`@ExceptionHandler`). Only `avaje-record-builder` needs to be
+> added explicitly.
 
 ---
 
-## Step 1 — Add the `avaje-record-builder` dependency
+## Step 1 — Add the `avaje-record-builder` dependency to `pom.xml`
 
-`ErrorResponse` uses `@RecordBuilder` to generate a builder. Add the dependency to `pom.xml` as a `provided`-scope annotation processor:
+`ErrorResponse` uses `@RecordBuilder` to generate a builder. Add the dependency to
+`pom.xml` as a `provided`-scope annotation processor:
 
 ```xml
 <dependency>
@@ -30,16 +44,17 @@ avaje's annotation processor generates the routing glue at compile time — no r
 </dependency>
 ```
 
-> `avaje-nima` already transitively includes `avaje-jsonb` (for `@Json`) and `avaje-http-api` (for `@ExceptionHandler`), so no additional dependencies are needed for those.
-
 ---
 
-## Step 2 — Create `ErrorResponse`
+## Step 2 — Create `ErrorResponse.java`
 
-Create `src/main/java/<your/package>/web/exception/ErrorResponse.java`:
+Create the file at `src/main/java/<base-package>/web/exception/ErrorResponse.java`.
+
+Replace `<base-package>` with the project's root package (find it by looking at
+existing controller imports or `module-info.java`).
 
 ```java
-package com.example.web.exception;
+package <base-package>.web.exception;
 
 import io.avaje.jsonb.Json;
 import io.avaje.recordbuilder.RecordBuilder;
@@ -67,16 +82,19 @@ public record ErrorResponse(
 | `message` | A human-readable description of the error |
 | `traceId` | Distributed trace ID (set to `null` until tracing is integrated) |
 
-> `@RecordBuilder` instructs the `avaje-record-builder` processor to generate `ErrorResponseBuilder` at compile time. The static `builder()` method delegates to the generated builder.
+> `@RecordBuilder` instructs the `avaje-record-builder` processor to generate
+> `ErrorResponseBuilder` at compile time. The static `builder()` method delegates to
+> the generated builder.
 
 ---
 
-## Step 3 — Create `GlobalExceptionController`
+## Step 3 — Create `GlobalExceptionController.java`
 
-Create `src/main/java/<your/package>/web/exception/GlobalExceptionController.java`:
+Create the file at
+`src/main/java/<base-package>/web/exception/GlobalExceptionController.java`:
 
 ```java
-package com.example.web.exception;
+package <base-package>.web.exception;
 
 import io.avaje.http.api.Controller;
 import io.avaje.http.api.ExceptionHandler;
@@ -171,20 +189,30 @@ final class GlobalExceptionController {
 
 ---
 
-## How the handler methods work
+## Step 4 — Key rules to follow
 
-### Method signature rules
+1. **`GlobalExceptionController` must be package-private** (`final class`, no `public`).
+   avaje-inject discovers it from generated wiring regardless of visibility.
+2. **`ErrorResponse` must be `public`** — it is part of the JSON API surface.
+3. Both files go in the **same `web/exception` package** (or equivalent sub-package).
+4. The `@ExceptionHandler` exception type is inferred from the first parameter; use
+   `@ExceptionHandler(SomeException.class)` when the parameter type differs or is
+   omitted (e.g. the 404 handler which has no exception parameter).
+5. Always pair `@ExceptionHandler` with `@Produces(statusCode = N)` to set the correct
+   HTTP status.
+
+### Handler method signature rules
 
 avaje-http maps `@ExceptionHandler` methods by inspecting the first parameter type:
 
 ```java
-// Explicit — handles exactly UnsupportedOperationException
-@ExceptionHandler(UnsupportedOperationException.class)
-ErrorResponse handle(UnsupportedOperationException ex, ServerRequest req) { … }
-
 // Implicit — exception type inferred from first parameter
 @ExceptionHandler
 ErrorResponse handle(BadRequestException ex, ServerRequest req) { … }
+
+// Explicit — handles exactly UnsupportedOperationException
+@ExceptionHandler(UnsupportedOperationException.class)
+ErrorResponse handle(UnsupportedOperationException ex, ServerRequest req) { … }
 
 // No exception parameter — handler receives only the request (e.g. for 404)
 @ExceptionHandler(NotFoundException.class)
@@ -193,61 +221,51 @@ ErrorResponse handle(ServerRequest req) { … }
 
 ### Handler priority
 
-More-specific exception types take priority over broader ones. The `Exception` catch-all is the fallback:
+More-specific exception types take priority over broader ones. The `Exception`
+catch-all is the fallback:
 
 ```
-NotFoundException         → 404
-BadRequestException       → 400
-InternalServerException   → 500
+NotFoundException             → 404
+BadRequestException           → 400
+InternalServerException       → 500
 UnsupportedOperationException → 400
-Exception (catch-all)     → 500
-```
-
-### `@Produces(statusCode = N)`
-
-Sets the HTTP status code on the response. Without it, the default is `200`. Always pair with `@ExceptionHandler`.
-
-### The `traceId` field
-
-`traceId` is `null` throughout this implementation. It is a placeholder for a distributed trace ID (e.g. from a `X-B3-TraceId` or `traceparent` header). Populate it when distributed tracing is integrated:
-
-```java
-String traceId = req.headers().value(HeaderNames.create("traceparent")).orElse(null);
+Exception (catch-all)         → 500
 ```
 
 ---
 
-## Package and visibility
-
-- Place both classes in a `web/exception` sub-package (or equivalent).
-- `GlobalExceptionController` is **package-private** (`final class`, no `public`). avaje-inject discovers it via the generated DI wiring regardless of visibility.
-- `ErrorResponse` is `public` because it is part of the API surface (JSON response body).
-
----
-
-## Verifying the handler
-
-After adding the classes, build and run the application:
+## Step 5 — Verify
 
 ```bash
 mvn compile
-mvn exec:java -Dexec.mainClass=com.example.Main
 ```
 
-Trigger a 404:
+The build must succeed with no errors from the annotation processors. Then run and test:
 
 ```bash
 curl -i http://localhost:8080/no-such-path
+# Expected: HTTP 404, Content-Type: application/json
 ```
 
-Expected response:
+Expected response body:
 
 ```json
-HTTP/1.1 404 Not Found
-Content-Type: application/json
-
 {"httpCode":404,"path":"/no-such-path","message":"Not found for /no-such-path","traceId":null}
 ```
+
+---
+
+## Notes
+
+- The `traceId` field is always `null` in this baseline. Populate it with a distributed
+  trace ID (e.g. from a `traceparent` header) when tracing is integrated:
+  ```java
+  String traceId = req.headers().value(HeaderNames.create("traceparent")).orElse(null);
+  ```
+- To add handlers for additional exception types, add new methods following the same
+  pattern: `@Produces(statusCode = N)` + `@ExceptionHandler` + exception type as first
+  parameter.
+- The `Exception` catch-all is the fallback. More-specific types always take priority.
 
 ---
 
@@ -259,3 +277,10 @@ Content-Type: application/json
 | `avaje-nima` (includes `avaje-http-api`, `avaje-jsonb`) | 1.8 |
 | Helidon SE | 4.4.0 |
 | Java | 25 |
+
+---
+
+## References
+
+- avaje-http `@ExceptionHandler` docs: https://avaje.io/http/
+- avaje-record-builder: https://github.com/avaje/avaje-record-builder
