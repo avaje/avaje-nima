@@ -14,8 +14,8 @@ The generated project provides two endpoints out of the box:
 
 | Tool | Minimum version |
 |------|-----------------|
-| JDK | 21 |
-| Maven | 3.9 |
+| JDK | 25              |
+| Maven | 3.9             |
 
 ---
 
@@ -87,7 +87,16 @@ curl http://localhost:8080/hi/data
 
 ---
 
-## 5. Build a fat jar (optional)
+## 5. Build as native executable (optional)
+
+```bash
+mvn package -Pnative
+./target/my-service
+```
+
+---
+
+## 6. Build a fat jar (optional)
 
 The `fat-jar` Maven profile bundles all dependencies into a single executable jar using the Maven Shade plugin.
 The `ServicesResourceTransformer` ensures avaje-inject SPI registrations are merged correctly.
