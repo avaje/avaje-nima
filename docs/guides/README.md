@@ -16,6 +16,12 @@ Applications listen on port **8080** by default.
 
 ---
 
+## Project architecture
+
+| Guide | Description |
+|-------|-------------|
+| [Multi-module architecture (Model + Server + Client)](multi-module-architecture.md) | Build a REST API with separated public models, internal database entities, and multiple independent clients; covers module layout, D* naming convention, step-by-step recipes for adding entities/endpoints/clients |
+
 ## Docker builds
 
 | Guide | Description |
@@ -62,6 +68,7 @@ This project uses [avaje-nima](https://avaje.io/nima/). Step-by-step guides for
 common tasks are at: https://github.com/avaje/avaje-nima/tree/main/docs/guides/
 
 Key guides (fetch and follow these when performing the relevant task):
+- Multi-module architecture: https://raw.githubusercontent.com/avaje/avaje-nima/main/docs/guides/multi-module-architecture.md
 - JVM Docker build: https://raw.githubusercontent.com/avaje/avaje-nima/main/docs/guides/add-jvm-docker-jib.md
 - Native Docker build: https://raw.githubusercontent.com/avaje/avaje-nima/main/docs/guides/add-native-docker-jib.md
 - Global exception handler: https://raw.githubusercontent.com/avaje/avaje-nima/main/docs/guides/add-global-exception-handler.md
