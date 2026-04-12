@@ -16,6 +16,14 @@ Applications listen on port **8080** by default.
 
 ---
 
+## Getting Started
+
+| Guide | Description |
+|-------|-------------|
+| [Archetype Getting Started](archetype-getting-started.md) | Use the `io.avaje.archetype:avaje-nima-archetype-minimal-rest` Maven archetype to scaffold a new avaje-nima REST service; includes generation, project structure, compilation, customization patterns, and AI agent command patterns |
+
+---
+
 ## Docker builds
 
 | Guide | Description |
@@ -62,6 +70,7 @@ This project uses [avaje-nima](https://avaje.io/nima/). Step-by-step guides for
 common tasks are at: https://github.com/avaje/avaje-nima/tree/main/docs/guides/
 
 Key guides (fetch and follow these when performing the relevant task):
+- Archetype scaffolding: https://raw.githubusercontent.com/avaje/avaje-nima/main/docs/guides/archetype-getting-started.md
 - JVM Docker build: https://raw.githubusercontent.com/avaje/avaje-nima/main/docs/guides/add-jvm-docker-jib.md
 - Native Docker build: https://raw.githubusercontent.com/avaje/avaje-nima/main/docs/guides/add-native-docker-jib.md
 - Global exception handler: https://raw.githubusercontent.com/avaje/avaje-nima/main/docs/guides/add-global-exception-handler.md
