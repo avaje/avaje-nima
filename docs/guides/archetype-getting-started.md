@@ -50,6 +50,45 @@ Before using this archetype, verify:
 - Maven: https://maven.apache.org/install.html
 - Java 25: https://www.oracle.com/java/technologies/ or use SDKMAN (`sdk install java 25`)
 
+### Check for Latest Archetype Version
+
+Before generating, verify latest available version:
+
+**Option 1 - Recommended for AI Agents:** Simply omit the version parameter and Maven will use the latest:
+
+```bash
+mvn archetype:generate \
+  -DarchetypeGroupId=io.avaje.archetype \
+  -DarchetypeArtifactId=avaje-nima-archetype-minimal-rest \
+  -DgroupId=com.example \
+  -DartifactId=my-service \
+  -Dpackage=com.example.service \
+  -B
+```
+
+**Option 2 - Check available versions:** Run interactive generation, which will show available versions:
+
+```bash
+mvn archetype:generate \
+  -DarchetypeGroupId=io.avaje.archetype \
+  -DarchetypeArtifactId=avaje-nima-archetype-minimal-rest
+```
+
+When prompted, review the suggested version (usually latest) or select a different one.
+
+**Option 3 - Search Maven Central (for published versions):**
+
+```bash
+# Simpler version detection
+mvn dependency:tree -q 2>/dev/null | grep avaje-nima-archetype || \
+  echo "No local cache. Run interactive generation to see available versions."
+```
+
+**Available Versions Summary (as of 2026-04-12):**
+- `1.9-RC1` (latest, release candidate)
+
+**Recommendation:** For new projects, omit `-DarchetypeVersion` to automatically use the latest available version.
+
 ---
 
 ## Generation Methods
@@ -63,6 +102,14 @@ mvn archetype:generate \
   -DarchetypeGroupId=io.avaje.archetype \
   -DarchetypeArtifactId=avaje-nima-archetype-minimal-rest \
   -DarchetypeVersion=1.9-RC1
+```
+
+**Or omit version to use latest:**
+
+```bash
+mvn archetype:generate \
+  -DarchetypeGroupId=io.avaje.archetype \
+  -DarchetypeArtifactId=avaje-nima-archetype-minimal-rest
 ```
 
 **Prompts:**
@@ -177,12 +224,13 @@ my-service/
 mvn archetype:generate \
   -DarchetypeGroupId=io.avaje.archetype \
   -DarchetypeArtifactId=avaje-nima-archetype-minimal-rest \
-  -DarchetypeVersion=1.9-RC1 \
   -DgroupId=com.example \
   -DartifactId=my-service \
   -Dpackage=com.example.service \
   -B
 ```
+
+**Note:** Version parameter omitted to use latest available. To specify a specific version, add: `-DarchetypeVersion=1.9-RC1`
 
 ### Step 2: Enter Project Directory
 
@@ -543,11 +591,31 @@ java -jar target/my-service-1.0-SNAPSHOT.jar
 
 ### Issue: "archetype not found"
 
-**Symptom:** `Unknown archetype repository: archetype.repository`
+**Symptom:** `Unknown archetype repository: archetype.repository` or `The desired archetype does not exist`
 
-**Cause:** Maven cannot locate the archetype in central repository.
+**Cause:** Maven cannot locate the archetype or specified version doesn't exist.
 
-**Solution:** Specify full archetype coordinates with version:
+**Solution 1 (Recommended):** Omit version to use latest available:
+
+```bash
+mvn archetype:generate \
+  -DarchetypeGroupId=io.avaje.archetype \
+  -DarchetypeArtifactId=avaje-nima-archetype-minimal-rest \
+  -DgroupId=com.example \
+  -DartifactId=my-service \
+  -Dpackage=com.example.service \
+  -B
+```
+
+**Solution 2:** Use interactive mode to see available versions:
+
+```bash
+mvn archetype:generate \
+  -DarchetypeGroupId=io.avaje.archetype \
+  -DarchetypeArtifactId=avaje-nima-archetype-minimal-rest
+```
+
+**Solution 3:** Specify a known version:
 
 ```bash
 mvn archetype:generate \
@@ -771,14 +839,38 @@ mvn clean compile
 
 ## Version Information
 
-| Component | Version |
-|-----------|---------|
-| Archetype | 1.9-RC1 |
-| Avaje Nima | 1.8 |
-| Avaje HTTP | 3.8 |
-| Helidon | 4.4.0 |
-| Java Target | 25 |
-| Maven Minimum | 3.9 |
+| Component | Version | Notes |
+|-----------|---------|-------|
+| Archetype | 1.9-RC1 | Latest as of 2026-04-12 |
+| Avaje Nima | 1.8 | Latest compatible with archetype 1.9-RC1 |
+| Avaje HTTP | 3.8 | Included in avaje-nima |
+| Helidon | 4.4.0 | Virtual-thread HTTP server |
+| Java Target | 25 | Minimum Java version for generated projects |
+| Maven Minimum | 3.9 | Minimum Maven version required |
+
+### Best Practice for Version Management
+
+**For AI Agents: Always omit `-DarchetypeVersion` to use the latest available version:**
+
+```bash
+mvn archetype:generate \
+  -DarchetypeGroupId=io.avaje.archetype \
+  -DarchetypeArtifactId=avaje-nima-archetype-minimal-rest \
+  -DgroupId=com.example \
+  -DartifactId=my-service \
+  -Dpackage=com.example.service \
+  -B
+```
+
+This ensures:
+- ✅ New projects always get the latest features and bug fixes
+- ✅ No need to track version updates
+- ✅ Compatible with Maven's automatic version resolution
+- ✅ Simpler command syntax
+
+**When to specify a version:** Only specify `-DarchetypeVersion` when you need a specific, older version for compatibility or testing purposes.
+
+The example commands throughout this guide show `1.9-RC1` for reference, but should be omitted for production usage to always get latest.
 
 ---
 
