@@ -209,16 +209,16 @@ public class Main {
 
 | Task | Difficulty | Guide |
 |------|-----------|-------|
-| Create your first controller | Beginner | [docs/guides/controller-basics.md](../guides/controller-basics.md) |
-| Add global exception handler | Beginner | [docs/guides/exception-handling.md](../guides/exception-handling.md) |
-| Validate request data | Beginner | [docs/guides/validation.md](../guides/validation.md) |
-| Write integration tests | Intermediate | [docs/guides/testing.md](../guides/testing.md) |
-| Add request/response filters | Intermediate | [docs/guides/filters.md](../guides/filters.md) |
-| Configure dependency injection | Intermediate | [docs/guides/dependency-injection.md](../guides/dependency-injection.md) |
-| Build GraalVM native image | Advanced | [docs/guides/native-image.md](../guides/native-image.md) |
-| Deploy to Docker/Kubernetes | Advanced | [docs/guides/deployment.md](../guides/deployment.md) |
+| Create your first controller | Beginner | [guides/controller-basics.md](guides/controller-basics.md) |
+| Add global exception handler | Beginner | [guides/exception-handling.md](guides/exception-handling.md) |
+| Validate request data | Beginner | [guides/validation.md](guides/validation.md) |
+| Write integration tests | Intermediate | [guides/testing.md](guides/testing.md) |
+| Add request/response filters | Intermediate | [guides/filters.md](guides/filters.md) |
+| Configure dependency injection | Intermediate | [guides/dependency-injection.md](guides/dependency-injection.md) |
+| Build GraalVM native image | Advanced | [guides/native-image.md](guides/native-image.md) |
+| Deploy to Docker/Kubernetes | Advanced | [guides/deployment.md](guides/deployment.md) |
 
-**Full Guides Index**: See [docs/guides/README.md](../guides/README.md)
+**Full Guides Index**: See [guides/README.md](guides/README.md)
 
 ## API Quick Reference
 
@@ -432,7 +432,7 @@ public class UserControllerTest {
 }
 ```
 
-**See**: [docs/guides/testing.md](../guides/testing.md)
+**See**: [guides/testing.md](guides/testing.md)
 
 ## Performance Characteristics
 
@@ -484,7 +484,7 @@ export LOGGING_LEVEL_IO_AVAJE=DEBUG
 
 **Solution**: Ensure annotation processor is properly configured in your build (Maven compiler plugin or Gradle annotation processor). Run clean build to regenerate code.
 
-**See**: [docs/guides/troubleshooting.md](../guides/troubleshooting.md#controller-routes)
+**See**: [guides/troubleshooting.md](guides/troubleshooting.md#controller-routes)
 
 ### Issue: Dependency Injection Not Working
 
@@ -492,7 +492,7 @@ export LOGGING_LEVEL_IO_AVAJE=DEBUG
 
 **Solution**: Verify all injected classes are annotated with `@Singleton` or `@Factory`. Check bean scope initialization with `BeanScope.builder().build()`.
 
-**See**: [docs/guides/troubleshooting.md](../guides/troubleshooting.md#dependency-injection)
+**See**: [guides/troubleshooting.md](guides/troubleshooting.md#dependency-injection)
 
 ### Issue: Slow Startup Time
 
@@ -500,7 +500,7 @@ export LOGGING_LEVEL_IO_AVAJE=DEBUG
 
 **Solution**: This is normal for JVM. Consider GraalVM native image for faster startup. Profile with `java -XX:+PrintCompilation`.
 
-**See**: [docs/guides/native-image.md](../guides/native-image.md)
+**See**: [guides/native-image.md](guides/native-image.md)
 
 ## GraalVM Native Image
 
@@ -522,7 +522,7 @@ mvn clean package -Pnative
 ./gradlew nativeCompile
 ```
 
-**See**: [docs/guides/native-image.md](../guides/native-image.md)
+**See**: [guides/native-image.md](guides/native-image.md)
 
 ## Design Philosophy
 
@@ -626,7 +626,7 @@ In your main `README.md`, add:
 
 - **Quick Start**: See [Getting Started](#getting-started) above
 - **Full Reference**: See [docs/LIBRARY.md](docs/LIBRARY.md) for comprehensive capability reference, use cases, and AI agent guidance
-- **Guides**: Step-by-step guides for common tasks in [docs/guides/README.md](docs/guides/README.md)
+- **Guides**: Step-by-step guides for common tasks in [guides/README.md](docs/guides/README.md)
 - **API Docs**: [Javadoc](https://javadoc.io/doc/io.avaje/avaje-nima/latest)
 ```
 
