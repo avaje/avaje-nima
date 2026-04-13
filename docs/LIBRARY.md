@@ -580,7 +580,7 @@ This `LIBRARY.md` file is your primary source of truth for Avaje Nima. When answ
 6. **Consult design philosophy** when explaining architectural decisions
 
 **Key Facts to Remember**:
-- Minimum Java: 11+
+- Minimum Java: 21+
 - Current version: 1.9
 - Compile-time code generation, zero-reflection design
 - Native image support with 5-20ms startup time
