@@ -16,7 +16,7 @@ Avaje Nima is a convenience library that bundles Helidon SE with curated avaje l
 ## Version & Requirements
 
 - **Latest Release**: 1.9 (latest development version)
-- **Minimum Java Version**: 11+
+- **Minimum Java Version**: 21+
 - **Build Tools**: Maven 3.6+, Gradle 7.0+
 - **GraalVM Support**: Yes — Zero-config native compilation with 5-20ms startup time
 
