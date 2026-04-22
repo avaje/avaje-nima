@@ -10,25 +10,33 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.slf4j.spi.LoggingEventBuilder;
 
+import java.util.List;
+
 final class OpenTelemetryFilter implements Filter {
 
     private static final Logger log = LoggerFactory.getLogger(OpenTelemetryFilter.class);
 
     private final Instrumenter<ServerRequest, ServerResponse> instrumenter;
+    private final List<String> excludedPaths;
 
-    OpenTelemetryFilter(Instrumenter<ServerRequest, ServerResponse> instrumenter) {
+    OpenTelemetryFilter(Instrumenter<ServerRequest, ServerResponse> instrumenter, List<String> excludedPaths) {
         this.instrumenter = instrumenter;
+        this.excludedPaths = excludedPaths;
     }
 
     @Override
     public void filter(FilterChain chain, RoutingRequest req, RoutingResponse res) {
+        String reqPath = req.path().rawPath();
+        if (isExcluded(reqPath)) {
+            chain.proceed();
+            return;
+        }
         Context parentContext = Context.current();
         if (!instrumenter.shouldStart(parentContext, req)) {
             chain.proceed();
             return;
         }
         String reqMethod = req.prologue().method().text();
-        String reqPath = req.path().rawPath();
         Context context = instrumenter.start(parentContext, req);
         Throwable error = null;
         try (Scope ignored = context.makeCurrent()) {
@@ -48,6 +56,13 @@ final class OpenTelemetryFilter implements Filter {
                     .ifPresent(route -> HttpServerRoute.update(context, HttpServerRouteSource.SERVER, route));
             instrumenter.end(context, req, res, error);
         }
+    }
+
+    private boolean isExcluded(String path) {
+        for (String prefix : excludedPaths) {
+            if (path.startsWith(prefix)) return true;
+        }
+        return false;
     }
 
     private static LoggingEventBuilder logHttpRequest(LoggingEventBuilder logEvent, String reqMethod, String reqPath) {
