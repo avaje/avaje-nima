@@ -1,0 +1,28 @@
+# avaje-nima — AI Agent & LLM Instructions
+
+> This file provides AI agent and LLM onboarding instructions specifically for avaje-nima. For broader Avaje project documentation and AI onboarding, see the main Avaje website llms.txt at https://avaje.io/llms.txt.
+
+## Key onboarding files
+- [AGENTS.md template](https://raw.githubusercontent.com/avaje/avaje-nima/HEAD/docs/guides/AGENTS.md): Minimal template for agent onboarding and automation in avaje-nima projects
+- [Step-by-step guides index](https://raw.githubusercontent.com/avaje/avaje-nima/HEAD/docs/guides/README.md): Guide index with project context and links to all guides
+
+## Step-by-step guides (fetch and follow as needed)
+- [Archetype scaffolding](https://raw.githubusercontent.com/avaje/avaje-nima/HEAD/docs/guides/archetype-getting-started.md)
+- [Multi-module architecture](https://raw.githubusercontent.com/avaje/avaje-nima/HEAD/docs/guides/multi-module-architecture.md)
+- [JVM Docker build (Jib)](https://raw.githubusercontent.com/avaje/avaje-nima/HEAD/docs/guides/add-jvm-docker-jib.md)
+- [Native image Docker build (Jib)](https://raw.githubusercontent.com/avaje/avaje-nima/HEAD/docs/guides/add-native-docker-jib.md)
+- [Global exception handler](https://raw.githubusercontent.com/avaje/avaje-nima/HEAD/docs/guides/add-global-exception-handler.md)
+- [Controller testing](https://raw.githubusercontent.com/avaje/avaje-nima/HEAD/docs/guides/add-controller-test.md)
+- [Exception handling](https://raw.githubusercontent.com/avaje/avaje-nima/HEAD/docs/guides/exception-handling.md)
+- [Dependency injection](https://raw.githubusercontent.com/avaje/avaje-nima/HEAD/docs/guides/dependency-injection.md)
+- [Filters](https://raw.githubusercontent.com/avaje/avaje-nima/HEAD/docs/guides/filters.md)
+- [Controller basics](https://raw.githubusercontent.com/avaje/avaje-nima/HEAD/docs/guides/controller-basics.md)
+- [Validation](https://raw.githubusercontent.com/avaje/avaje-nima/HEAD/docs/guides/validation.md)
+- [Deployment](https://raw.githubusercontent.com/avaje/avaje-nima/HEAD/docs/guides/deployment.md)
+- [Testing](https://raw.githubusercontent.com/avaje/avaje-nima/HEAD/docs/guides/testing.md)
+- [Native image](https://raw.githubusercontent.com/avaje/avaje-nima/HEAD/docs/guides/native-image.md)
+- [Troubleshooting](https://raw.githubusercontent.com/avaje/avaje-nima/HEAD/docs/guides/troubleshooting.md)
+
+## Always check AGENTS.md and the guide index before automating or generating code for avaje-nima projects.
+
+For documentation on other Avaje projects, see the main Avaje website or the respective project repositories.
