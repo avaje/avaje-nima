@@ -9,8 +9,10 @@
     <version>1.9</version>
   </parent>
 
-  <artifactId>avaje-nima-opentelemetry</artifactId>
   <version>0.9-RC1</version>
+  <artifactId>avaje-nima-opentelemetry</artifactId>
+  <name>avaje-nima-opentelemetry</name>
+  <description>Opentelemetry integration for Helidon SE with avaje-nima</description>
 
   <properties>
     <maven.compiler.source>21</maven.compiler.source>

@@ -8,6 +8,7 @@ module io.avaje.nima.opentelemetry {
   requires transitive io.opentelemetry.api;
   requires transitive io.opentelemetry.context;
   requires transitive io.opentelemetry.sdk.trace;
+  requires io.opentelemetry.sdk.metrics;
   requires io.opentelemetry.sdk;
   requires io.opentelemetry.sdk.common;
   requires io.opentelemetry.exporter.otlp;

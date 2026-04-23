@@ -7,17 +7,22 @@ import io.helidon.webserver.http.ServerResponse;
 import io.opentelemetry.api.OpenTelemetry;
 import io.opentelemetry.api.trace.propagation.W3CTraceContextPropagator;
 import io.opentelemetry.context.propagation.ContextPropagators;
+import io.opentelemetry.exporter.otlp.metrics.OtlpGrpcMetricExporter;
 import io.opentelemetry.exporter.otlp.trace.OtlpGrpcSpanExporter;
 import io.opentelemetry.instrumentation.api.instrumenter.AttributesExtractor;
 import io.opentelemetry.instrumentation.api.instrumenter.SpanNameExtractor;
 import io.opentelemetry.instrumentation.api.instrumenter.SpanStatusExtractor;
 import io.opentelemetry.sdk.OpenTelemetrySdk;
+import io.opentelemetry.sdk.metrics.SdkMeterProvider;
+import io.opentelemetry.sdk.metrics.export.MetricExporter;
+import io.opentelemetry.sdk.metrics.export.PeriodicMetricReader;
 import io.opentelemetry.sdk.trace.SdkTracerProvider;
 import io.opentelemetry.sdk.trace.export.SimpleSpanProcessor;
 import io.opentelemetry.sdk.trace.export.SpanExporter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.time.Duration;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
@@ -44,6 +49,7 @@ import java.util.function.UnaryOperator;
  * <p>Config keys:
  * <ul>
  *   <li>{@code otel.spanExport.enabled} — whether to export spans via OTLP (default: {@code true})</li>
+ *   <li>{@code otel.metricExport.enabled} — whether to export metrics via OTLP (default: {@code true})</li>
  *   <li>{@code otel.health.exclude} — whether to exclude {@code /health} paths (default: {@code true})</li>
  * </ul>
  */
@@ -76,8 +82,11 @@ public final class NimaOtelFilter {
     private final InstrumenterBuilder instrumenterBuilder = new InstrumenterBuilder();
     private final List<String> excludedPaths = new ArrayList<>();
     private boolean spanExportEnabled = Config.enabled("otel.spanExport.enabled", true);
+    private boolean metricExportEnabled = Config.enabled("otel.metricExport.enabled", true);
     private boolean excludeHealthPaths = Config.enabled("otel.health.exclude", true);
     private SpanExporter spanExporter;
+    private MetricExporter metricExporter;
+    private Duration metricInterval = Duration.ofSeconds(60);
     private OpenTelemetry openTelemetry;
 
     private Builder() {
@@ -99,6 +108,34 @@ public final class NimaOtelFilter {
      */
     public Builder spanExporter(SpanExporter spanExporter) {
       this.spanExporter = spanExporter;
+      return this;
+    }
+
+    /**
+     * Whether to export metrics via OTLP. Defaults to the {@code otel.metricExport.enabled} config
+     * property (true if not set). Ignored if a custom {@link #metricExporter(MetricExporter)} or
+     * {@link #openTelemetry} is provided.
+     */
+    public Builder metricExportEnabled(boolean metricExportEnabled) {
+      this.metricExportEnabled = metricExportEnabled;
+      return this;
+    }
+
+    /**
+     * Provide a custom {@link MetricExporter}. When set, {@link #metricExportEnabled} is ignored.
+     * Ignored if {@link #openTelemetry} is also set.
+     */
+    public Builder metricExporter(MetricExporter metricExporter) {
+      this.metricExporter = metricExporter;
+      return this;
+    }
+
+    /**
+     * Set the interval at which metrics are exported via {@link PeriodicMetricReader}.
+     * Defaults to 60 seconds. Ignored if {@link #openTelemetry} is provided.
+     */
+    public Builder metricInterval(Duration metricInterval) {
+      this.metricInterval = metricInterval;
       return this;
     }
 
@@ -205,17 +242,17 @@ public final class NimaOtelFilter {
       if (openTelemetry != null) {
         return openTelemetry;
       }
-      SpanExporter exporter = resolveExporter();
       SdkTracerProvider tracerProvider = SdkTracerProvider.builder()
-        .addSpanProcessor(SimpleSpanProcessor.builder(exporter).build())
+        .addSpanProcessor(SimpleSpanProcessor.builder(resolveSpanExporter()).build())
         .build();
       return OpenTelemetrySdk.builder()
         .setTracerProvider(tracerProvider)
+        .setMeterProvider(resolveMeterProvider())
         .setPropagators(ContextPropagators.create(W3CTraceContextPropagator.getInstance()))
         .build();
     }
 
-    private SpanExporter resolveExporter() {
+    private SpanExporter resolveSpanExporter() {
       if (spanExporter != null) {
         return spanExporter;
       }
@@ -224,6 +261,23 @@ public final class NimaOtelFilter {
         return OtlpGrpcSpanExporter.getDefault();
       }
       return NoopSpanExporter.getInstance();
+    }
+
+    private SdkMeterProvider resolveMeterProvider() {
+      MetricExporter exporter = metricExporter;
+      if (exporter == null && !metricExportEnabled) {
+        return null;
+      }
+      if (exporter == null) {
+        log.debug("exporting otel metrics using OtlpGrpcMetricExporter");
+        exporter = OtlpGrpcMetricExporter.builder().build();
+      }
+      return SdkMeterProvider.builder()
+        .registerMetricReader(
+          PeriodicMetricReader.builder(exporter)
+            .setInterval(metricInterval)
+            .build())
+        .build();
     }
   }
 }
