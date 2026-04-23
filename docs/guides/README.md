@@ -1,5 +1,7 @@
 # Guides
 
+See also: [AGENTS.md](AGENTS.md) — a minimal template for AI agent onboarding and automation in avaje-nima projects.
+
 Step-by-step guides written as instructions for AI agents and developers working in
 **avaje-nima** projects.
 
