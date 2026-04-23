@@ -44,6 +44,7 @@
     <module>avaje-nima-generator</module>
     <module>avaje-nima-test</module>
     <module>avaje-nima-archetype-minimal-rest</module>
+    <module>avaje-nima-opentelemetry</module>
   </modules>
 
   <dependencyManagement>
