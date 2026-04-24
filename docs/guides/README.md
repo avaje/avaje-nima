@@ -1,10 +1,10 @@
 # Guides
 
-See also: [how-to-add-AGENTS-md.md](how-to-add-AGENTS-md.md) — a step-by-step guide and template for adding AGENTS.md to any project, ensuring both AI and human agents have actionable onboarding instructions.
+**Recommended:** For all downstream projects, add an AGENTS.md at the project root. AGENTS.md should point both AI and human developers to the official agent/developer guides for all major frameworks used (e.g., Avaje Nima, Ebean ORM). This ensures fast, accurate onboarding and discoverability of best practices.
+
+See: [how-to-add-AGENTS-md.md](how-to-add-AGENTS-md.md) for a step-by-step guide and template.
 
 See also: [AGENTS.md](AGENTS.md) — a minimal template for AI agent onboarding and automation in avaje-nima projects.
-
-**Recommended:** For downstream projects, add an AGENTS.md at the project root to guide both AI and human developers to official framework guides. This improves discoverability and onboarding for all contributors.
 
 Step-by-step guides written as instructions for AI agents and developers working in
 **avaje-nima** projects.
@@ -54,19 +54,30 @@ Applications listen on port **8080** by default.
 
 ## Helping AI agents find these guides
 
-AI coding agents can only follow these guides if they know they exist. Below are
-copy-paste snippets for the most common AI tooling configurations.
+AI coding agents can only follow these guides if they know they exist. The recommended approach is to add an AGENTS.md at the project root, pointing both AI and human developers to the official agent/developer guides for all major frameworks used (e.g., Avaje Nima, Ebean ORM).
 
+See: [how-to-add-AGENTS-md.md](how-to-add-AGENTS-md.md) for a step-by-step guide and template.
 
-### Project `README.md` (universal)
+Below are copy-paste snippets for the most common AI tooling configurations.
+
+### Project `AGENTS.md` (recommended)
+
+```markdown
+# AI Agent Instructions
+
+This project uses [avaje-nima](https://avaje.io/nima/). Step-by-step guides for common tasks (Docker builds, exception handling, controller testing) are at:
+
+**https://github.com/avaje/avaje-nima/tree/HEAD/docs/guides/**
+```
+
+### Project `README.md` (legacy/universal)
 
 ```markdown
 ## AI Agent Instructions
 
-This project uses [avaje-nima](https://avaje.io/nima/). Step-by-step guides for
-common tasks (Docker builds, exception handling, controller testing) are at:
+This project uses [avaje-nima](https://avaje.io/nima/). Step-by-step guides for common tasks (Docker builds, exception handling, controller testing) are at:
 
-**https://github.com/avaje/avaje-nima/tree/main/docs/guides/**
+**https://github.com/avaje/avaje-nima/tree/HEAD/docs/guides/**
 ```
 
 ### GitHub Copilot — `.github/copilot-instructions.md`
