@@ -1,5 +1,15 @@
 # How to Add AGENTS.md to Existing Projects
 
+## Example AI Prompt
+
+To add an AGENTS.md to this project, use the following prompt with your AI assistant:
+
+```
+Add an AGENTS.md to this project. Follow the process and template in https://github.com/avaje/avaje-nima/blob/HEAD/docs/guides/how-to-add-AGENTS-md.md. It should guide both AI and human developers to the official agent/developer guides for all major frameworks used (e.g., Avaje Nima, Ebean ORM). Use the latest links and match the style of AGENTS.md in sibling projects if available.
+```
+
+---
+
 This guide standardizes the process for adding an AGENTS.md to any Avaje Nima (or similar) project, ensuring both AI and human developers have fast, accurate access to actionable, framework-specific instructions.
 
 ## Purpose
@@ -12,7 +22,7 @@ AGENTS.md is a developer/AI agent onboarding file. It:
 1. **Clarify the Audience and Purpose**
    - Confirm AGENTS.md is for developer/AI agent onboarding (not background jobs).
 2. **Check for Reference AGENTS.md**
-   - Look for AGENTS.md in sibling projects (e.g., central-notifications) and align style/content.
+   - Look for AGENTS.md in sibling projects and align style/content.
 3. **Use the Template Below**
    - Update framework links and project-specific notes as needed.
 4. **Review and Commit**
@@ -65,10 +75,12 @@ Key guides (fetch and follow when performing the relevant task):
 To add an AGENTS.md to this project, use the following prompt with your AI assistant:
 
 ```
-Add an AGENTS.md to this project. Follow the process and template in https://github.com/avaje/avaje-nima/blob/HEAD/docs/guides/how-to-add-AGENTS-md.md. It should guide both AI and human developers to the official agent/developer guides for all major frameworks used (e.g., Avaje Nima, Ebean ORM). Use the latest links and match the style of AGENTS.md in central-notifications if available.
+Add an AGENTS.md to this project. Follow the process and template in https://github.com/avaje/avaje-nima/blob/HEAD/docs/guides/how-to-add-AGENTS-md.md. It should guide both AI and human developers to the official agent/developer guides for all major frameworks used (e.g., Avaje Nima, Ebean ORM). Use the latest links and match the style of AGENTS.md in sibling projects if available.
 ```
 
-## Checklist
+---
+
+
 - [ ] Audience and purpose clarified
 - [ ] Template used and links updated
 - [ ] Style matches sibling projects
