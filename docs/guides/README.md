@@ -1,5 +1,7 @@
 # Guides
 
+See also: [how-to-add-AGENTS-md.md](how-to-add-AGENTS-md.md) — a step-by-step guide and template for adding AGENTS.md to any project, ensuring both AI and human agents have actionable onboarding instructions.
+
 See also: [AGENTS.md](AGENTS.md) — a minimal template for AI agent onboarding and automation in avaje-nima projects.
 
 Step-by-step guides written as instructions for AI agents and developers working in
