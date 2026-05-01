@@ -54,6 +54,22 @@ Applications listen on port **8080** by default.
 
 ## Helping AI agents find these guides
 
+### Agent Skills (recommended)
+
+Pre-packaged skills for AI coding agents are available at:
+[github.com/avaje/skills](https://github.com/avaje/skills)
+
+```bash
+git clone git@github.com:avaje/skills.git ~/.agents/avaje-skills
+ln -sf ~/.agents/avaje-skills/avaje-nima ~/.agents/skills/avaje-nima
+```
+
+Works with [pi](https://github.com/mariozechner/pi-coding-agent),
+[Claude Code](https://docs.anthropic.com/en/docs/claude-code), and any
+[Agent Skills](https://agentskills.io) compatible harness.
+
+### Other approaches
+
 AI coding agents can only follow these guides if they know they exist. The recommended approach is to add an AGENTS.md at the project root, pointing both AI and human developers to the official agent/developer guides for all major frameworks used (e.g., Avaje Nima, Ebean ORM).
 
 See: [how-to-add-AGENTS-md.md](how-to-add-AGENTS-md.md) for a step-by-step guide and template.
