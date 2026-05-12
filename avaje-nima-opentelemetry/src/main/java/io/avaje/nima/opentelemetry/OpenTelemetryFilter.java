@@ -26,27 +26,30 @@ final class OpenTelemetryFilter implements Filter {
 
     @Override
     public void filter(FilterChain chain, RoutingRequest req, RoutingResponse res) {
-        String reqPath = req.path().rawPath();
+        final String reqPath = req.path().rawPath();
         if (isExcluded(reqPath)) {
             chain.proceed();
             return;
         }
-        Context parentContext = Context.current();
+        final Context parentContext = Context.current();
         if (!instrumenter.shouldStart(parentContext, req)) {
             chain.proceed();
             return;
         }
-        String reqMethod = req.prologue().method().text();
-        Context context = instrumenter.start(parentContext, req);
+        final String reqMethod = req.prologue().method().text();
+        final Context context = instrumenter.start(parentContext, req);
         Throwable error = null;
         try (Scope ignored = context.makeCurrent()) {
             if (log.isTraceEnabled()) {
                 logHttpRequest(log.atTrace(), reqMethod, reqPath).log();
             }
             chain.proceed();
-            if (log.isInfoEnabled()) {
-                logHttpResponse(log.atInfo(), res, reqMethod, reqPath).log();
+            if (log.isDebugEnabled()) {
+                logHttpResponse(log.atDebug(), res, reqMethod, reqPath).log();
+            } else if (res.status().code() >= 400) {
+                logHttpResponse(log.atWarn(), res, reqMethod, reqPath).log();
             }
+
         } catch (Throwable t) {
             logHttpResponse(log.atWarn(), res, reqMethod, reqPath).log("Error processing request", t);
             error = t;
