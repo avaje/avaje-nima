@@ -18,8 +18,8 @@
     <maven.compiler.source>21</maven.compiler.source>
     <maven.compiler.target>21</maven.compiler.target>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-    <otel.version>1.61.0</otel.version>
-    <otel.instrumentation.version>2.26.1</otel.instrumentation.version>
+    <otel.version>1.62.0</otel.version>
+    <otel.instrumentation.version>2.27.0</otel.instrumentation.version>
   </properties>
 
   <dependencyManagement>
