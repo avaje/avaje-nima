@@ -9,7 +9,7 @@
     <version>1.9</version>
   </parent>
 
-  <version>0.9-RC1</version>
+  <version>0.9-RC2</version>
   <artifactId>avaje-nima-opentelemetry</artifactId>
   <name>avaje-nima-opentelemetry</name>
   <description>Opentelemetry integration for Helidon SE with avaje-nima</description>
