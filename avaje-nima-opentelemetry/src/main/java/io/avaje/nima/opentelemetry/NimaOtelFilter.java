@@ -1,6 +1,5 @@
 package io.avaje.nima.opentelemetry;
 
-import io.avaje.config.Config;
 import io.helidon.webserver.http.Filter;
 import io.helidon.webserver.http.ServerRequest;
 import io.helidon.webserver.http.ServerResponse;
@@ -9,11 +8,23 @@ import io.opentelemetry.instrumentation.api.instrumenter.AttributesExtractor;
 import io.opentelemetry.instrumentation.api.instrumenter.SpanNameExtractor;
 import io.opentelemetry.instrumentation.api.instrumenter.SpanStatusExtractor;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collection;
+import java.util.List;
 import java.util.function.UnaryOperator;
+
+import static java.util.Objects.requireNonNull;
 
 /**
  * Builder for creating an OpenTelemetry {@link Filter} for Helidon Nima.
+ *
+ * <p>Provide the {@link OpenTelemetry} instance from your application's telemetry setup. This module
+ * creates the Helidon filter only and does not configure or build OpenTelemetry for you.
+ *
+ * <p>The supplied {@link OpenTelemetry} can come from the OpenTelemetry Java agent, OpenTelemetry
+ * autoconfiguration, manual SDK wiring, or another helper such as
+ * {@code io.avaje.metrics.otel.MetricsOpenTelemetry}.
  *
  * <pre>{@code
  *
@@ -22,11 +33,7 @@ import java.util.function.UnaryOperator;
  *
  *     @Bean
  *     OpenTelemetry openTelemetry() {
- *         return NimaOpenTelemetry.builder()
- *                 .enabled(Config.enabled("otel.export.enabled", true))
- *                 .endpoint(Config.get("otel.export.endpoint"))
- *                 .serviceName(Config.get("otel.service.name", "unknown"))
- *                 .buildAndRegisterGlobal();
+ *         return GlobalOpenTelemetry.get();
  *     }
  *
  *     @Bean
@@ -48,7 +55,7 @@ public final class NimaOtelFilter {
   /**
    * Returns a new builder.
    *
-   * @param openTelemetry The openTelemetry SDK that the filter will use.
+   * @param openTelemetry the externally provided OpenTelemetry instance the filter will use
    */
   public static Builder builder(OpenTelemetry openTelemetry) {
     return new Builder(openTelemetry);
@@ -62,10 +69,10 @@ public final class NimaOtelFilter {
     private final InstrumenterBuilder instrumenterBuilder = new InstrumenterBuilder();
     private final List<String> excludedPaths = new ArrayList<>();
     private final OpenTelemetry openTelemetry;
-    private boolean excludeHealthPaths = Config.enabled("otel.health.exclude", true);
+    private boolean excludeHealthPaths = true;
 
     private Builder(OpenTelemetry openTelemetry) {
-      this.openTelemetry = Objects.requireNonNull(openTelemetry);
+      this.openTelemetry = requireNonNull(openTelemetry);
     }
 
     /**
@@ -118,8 +125,7 @@ public final class NimaOtelFilter {
     }
 
     /**
-     * Whether to exclude {@code /health} paths from tracing. Defaults to the
-     * {@code otel.health.exclude} config property (true if not set).
+     * Whether to exclude {@code /health} paths from tracing. Defaults to {@code true}.
      */
     public Builder excludeHealthPaths(boolean exclude) {
       this.excludeHealthPaths = exclude;
