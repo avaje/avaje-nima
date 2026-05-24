@@ -47,11 +47,11 @@ jobs:
       - name: Build reusable base layer
         run: mvn -B -f examples/layered-native-image/base-layer/pom.xml clean install
 
-      - name: Build standalone native image
-        run: mvn -B -f examples/layered-native-image/pom.xml -Pstandalone clean package
-
       - name: Build layered native image
         run: mvn -B -f examples/layered-native-image/pom.xml -Papp-layer clean package
+
+      - name: Build standalone native image
+        run: mvn -B -f examples/layered-native-image/pom.xml -Pstandalone clean package
 
       - name: Upload layered example artifacts
         uses: actions/upload-artifact@v4
