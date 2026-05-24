@@ -1,0 +1,79 @@
+name: Layered Native Image
+
+on:
+  workflow_dispatch:
+  pull_request:
+    paths:
+      - .github/workflows/layered-native-image.yml
+      - examples/layered-native-image/**
+      - avaje-nima/**
+      - avaje-nima-generator/**
+      - pom.xml
+  push:
+    branches:
+      - master
+    paths:
+      - .github/workflows/layered-native-image.yml
+      - examples/layered-native-image/**
+      - avaje-nima/**
+      - avaje-nima-generator/**
+      - pom.xml
+
+jobs:
+  layered-native-image:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+    steps:
+      - uses: actions/checkout@v6
+
+      - name: Set up GraalVM EA
+        uses: graalvm/setup-graalvm@v1
+        with:
+          distribution: graalvm
+          java-version: '25e1-ea'
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          cache: maven
+
+      - name: Tool versions
+        run: |
+          java --version
+          native-image --version
+          mvn --version
+
+      - name: Install current avaje-nima modules
+        run: mvn -B -pl avaje-nima,avaje-nima-generator -am -DskipTests install
+
+      - name: Build reusable base layer
+        run: mvn -B -f examples/layered-native-image/base-layer/pom.xml clean install
+
+      - name: Build layered native image
+        run: mvn -B -f examples/layered-native-image/pom.xml -Papp-layer clean package
+
+      - name: Build standalone native image
+        run: mvn -B -f examples/layered-native-image/pom.xml -Pstandalone clean package
+
+      - name: Upload layered runtime artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: layered-native-runtime-linux
+          if-no-files-found: error
+          path: |
+            examples/layered-native-image/app-layer-target/layered-app
+            examples/layered-native-image/app-layer-target/libjavabaselayer.so
+
+      - name: Upload standalone native artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: standalone-native-linux
+          if-no-files-found: error
+          path: |
+            examples/layered-native-image/target/standalone-app
+
+      - name: Upload layered build metadata
+        uses: actions/upload-artifact@v4
+        with:
+          name: layered-native-build-metadata-linux
+          if-no-files-found: error
+          path: |
+            examples/layered-native-image/base-layer/base-layer-target/base-layer.nil

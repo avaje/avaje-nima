@@ -22,6 +22,45 @@ mvn -Pnative clean package
 
 This produces `target/myapp` executable.
 
+## Layered Native Image Example
+
+There is a Linux-focused layered native image example in
+[`examples/layered-native-image`](../../examples/layered-native-image/README.md).
+
+The example keeps the reusable `java.base` image layer in a separate `base-layer/`
+project and builds the application layer from the main example module.
+It is intentionally **not** part of the top-level Maven reactor, so it only runs when
+invoked explicitly.
+
+To exercise the example against the **current checkout** of `avaje-nima`, install the
+local framework modules first:
+
+```bash
+mvn -pl avaje-nima,avaje-nima-generator -am -DskipTests install
+```
+
+Build the standalone native image:
+
+```bash
+mvn -f examples/layered-native-image/pom.xml -Pstandalone clean package
+```
+
+Build the reusable base layer (Linux + GraalVM EA required):
+
+```bash
+mvn -f examples/layered-native-image/base-layer/pom.xml clean install
+```
+
+Build the layered application:
+
+```bash
+mvn -f examples/layered-native-image/pom.xml -Papp-layer clean package
+```
+
+The layered build is currently intended for Linux runners. macOS arm64 exposes the
+flags in recent GraalVM builds, but layered image creation itself is not currently
+supported there.
+
 ## Performance
 
 Native images provide:
