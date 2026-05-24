@@ -53,14 +53,27 @@ jobs:
       - name: Build standalone native image
         run: mvn -B -f examples/layered-native-image/pom.xml -Pstandalone clean package
 
-      - name: Upload layered example artifacts
+      - name: Upload layered runtime artifacts
         uses: actions/upload-artifact@v4
         with:
-          name: layered-native-image-linux
+          name: layered-native-runtime-linux
+          if-no-files-found: error
+          path: |
+            examples/layered-native-image/app-layer-target/layered-app
+            examples/layered-native-image/app-layer-target/libjavabaselayer.so
+
+      - name: Upload standalone native artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: standalone-native-linux
           if-no-files-found: error
           path: |
             examples/layered-native-image/target/standalone-app
-            examples/layered-native-image/app-layer-target/layered-app
-            examples/layered-native-image/app-layer-target/libjavabaselayer.so
+
+      - name: Upload layered build metadata
+        uses: actions/upload-artifact@v4
+        with:
+          name: layered-native-build-metadata-linux
+          if-no-files-found: error
+          path: |
             examples/layered-native-image/base-layer/base-layer-target/base-layer.nil
-            examples/layered-native-image/base-layer/base-layer-target/libjavabaselayer.so
