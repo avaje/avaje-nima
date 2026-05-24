@@ -59,11 +59,6 @@
       <version>${otel.instrumentation.version}</version>
     </dependency>
     <dependency>
-      <groupId>io.opentelemetry.instrumentation</groupId>
-      <artifactId>opentelemetry-instrumentation-api-incubator</artifactId>
-      <version>${otel.instrumentation.version}-alpha</version>
-    </dependency>
-    <dependency>
       <groupId>org.jspecify</groupId>
       <artifactId>jspecify</artifactId>
       <version>1.0.0</version>
