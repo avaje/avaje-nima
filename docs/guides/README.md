@@ -50,6 +50,12 @@ Applications listen on port **8080** by default.
 | [Add a global exception handler](add-global-exception-handler.md) | Add `ErrorResponse` + `GlobalExceptionController` to catch all exceptions, return structured JSON, and set correct HTTP status codes |
 | [Add a controller test](add-controller-test.md) | Write integration tests for a controller using `avaje-nima-test` and `@InjectTest`; covers raw `HttpClient` and the generated typed API |
 
+## Observability
+
+| Guide | Description |
+|-------|-------------|
+| [Add OpenTelemetry filter](add-open-telemetry-filter.md) | Add `avaje-nima-opentelemetry`, provide an `OpenTelemetry` bean, and register `NimaOtelFilter` for HTTP request tracing |
+
 ---
 
 ## Helping AI agents find these guides
@@ -81,7 +87,7 @@ Below are copy-paste snippets for the most common AI tooling configurations.
 ```markdown
 # AI Agent Instructions
 
-This project uses [avaje-nima](https://avaje.io/nima/). Step-by-step guides for common tasks (Docker builds, exception handling, controller testing) are at:
+This project uses [avaje-nima](https://avaje.io/nima/). Step-by-step guides for common tasks (Docker builds, exception handling, controller testing, OpenTelemetry filter setup) are at:
 
 **https://github.com/avaje/avaje-nima/tree/HEAD/docs/guides/**
 ```
@@ -91,7 +97,7 @@ This project uses [avaje-nima](https://avaje.io/nima/). Step-by-step guides for 
 ```markdown
 ## AI Agent Instructions
 
-This project uses [avaje-nima](https://avaje.io/nima/). Step-by-step guides for common tasks (Docker builds, exception handling, controller testing) are at:
+This project uses [avaje-nima](https://avaje.io/nima/). Step-by-step guides for common tasks (Docker builds, exception handling, controller testing, OpenTelemetry filter setup) are at:
 
 **https://github.com/avaje/avaje-nima/tree/HEAD/docs/guides/**
 ```
@@ -115,6 +121,7 @@ Key guides (fetch and follow these when performing the relevant task):
 - Native Docker build: https://raw.githubusercontent.com/avaje/avaje-nima/main/docs/guides/add-native-docker-jib.md
 - Global exception handler: https://raw.githubusercontent.com/avaje/avaje-nima/main/docs/guides/add-global-exception-handler.md
 - Controller testing: https://raw.githubusercontent.com/avaje/avaje-nima/main/docs/guides/add-controller-test.md
+- OpenTelemetry filter: https://raw.githubusercontent.com/avaje/avaje-nima/main/docs/guides/add-open-telemetry-filter.md
 ```
 
 ### Claude Code — `CLAUDE.md`

@@ -27,6 +27,7 @@ The generator module transitively brings in the following avaje services and ann
 
 - [Avaje Nima docs](https://avaje.io/nima/)
 - [Step-by-step guides for AI agents](docs/guides/README.md)
+- [Add OpenTelemetry filter](docs/guides/add-open-telemetry-filter.md)
 - [Examples](examples/README.md)
 
 # How to use
