@@ -54,7 +54,7 @@ jobs:
         run: mvn -B -f examples/layered-native-image/pom.xml -Pstandalone clean package
 
       - name: Upload layered runtime artifacts
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v7
         with:
           name: layered-native-runtime-linux
           if-no-files-found: error
@@ -63,7 +63,7 @@ jobs:
             examples/layered-native-image/app-layer-target/libjavabaselayer.so
 
       - name: Upload standalone native artifact
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v7
         with:
           name: standalone-native-linux
           if-no-files-found: error
@@ -71,7 +71,7 @@ jobs:
             examples/layered-native-image/target/standalone-app
 
       - name: Upload layered build metadata
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v7
         with:
           name: layered-native-build-metadata-linux
           if-no-files-found: error
