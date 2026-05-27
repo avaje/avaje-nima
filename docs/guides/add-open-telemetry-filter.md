@@ -13,7 +13,7 @@ these steps exactly.
 
 ## Overview
 
-The pattern has two moving parts:
+The HTTP tracing pattern has two moving parts:
 
 | Bean | Purpose |
 |---|---|
@@ -27,7 +27,8 @@ The `OpenTelemetry` bean can come from:
 
 - `GlobalOpenTelemetry.get()` when using the OpenTelemetry Java agent or another global setup
 - OpenTelemetry autoconfiguration or manual SDK wiring already present in the application
-- another helper that builds an `OpenTelemetry` instance, such as `MetricsOpenTelemetry`
+- `MetricsOpenTelemetry` from `avaje-metrics-otel`, which is the common pattern when the
+  application also publishes metrics via OpenTelemetry
 
 ---
 
@@ -90,7 +91,98 @@ OpenTelemetry Java agent or another global setup.
 
 ---
 
-## Step 3 — Register `NimaOtelFilter`
+## Step 3 — Optional: build OpenTelemetry from avaje-metrics
+
+When the application uses `avaje-metrics-otel`, expose the `OpenTelemetry` instance
+created by `MetricsOpenTelemetry` and reuse it for `NimaOtelFilter`.
+
+Add the metrics OpenTelemetry dependency:
+
+```xml
+<dependency>
+  <groupId>io.avaje</groupId>
+  <artifactId>avaje-metrics-otel</artifactId>
+  <version>${avaje.metrics.version}</version>
+</dependency>
+```
+
+Then create the bean:
+
+```java
+package <base-package>.configuration;
+
+import io.avaje.config.Config;
+import io.avaje.inject.Bean;
+import io.avaje.inject.Factory;
+import io.avaje.metrics.Metrics;
+import io.avaje.metrics.otel.MetricsOpenTelemetry;
+import io.avaje.nima.opentelemetry.NimaOtelFilter;
+import io.helidon.webserver.http.Filter;
+import io.opentelemetry.api.OpenTelemetry;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+@Factory
+final class OpenTelemetryConfig {
+
+  private static final Logger log = LoggerFactory.getLogger(OpenTelemetryConfig.class);
+
+  @Bean
+  OpenTelemetry openTelemetry() {
+    Metrics.registry().registerJvmCoreMetrics();
+
+    if (!Config.enabled("opentelemetry.publish", false)) {
+      log.info("No opentelemetry reporting");
+      return OpenTelemetry.noop();
+    }
+
+    var endpoint = Config.get("opentelemetry.endpoint");
+    log.info("Publishing opentelemetry metrics {}", endpoint);
+    return MetricsOpenTelemetry.builder()
+      .endpoint(endpoint)
+      .serviceName("my-service")
+      .buildAndRegisterGlobal();
+  }
+
+  @Bean
+  Filter openTelemetryFilter(OpenTelemetry openTelemetry) {
+    return NimaOtelFilter.builder(openTelemetry)
+      .excludeHealthPaths(true)
+      .excludePaths("/metrics")
+      .build();
+  }
+}
+```
+
+Recommended configuration:
+
+```yaml
+# application.yaml or dynamic config
+opentelemetry.publish: true
+opentelemetry.endpoint: http://otel-collector:4317
+```
+
+For tests, disable publishing so integration tests do not try to contact a collector:
+
+```yaml
+# src/test/resources/application-test.yaml
+opentelemetry.publish: false
+```
+
+If the project also uses avaje-metrics naming configuration, include the metrics
+manifest in `src/main/resources/metrics.mf`:
+
+```properties
+timedMetricNaming: label-tag
+```
+
+This pattern still gives `NimaOtelFilter` the same `OpenTelemetry` bean; the difference
+is that the bean also registers JVM metrics and configures OTLP publishing for the
+service when `opentelemetry.publish` is enabled.
+
+---
+
+## Step 4 — Register `NimaOtelFilter`
 
 Add the filter bean to the same factory class:
 
@@ -131,7 +223,7 @@ Default behavior:
 
 ---
 
-## Step 4 — Optional customization
+## Step 5 — Optional customization
 
 `NimaOtelFilter` exposes a few useful customisation hooks:
 
@@ -188,7 +280,7 @@ final class OpenTelemetryConfig {
 
 ---
 
-## Step 5 — Verify
+## Step 6 — Verify
 
 1. Start the application with OpenTelemetry configured.
 2. Send a request to a traced endpoint:
@@ -212,6 +304,7 @@ starting the application.
 - The filter traces incoming HTTP requests; traced timers and metrics are separate
   concerns.
 - If the application also uses avaje-metrics with OpenTelemetry, you can supply that
-  same `OpenTelemetry` bean to `NimaOtelFilter`.
+  same `OpenTelemetry` bean to `NimaOtelFilter`. Use `OpenTelemetry.noop()` when
+  publishing is disabled, especially in tests.
 - The most likely place to add the factory class is a `telemetry`, `config`, or
   `infra` package near the application's other infrastructure beans.

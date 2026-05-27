@@ -52,7 +52,53 @@ final class OpenTelemetryConfig {
 If the application already provides `OpenTelemetry` via autoconfigure, manual SDK
 wiring, or another helper, use that bean instead of `GlobalOpenTelemetry.get()`.
 
+## avaje-metrics OpenTelemetry publishing
+
+For applications using `avaje-metrics-otel`, expose the `OpenTelemetry` instance built
+by `MetricsOpenTelemetry` and reuse it for the filter:
+
+```java
+import io.avaje.config.Config;
+import io.avaje.inject.Bean;
+import io.avaje.inject.Factory;
+import io.avaje.metrics.Metrics;
+import io.avaje.metrics.otel.MetricsOpenTelemetry;
+import io.avaje.nima.opentelemetry.NimaOtelFilter;
+import io.helidon.webserver.http.Filter;
+import io.opentelemetry.api.OpenTelemetry;
+
+@Factory
+final class OpenTelemetryConfig {
+
+  @Bean
+  OpenTelemetry openTelemetry() {
+    Metrics.registry().registerJvmCoreMetrics();
+
+    if (!Config.enabled("opentelemetry.publish", false)) {
+      return OpenTelemetry.noop();
+    }
+
+    return MetricsOpenTelemetry.builder()
+      .endpoint(Config.get("opentelemetry.endpoint"))
+      .serviceName("my-service")
+      .buildAndRegisterGlobal();
+  }
+
+  @Bean
+  Filter openTelemetryFilter(OpenTelemetry openTelemetry) {
+    return NimaOtelFilter.builder(openTelemetry)
+      .excludeHealthPaths(true)
+      .excludePaths("/metrics")
+      .build();
+  }
+}
+```
+
+Set `opentelemetry.publish: false` in test configuration so tests use
+`OpenTelemetry.noop()` and do not publish to a collector.
+
 ## Full guide
 
-For the full step-by-step setup guide, including optional filter customization, see
+For the full step-by-step setup guide, including avaje-metrics integration and optional
+filter customization, see
 [docs/guides/add-open-telemetry-filter.md](../docs/guides/add-open-telemetry-filter.md).
