@@ -57,7 +57,7 @@ requires io.avaje.nima.opentelemetry;
 Create a factory class at:
 
 ```
-src/main/java/<base-package>/telemetry/OpenTelemetryConfig.java
+src/main/java/<base-package>/configuration/OpenTelemetryConfig.java
 ```
 
 Replace `<base-package>` with the application's root package.
@@ -65,7 +65,7 @@ Replace `<base-package>` with the application's root package.
 For the minimal setup, use the global OpenTelemetry instance:
 
 ```java
-package <base-package>.telemetry;
+package <base-package>.configuration;
 
 import io.avaje.inject.Bean;
 import io.avaje.inject.Factory;
@@ -187,7 +187,7 @@ service when `opentelemetry.publish` is enabled.
 Add the filter bean to the same factory class:
 
 ```java
-package <base-package>.telemetry;
+package <base-package>.configuration;
 
 import io.avaje.inject.Bean;
 import io.avaje.inject.Factory;
@@ -236,7 +236,7 @@ Default behavior:
 Example:
 
 ```java
-package <base-package>.telemetry;
+package <base-package>.configuration;
 
 import io.avaje.inject.Bean;
 import io.avaje.inject.Factory;
