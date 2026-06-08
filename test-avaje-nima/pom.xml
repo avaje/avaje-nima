@@ -19,7 +19,7 @@
     <dependency>
       <groupId>io.avaje</groupId>
       <artifactId>avaje-simple-logger</artifactId>
-      <version>1.5</version>
+      <version>2.0</version>
     </dependency>
 
     <dependency>
@@ -89,7 +89,7 @@
       <plugin> <!-- perform ebean enhancement -->
         <groupId>io.ebean</groupId>
         <artifactId>ebean-maven-plugin</artifactId>
-        <version>17.6.0</version>
+        <version>17.9.0</version>
         <extensions>true</extensions>
       </plugin>
 
@@ -105,7 +105,7 @@
         <plugin>
           <groupId>org.graalvm.buildtools</groupId>
           <artifactId>native-maven-plugin</artifactId>
-          <version>1.1.0</version>
+          <version>1.1.1</version>
           <extensions>true</extensions>
           <executions>
             <execution>
