@@ -89,7 +89,7 @@
       <plugin> <!-- perform ebean enhancement -->
         <groupId>io.ebean</groupId>
         <artifactId>ebean-maven-plugin</artifactId>
-        <version>17.9.0</version>
+        <version>17.11.0</version>
         <extensions>true</extensions>
       </plugin>
 
@@ -105,7 +105,7 @@
         <plugin>
           <groupId>org.graalvm.buildtools</groupId>
           <artifactId>native-maven-plugin</artifactId>
-          <version>1.1.1</version>
+          <version>1.1.2</version>
           <extensions>true</extensions>
           <executions>
             <execution>
