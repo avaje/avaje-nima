@@ -24,7 +24,7 @@ final class DNimaBuilder implements Nima.Builder {
   private int maxTcpConnections = Config.getInt("server.maxTcpConnections", 0);
   private long maxPayloadSize = Config.getLong("server.maxPayloadSize", 0);
   // private boolean shutdownHook = Config.getBool("server.shutdownHook", false);
-  private long shutdownGraceMillis = Config.getLong("server.shutdownGraceMillis", 0);
+  private long shutdownGraceMillis = Config.getLong("server.shutdownGraceMillis", 10_000);
   private long shutdownDelay = Config.getLong("server.shutdownDelay", 200);
 
   private boolean health = Config.getBool("server.health", true);

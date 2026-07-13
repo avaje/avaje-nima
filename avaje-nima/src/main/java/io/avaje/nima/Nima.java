@@ -94,14 +94,23 @@ public interface Nima {
     Builder maxPayloadSize(long maxPayloadSize);
 
     /**
-     * Set the maximum graceful shutdown time.
+     * Set the maximum time in milliseconds to wait for active/in-flight requests to complete
+     * during graceful shutdown. Defaults to 10 seconds.
+     *
+     * <p>This is a ceiling rather than a fixed delay - shutdown proceeds as soon as all active
+     * requests complete, only waiting the full duration if requests are still running when it
+     * elapses. Increase this if requests can take longer to complete (e.g. slow downstream calls).
      */
     Builder shutdownGraceMillis(long shutdownGraceMillis);
 
     /**
-     * Set a shutdown delay in milliseconds.
+     * Set a shutdown delay in milliseconds (defaults to 200ms).
      *
-     * <p>This delay is used to wait for active requests to complete before shutting down the server.
+     * <p>This is a short fixed pause after the server is marked as stopping (e.g. readiness
+     * turns down) and before the underlying server begins draining active requests. It gives load
+     * balancers/ingress time to stop routing new requests here. It is not the window used to wait
+     * for active requests to complete - see {@link #shutdownGraceMillis(long)} for that.
+     *
      * @param shutdownDelayMillis The delay in milliseconds before the server is shut down
      */
     Builder shutdownDelay(long shutdownDelayMillis);
