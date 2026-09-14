@@ -18,7 +18,7 @@
     <maven.compiler.target>21</maven.compiler.target>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     <surefire.useModulePath>false</surefire.useModulePath>
-    <otel.version>1.65.0</otel.version>
+    <otel.version>1.66.0</otel.version>
     <otel.instrumentation.version>2.31.1</otel.instrumentation.version>
   </properties>
 
