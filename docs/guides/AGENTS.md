@@ -15,5 +15,6 @@ Key guides (fetch and follow when performing the relevant task):
 - Native Docker build: https://raw.githubusercontent.com/avaje/avaje-nima/HEAD/docs/guides/add-native-docker-jib.md
 - Global exception handler: https://raw.githubusercontent.com/avaje/avaje-nima/HEAD/docs/guides/add-global-exception-handler.md
 - Controller testing: https://raw.githubusercontent.com/avaje/avaje-nima/HEAD/docs/guides/add-controller-test.md
+- HTMX web UI: https://raw.githubusercontent.com/avaje/avaje-nima/HEAD/docs/guides/htmx-getting-started.md
 
 Agents: Before performing any avaje-nima-related task, fetch and follow the relevant guide above.
