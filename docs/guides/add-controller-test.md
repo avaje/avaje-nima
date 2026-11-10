@@ -23,13 +23,14 @@ There are two ways to call endpoints from tests:
 | | Approach 1: raw `HttpClient` | Approach 2: generated typed API |
 |---|---|---|
 | Inject | `HttpClient` | `HelloControllerTestAPI` |
-| Response type | `HttpResponse<String>` | `HttpResponse<MyDto>` (typed) |
+| Response type | `HttpResponse<String>` or `HttpResponse<MyDto>` via `.as(MyDto.class)` | `HttpResponse<MyDto>` (typed) |
 | Path construction | manual string | generated method per endpoint |
-| Best for | raw/non-JSON, custom headers | standard CRUD/JSON endpoints |
+| Best for | custom paths/parameters, raw body inspection, non-JSON endpoints | standard endpoint calls |
 
-**Prefer Approach 2** (generated typed API) for standard JSON endpoints; use Approach
-1 when you need direct control over headers, raw body inspection, or are testing
-non-JSON endpoints.
+**Prefer Approach 2** (generated typed API) when calling an endpoint as declared by
+the controller contract. Approach 1 is useful when the test needs a custom request,
+such as omitting a query parameter to verify its default; it can still deserialize a
+JSON response directly into a DTO with `.as(MyDto.class)`.
 
 ---
 
@@ -106,11 +107,11 @@ class HelloControllerTest {
 
 ## Step 3 — Write the test method
 
-### Approach 1 — `HttpClient` (untyped)
+### Approach 1 — `HttpClient` (manual request)
 
 ```java
 @Test
-void data_returnsJson() {
+void data_returnsJsonText() {
   HttpResponse<String> res = client.request()
     .path("hi/data")
     .GET().asString();
@@ -121,6 +122,25 @@ void data_returnsJson() {
 }
 ```
 
+For a typed JSON response, use `.as(MyDto.class)` instead of reading a string and
+deserializing it separately:
+
+```java
+@Test
+void data_returnsTypedJson() {
+  HttpResponse<GreetingResponse> res = client.request()
+    .path("hi/data/World")
+    .GET().as(GreetingResponse.class);
+
+  assertThat(res.statusCode()).isEqualTo(200);
+  assertThat(res.body().message()).isEqualTo("World");
+}
+```
+
+This keeps a typed response while allowing the test to construct the path and query
+parameters itself—for example, to omit an optional query parameter and verify its
+server-side default.
+
 **Request builder reference:**
 
 | Scenario | Snippet |
@@ -129,6 +149,7 @@ void data_returnsJson() {
 | Query parameter | `.queryParam("q", "foo")` |
 | Request header | `.header("Authorization", "Bearer ...")` |
 | GET, return as String | `.GET().asString()` |
+| GET, return as a typed JSON body | `.GET().as(MyDto.class)` |
 | POST with JSON body | `.body(myDto).POST().asString()` |
 | Assert status | `assertThat(res.statusCode()).isEqualTo(200)` |
 | Assert JSON field present | `assertThat(res.body()).contains("fieldName")` |
@@ -163,9 +184,9 @@ void dataByName_returnsTypedResponse() {
 }
 ```
 
-Key advantages over Approach 1:
-- **Typed responses** — no JSON string parsing or `.contains()` hacks.
-- **Compile-time safety** — method signatures are checked by `javac`.
+Key advantages over a manually constructed `HttpClient` request:
+- **Contract-backed method signatures** — paths and parameters are checked by `javac`.
+- **Typed responses** — the generated method declares its response DTO.
 - **Path parameters are method parameters** — `dataByName("World")` vs.
   `.path("hi/data/World")`.
 
