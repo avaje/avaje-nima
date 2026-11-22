@@ -44,10 +44,14 @@ final class OpenTelemetryFilter implements Filter {
                 logHttpRequest(log.atTrace(), reqMethod, reqPath).log();
             }
             chain.proceed();
-            if (log.isDebugEnabled()) {
-                logHttpResponse(log.atDebug(), res, reqMethod, reqPath).log();
-            } else if (res.status().code() >= 400) {
-                logHttpResponse(log.atWarn(), res, reqMethod, reqPath).log();
+            if (res.status().code() >= 400) {
+                if (res.status().code() == 404) {
+                    logHttpResponse(log.atDebug(), res, reqMethod, reqPath).log();
+                } else {
+                    logHttpResponse(log.atWarn(), res, reqMethod, reqPath).log();
+                }
+            } else if (log.isTraceEnabled()) {
+                logHttpResponse(log.atTrace(), res, reqMethod, reqPath).log();
             }
 
         } catch (Throwable t) {
