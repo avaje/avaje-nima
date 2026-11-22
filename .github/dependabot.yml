@@ -9,6 +9,10 @@ updates:
       dependencies:
         patterns:
         - "*"
+    ignore:
+      - dependency-name: "io.helidon:*"
+        versions:
+          - ">= 5.0.0"
     labels:
       - "dependencies"
     target-branch: "main"
