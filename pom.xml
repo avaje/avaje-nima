@@ -13,7 +13,7 @@
   <groupId>io.avaje</groupId>
   <artifactId>avaje-nima-parent</artifactId>
   <name>avaje-nima-parent</name>
-  <version>1.15</version>
+  <version>1.16-RC1</version>
   <packaging>pom</packaging>
 
   <scm>
@@ -24,9 +24,9 @@
     <maven.compiler.release>21</maven.compiler.release>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     <avaje.config.version>5.2</avaje.config.version>
-    <avaje.inject.version>12.7</avaje.inject.version>
-    <avaje.jsonb.version>3.16</avaje.jsonb.version>
-    <avaje.http.version>3.12.1</avaje.http.version>
+    <avaje.inject.version>12.8-RC1</avaje.inject.version>
+    <avaje.jsonb.version>3.17-RC5</avaje.jsonb.version>
+    <avaje.http.version>3.13-RC4</avaje.http.version>
     <avaje.metrics.version>10.4</avaje.metrics.version>
     <avaje.validator.version>2.18</avaje.validator.version>
     <avaje.record.builder.version>1.4</avaje.record.builder.version>
@@ -189,22 +189,22 @@
       <dependency>
         <groupId>io.avaje</groupId>
         <artifactId>avaje-nima</artifactId>
-        <version>1.15</version>
+        <version>1.16-RC1</version>
       </dependency>
       <dependency>
         <groupId>io.avaje</groupId>
         <artifactId>avaje-nima-htmx</artifactId>
-        <version>1.15</version>
+        <version>1.16-RC1</version>
       </dependency>
       <dependency>
         <groupId>io.avaje</groupId>
         <artifactId>avaje-nima-generator</artifactId>
-        <version>1.15</version>
+        <version>1.16-RC1</version>
       </dependency>
       <dependency>
         <groupId>io.avaje</groupId>
         <artifactId>avaje-nima-test</artifactId>
-        <version>1.15</version>
+        <version>1.16-RC1</version>
       </dependency>
     </dependencies>
   </dependencyManagement>
